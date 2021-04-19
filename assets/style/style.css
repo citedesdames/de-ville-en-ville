@@ -136,3 +136,29 @@ header h1 {
     writing-mode: unset;
     transform: unset;
 }
+
+.timeline {
+    display: none;
+    background-color: white;
+    width: 80%;
+    margin: 5% auto;
+    padding: 2%;
+    border-radius: 50px;
+}
+
+.timeline-open {
+    display: block;
+}
+
+.timeline-marker {
+    cursor: pointer;
+    width: 25px;
+    margin: 0 5%;
+}
+
+.blue-line {
+    background-color: #24395D;
+    height: 2px;
+    width: 95%;
+    margin: auto;
+}
