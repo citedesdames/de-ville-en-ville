@@ -40,16 +40,19 @@ main {
     color: #fff;
     display: block;    
     text-decoration: none;
+    left: 4%;
+    transition: left 1s ease;
 }
-
+.gauche-open {
+    left: 49.2%;
+}
 .arrow {
     cursor: pointer;
     height: 180px;
     left: 100%;
     position: absolute;
     top: 50%;
-    transform: translateX(200%) translateY(-50%);
-    transition: transform 1s ease;
+    transform: translateX(0%) translateY(-50%);
     width: 40px;
     background-color: #004262;
     z-index: 100;
@@ -81,9 +84,6 @@ main {
     transform-origin: top right;
 }
 
-.arrow-open {
-    transform: translateX(2360%) translateY(-50%);
-}
 .arrow-top-open {
     transform-origin: bottom left;
     left: 15px;

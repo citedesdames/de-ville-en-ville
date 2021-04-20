@@ -12,7 +12,6 @@ function fadeOut(el){
   })();
 }
 
-
 // Fonction pour fadeIn en JS Vanilla
 function fadeIn(el, display){
   if (el.classList.contains('is-hidden')){
@@ -30,6 +29,9 @@ function fadeIn(el, display){
   })();
 }
 
+/*--------------------- Paramétrage de la carte et des villes ---------------------*/
+/*--------------------- Paramétrage de la carte et des villes ---------------------*/
+/*--------------------- Paramétrage de la carte et des villes ---------------------*/
 
 // Paramétrage de la vue sur la carte
 let mymap = L.map('mapid');
@@ -42,24 +44,39 @@ L.tileLayer('http://c.tile.stamen.com/watercolor/{z}/{x}/{y}.jpg', {
     maxZoom: 18,
 }).addTo(mymap); 
 
+// Tableau regroupant les villes et leurs coordonnées
+let data = [
+  {
+    'name': 'Paris',
+    'lat':'48.85',
+    'lng':'2.5'
+  },
+  {
+    'name':'Lyon',
+    'lat':'45.764043',
+    'lng':'4.835659'
+  }
+]
 
+// Fonction lors de l'ouverture et la fermeture du volet
 function ChangeClass() {
+    // Séléction de tous les éléments qui vont être modifié lors de l'ouverture ou la fermeture du volet
     let element1 = document.querySelector(".main_container");
     let element2 = document.getElementById("mapid");
-    let element3 = document.querySelector(".arrow");
+    let element3 = document.querySelector(".gauche_link");
     let element4 = document.querySelector(".arrow-top");
     let element5 = document.querySelector(".arrow-bottom");
     let element6 = document.querySelector("header");
     let element7 = document.querySelector("section");
     element1.classList.toggle("open");
     element2.classList.toggle("short");
-    element3.classList.toggle("arrow-open");
+    element3.classList.toggle("gauche-open");
     element4.classList.toggle("arrow-top-open");
     element5.classList.toggle("arrow-bottom-open");
     element6.classList.toggle("header-open");
     element7.classList.toggle("section-open");
 
-    // Animation de la carte lors de l'ouverture et fermeture du volet
+    // Animation de la carte lors de l'ouverture et fermeture du volet pour éviter un décalage
     if(element1.classList.contains('open') && mymap.getZoom()<7) {
       mymap.flyTo([47,11], mymap.getZoom(), {
         "animate": true,
@@ -94,6 +111,7 @@ function ChangeClass() {
       }, 1000);
     };
 }
+// Fin fonction
 
 // Marqueur Bleu
 let blueMarkIcon = L.icon({
@@ -107,36 +125,49 @@ let greenMarkIcon = L.icon({
   iconSize: [25.5, 50]
 })
 
-// Création des marqueurs
-let Mark1 =  L.marker([48.85, 2.5],{icon: blueMarkIcon});
-let Mark2 =  L.marker([45.764043, 4.835659],{icon: blueMarkIcon});
+// Tableau qui va contenir les marqueurs
+let markers = [];
 
-Mark1.addTo(mymap);
-Mark2.addTo(mymap);
+// Fonction pour créer les marqueurs sur la carte et dans la timeline
+function createMarkers() {
+// Séléction de la timeline
+let e = document.querySelector('.timeline');
+// Itération pour chacune des villes dans le tableau data
+for(i=0; i<data.length;i++) {
+  // Création du marqueur sur la carte
+  let mark = L.marker([data[i].lat, data[i].lng],{icon: blueMarkIcon});
+  mark.addTo(mymap);
+  // Création du marqueur sur la timeline
+  e.insertAdjacentHTML("beforeend",
+  '<a id="mark'+i+'" data-latlng="'+data[i].lat+', '+data[i].lng+'" onclick="onMarker(this.id)"><img class="timeline-marker" src="https://zupimages.net/up/21/16/pcxc.png" alt=""></a>');
+  // Insertion du marqueur créé dans le tableau markers
+  markers.push(mark);
+}
+e.insertAdjacentHTML("beforeend",'<div class="blue-line"></div>');
+}
 
-// Fonction lors du clic sur un marqueur de la timeline
+// Appel de la fonction pour créer les marqueurs
+createMarkers()
+
+// Fonction qui agit lors du clic sur un marqueur dans la timeline
 function onMarker(id) {
+  // Séléction du marqueur cliqué dans la timeline
   let e = document.querySelector("#"+id);
+  // Ainsi que son image
   let child = document.querySelector("#"+id+" img");
-  if(Mark1.getLatLng().lat.toString()+", "+Mark1.getLatLng().lng.toString() == e.getAttribute("data-latlng")) {
-    if(Mark1.getIcon() == blueMarkIcon) {
-      Mark1.setIcon(greenMarkIcon);
-      child.setAttribute("src", "https://zupimages.net/up/21/16/wnre.png");
-    }
-    else {
-      Mark1.setIcon(blueMarkIcon);
-      child.setAttribute("src", "https://zupimages.net/up/21/16/pcxc.png");
-    }
+  // Itération pour trouver quel marqueur de la carte est associé au marqueur de la timeline grâce aux coordonnées
+  for(i=0; i<data.length;i++) {
+    let mark = markers[i];
+    // Si le marqueur de la carte est le même que le marqueur cliqué, alors on le passe en vert, s'il est vert, on le passe en bleu
+    if(mark.getLatLng().lat.toString()+", "+mark.getLatLng().lng.toString() == e.getAttribute("data-latlng")) {
+      if(mark.getIcon() == blueMarkIcon) {
+        mark.setIcon(greenMarkIcon);
+        child.setAttribute("src", "https://zupimages.net/up/21/16/wnre.png");
+      }
+      else {
+        mark.setIcon(blueMarkIcon);
+        child.setAttribute("src", "https://zupimages.net/up/21/16/pcxc.png");
+      }
+    }  
   }
-  if(Mark2.getLatLng().lat.toString()+", "+Mark2.getLatLng().lng.toString() == e.getAttribute("data-latlng")) {
-    if(Mark2.getIcon() == blueMarkIcon) {
-      Mark2.setIcon(greenMarkIcon);
-      child.setAttribute("src", "https://zupimages.net/up/21/16/wnre.png");
-    }
-    else {
-      Mark2.setIcon(blueMarkIcon);
-      child.setAttribute("src", "https://zupimages.net/up/21/16/pcxc.png");
-    }
-  }
-  
 }
