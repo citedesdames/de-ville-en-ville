@@ -39,7 +39,7 @@ let mymap = L.map('mapid');
 mymap.setView([47, 3], 6);
 
 // Ajout du fond de carte
-L.tileLayer('http://c.tile.stamen.com/watercolor/{z}/{x}/{y}.jpg', {
+L.tileLayer('http://{s}.tile.stamen.com/watercolor/{z}/{x}/{y}.jpg', {
     attribution: '',
     maxZoom: 18,
 }).addTo(mymap); 
