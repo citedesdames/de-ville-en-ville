@@ -64,6 +64,22 @@ let data = [
   }
 ]
 
+const demarre = new Promise((resolve, reject) => {
+  Papa.parse('https://docs.google.com/spreadsheets/d/e/2PACX-1vTcjDAvojPXjqX9rpfZ0QMKjbq9mTxfKQZTxroaFBFzvyNMkhtfgx5LngTCn7135uAgGSY_cBgb2_wc/pub?gid=1773657079&single=true&output=csv', {
+      download: true,
+      header: true,
+      complete: function (results) {
+          console.log(results);
+          addStep(results.data);
+      }
+  });
+  setTimeout(() => {
+      resolve()
+  }, 2000)
+})
+
+
+
 // Fonction lors de l'ouverture et la fermeture du volet
 function ChangeClass() {
     // Séléction de tous les éléments qui vont être modifié lors de l'ouverture ou la fermeture du volet
