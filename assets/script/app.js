@@ -44,12 +44,13 @@ L.tileLayer('https://c.tile.stamen.com/watercolor/{z}/{x}/{y}.jpg', {
     maxZoom: 18,
 }).addTo(mymap); 
 
+// https://docs.google.com/spreadsheets/d/e/2PACX-1vTcjDAvojPXjqX9rpfZ0QMKjbq9mTxfKQZTxroaFBFzvyNMkhtfgx5LngTCn7135uAgGSY_cBgb2_wc/pub?gid=1773657079&single=true&output=csv
 // Tableau regroupant les villes et leurs coordonnées
 let data = [
   {
     'name': 'Paris',
-    'lat':'48.8534100',
-    'lng':'2.3488000'
+    'lat':'48.85341',
+    'lng':'2.3488'
   },
   {
     'name':'Lyon',
@@ -58,8 +59,8 @@ let data = [
   },
   {
     'name':'Nîmes',
-    'lat':'43.8333300',
-    'lng':'4.3500000'
+    'lat':'43.83333',
+    'lng':'4.35'
   }
 ]
 
