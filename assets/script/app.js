@@ -69,8 +69,8 @@ const demarre = new Promise((resolve, reject) => {
       download: true,
       header: true,
       complete: function (results) {
-          console.log(results);
-          addStep(results.data);
+          console.log(results.data[0]);
+          createMarkers(results.data);
       }
   });
   setTimeout(() => {
@@ -100,13 +100,13 @@ function ChangeClass() {
 
     // Animation de la carte lors de l'ouverture et fermeture du volet pour éviter un décalage
     if(element1.classList.contains('open') && mymap.getZoom()<7) {
-      mymap.flyTo([47,11], mymap.getZoom(), {
+      mymap.flyTo([47,11], 6, {
         "animate": true,
         "duration": 1
       });
     }
     else {
-      mymap.flyTo([47,3], mymap.getZoom(), {
+      mymap.flyTo([47,3], 6, {
         "animate": true,
         "duration": 1
       });
@@ -137,31 +137,33 @@ function ChangeClass() {
 
 // Marqueur Bleu
 let blueMarkIcon = L.icon({
-  iconUrl: 'https://zupimages.net/up/21/16/pcxc.png',
+  iconUrl: 'https://zupimages.net/up/21/16/bawa.png',
   iconSize: [25.5, 50] 
 }); 
 
 // Marqueur Vert
 let greenMarkIcon = L.icon({
-  iconUrl: 'https://zupimages.net/up/21/16/wnre.png',
-  iconSize: [25.5, 50]
+  iconUrl: 'https://zupimages.net/up/21/16/f5xz.png',
+  iconSize: [30.6, 60]
 })
 
 // Tableau qui va contenir les marqueurs
 let markers = [];
 
 // Fonction pour créer les marqueurs sur la carte et dans la timeline
-function createMarkers() {
+function createMarkers(data) {
 // Séléction de la timeline
+console.log(data);
+console.log(data[0]);
 let e = document.querySelector('.timeline');
 // Itération pour chacune des villes dans le tableau data
-for(i=0; i<data.length;i++) {
+for(i=0; i<3;i++) {
   // Création du marqueur sur la carte
-  let mark = L.marker([data[i].lat, data[i].lng], {icon: blueMarkIcon});
+  let mark = L.marker([data[i].latitude, data[i].longitude], {icon: blueMarkIcon});
   mark.addTo(mymap);
   // Création du marqueur sur la timeline
   e.insertAdjacentHTML("beforeend",
-  '<a id="mark'+i+'" data-latlng="'+data[i].lat+', '+data[i].lng+'" onclick="onMarker(this.id)"><img class="timeline-marker" src="https://zupimages.net/up/21/16/pcxc.png" alt=""></a>');
+  '<a id="mark'+i+'" class="marker" data-latlng="'+data[i].latitude+', '+data[i].longitude+'" onclick="onMarker(this.id)"><img class="timeline-marker" src="https://zupimages.net/up/21/16/pcxc.png" alt=""></a>');
   // Insertion du marqueur créé dans le tableau markers
   markers.push(mark);
 }
@@ -169,7 +171,6 @@ e.insertAdjacentHTML("beforeend",'<div class="blue-line"></div>');
 }
 
 // Appel de la fonction pour créer les marqueurs
-createMarkers()
 
 // Fonction qui agit lors du clic sur un marqueur dans la timeline
 function onMarker(id) {
@@ -178,13 +179,28 @@ function onMarker(id) {
   // Ainsi que son image
   let child = document.querySelector("#"+id+" img");
   // Itération pour trouver quel marqueur de la carte est associé au marqueur de la timeline grâce aux coordonnées
-  for(i=0; i<data.length;i++) {
+  for(i=0; i<3;i++) {
     let mark = markers[i];
     // Si le marqueur de la carte est le même que le marqueur cliqué, alors on le passe en vert, s'il est vert, on le passe en bleu
     if(mark.getLatLng().lat.toString()+", "+mark.getLatLng().lng.toString() == e.getAttribute("data-latlng")) {
       if(mark.getIcon() == blueMarkIcon) {
+        
+        for(a=0; a<3; a++) {
+        let prevmark = markers[a];
+        if(prevmark.getIcon().options.iconUrl == "https://zupimages.net/up/21/16/f5xz.png") {
+          let img = document.querySelectorAll(".timeline-marker");
+          for (b=0;b<3;b++) {
+            img[b].setAttribute("src", "https://zupimages.net/up/21/16/pcxc.png");
+          }
+          prevmark.setIcon(blueMarkIcon);
+          }
+        }
         mark.setIcon(greenMarkIcon);
-        child.setAttribute("src", "https://zupimages.net/up/21/16/wnre.png");
+        child.setAttribute("src", "https://zupimages.net/up/21/16/wnre.png");      
+        mymap.flyTo([mark.getLatLng().lat, mark.getLatLng().lng+.5], 10, {
+          "animate": true,
+          "duration": 1
+        });
       }
       else {
         mark.setIcon(blueMarkIcon);
