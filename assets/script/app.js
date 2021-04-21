@@ -39,7 +39,7 @@ let mymap = L.map('mapid');
 mymap.setView([47, 3], 6);
 
 // Ajout du fond de carte
-L.tileLayer('http://{s}.tile.stamen.com/watercolor/{z}/{x}/{y}.jpg', {
+L.tileLayer('https://c.tile.stamen.com/watercolor/{z}/{x}/{y}.jpg', {
     attribution: '',
     maxZoom: 18,
 }).addTo(mymap); 
@@ -48,13 +48,18 @@ L.tileLayer('http://{s}.tile.stamen.com/watercolor/{z}/{x}/{y}.jpg', {
 let data = [
   {
     'name': 'Paris',
-    'lat':'48.85',
-    'lng':'2.5'
+    'lat':'48.8534100',
+    'lng':'2.3488000'
   },
   {
     'name':'Lyon',
     'lat':'45.764043',
     'lng':'4.835659'
+  },
+  {
+    'name':'Nîmes',
+    'lat':'43.8333300',
+    'lng':'4.3500000'
   }
 ]
 
@@ -135,7 +140,7 @@ let e = document.querySelector('.timeline');
 // Itération pour chacune des villes dans le tableau data
 for(i=0; i<data.length;i++) {
   // Création du marqueur sur la carte
-  let mark = L.marker([data[i].lat, data[i].lng],{icon: blueMarkIcon});
+  let mark = L.marker([data[i].lat, data[i].lng], {icon: blueMarkIcon});
   mark.addTo(mymap);
   // Création du marqueur sur la timeline
   e.insertAdjacentHTML("beforeend",
