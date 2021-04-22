@@ -38,7 +38,6 @@ const demarre = new Promise((resolve, reject) => {
       download: true,
       header: true,
       complete: function (results) {
-          console.log(results.data[0]);
           createMarkers(results.data);
       }
   });
@@ -54,13 +53,15 @@ let markers = [];
 // Marqueur Bleu
 let blueMarkIcon = L.icon({
   iconUrl: 'https://zupimages.net/up/21/16/bawa.png',
-  iconSize: [25.5, 50] 
+  iconSize: [25.5, 50],
+  iconAnchor:   [13, 48]
 }); 
 
 // Marqueur Vert
 let greenMarkIcon = L.icon({
   iconUrl: 'https://zupimages.net/up/21/16/f5xz.png',
-  iconSize: [30.6, 60]
+  iconSize: [30.6, 60],
+  iconAnchor:   [14, 55]
 })
 
 
@@ -104,6 +105,13 @@ function ChangeClass() {
       uncolorMarkers();
     };
 
+    
+    let timeline = document.querySelector(".timeline");
+    let card = document.querySelector(".card");
+    if(timeline.classList.contains("-open")) {
+      timeline.classList.remove("-open");
+      card.classList.remove("-open");
+    }
     // Animation du titre lors de l'ouverture et fermeture du volet
     let el = document.querySelector("header h1");
     if(el.classList.contains('is-hidden')){
@@ -112,17 +120,6 @@ function ChangeClass() {
       else {
         fadeOut(el);
         setTimeout(function(){fadeIn(el)}, 1000);
-    };
-
-    // Animation de la timeline lors de l'ouverture et fermeture du volet
-    let timeline = document.querySelector(".timeline");
-    if(timeline.classList.contains("timeline-open")) {
-      timeline.classList.remove("timeline-open");
-    }
-    else {
-      setTimeout(function() {
-        timeline.classList.add("timeline-open");
-      }, 1000);
     };
 }
 
@@ -139,30 +136,34 @@ function ChangeClassFromMark(e) {
   element3.classList.add("gauche-open");
   element4.classList.add("arrow-top-open");
   element5.classList.add("arrow-bottom-open");
-  element6.classList.add("header-open");
   element7.classList.add("section-open");
 
   // Animation du titre lors de l'ouverture et fermeture du volet
   let el = document.querySelector("header h1");
-
-  if(e.length == 3) {
+  console.log(e);
+  if(e.length == 3 && !element6.classList.contains("header-open")) {
   fadeOut(el);
   setTimeout(function(){fadeIn(el)}, 1000);
   }
 
+  element6.classList.add("header-open");
 
   // Animation de la timeline lors de l'ouverture et fermeture du volet
-  let timeline = document.querySelector(".timeline");
-
-    setTimeout(function() {
-      timeline.classList.add("timeline-open");
-    }, 1000);
-
+    // Animation de la timeline lors de l'ouverture et fermeture du volet
+    let timeline = document.querySelector(".timeline");
+    let card = document.querySelector(".card");
+      setTimeout(function() {
+        timeline.classList.add("-open");
+        card.classList.add("-open");
+      }, 1000);
 }
+
 // Fonction pour créer les marqueurs sur la carte et dans la timeline
 function createMarkers(data) {
 // Sélection de la timeline
 let e = document.querySelector('.timeline');
+
+var latlngs = [];
 // Itération pour chacune des villes dans le tableau data
 for(i=0; i<3;i++) {
   // Création du marqueur sur la carte
@@ -173,7 +174,10 @@ for(i=0; i<3;i++) {
   '<a id="mark'+i+'" class="marker" data-latlng="'+data[i].latitude+', '+data[i].longitude+'" onclick="onMarkerTimeline(this.id)"><img class="timeline-marker" src="https://zupimages.net/up/21/16/pcxc.png" alt=""></a>');
   // Insertion du marqueur créé dans le tableau markers
   markers.push(mark);
+  latlngs.push([data[i].latitude, data[i].longitude]);
 }
+var polyline = L.polyline(latlngs, {color: '#004262'});
+polyline.addTo(mymap);
 e.insertAdjacentHTML("beforeend",'<div class="blue-line"></div>');
 }
 
