@@ -94,8 +94,19 @@ main {
 }
 
 section {
-    min-height: 100vh;
+    height: 100vh;
     width: 70%;
+    overflow-y: scroll;
+    /* Hide scrollbar for IE, Edge and Firefox */
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+section::-webkit-scrollbar {
+    display: none;
 }
 
 .section-open {
@@ -166,7 +177,7 @@ header h1 {
     margin: 5% auto;
     padding: 2%;
     border-radius: 50px;
-    min-height: 600px;
+    min-height: 1900px;
     background-color: white;
 }
 
