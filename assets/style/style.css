@@ -178,14 +178,31 @@ header h1 {
 }
 
 .card {
-    height: 1000px;
     display: none;
     width: 80%;
     margin: 5% auto;
     padding: 2%;
     border-radius: 50px;
-    min-height: 1900px;
+    min-height: 800px;
     background-color: white;
+}
+
+.buttons {
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    margin: 5% auto;
+}
+
+.etape-prev, .etape-suiv {
+    background-color: #fff;
+    padding: 3% 4%;
+    color: #004262;
+    font-size: 1.5rem;
+    border-radius: 50px;
+    margin: 0 5%;
+    text-decoration: none;
+    cursor: pointer;
 }
 
 .-open {

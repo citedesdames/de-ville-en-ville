@@ -173,7 +173,7 @@ function createMarkers(data) {
     // Création du marqueur sur la timeline
     e.insertAdjacentHTML("beforeend",
     '<a id="mark'+i+'" class="marker" data-latlng="'+data[i].latitude+', '+data[i].longitude+'" onclick="onMarkerTimeline(this.id)"><img class="timeline-marker" src="https://zupimages.net/up/21/16/pcxc.png" alt=""></a>');
-    card.insertAdjacentHTML("beforeend", '<div id="card'+i+'"class="card">'+data[i].lieu+'</div>')
+    card.insertAdjacentHTML("afterbegin", '<div id="card'+i+'"class="card">'+data[i].lieu+'</div>')
     // Insertion du marqueur créé dans le tableau markers
     markers.push(mark);
     latlngs.push([data[i].latitude, data[i].longitude]);
@@ -225,7 +225,6 @@ function onMarkerMap(mark) {
       img.setAttribute("src", "https://zupimages.net/up/21/16/wnre.png");
       marker.setIcon(greenMarkIcon);
       ChangeClassFromMark(tab);
-      console.log(card);
       card.classList.add("-open");
       if(document.querySelector(".main_container").classList.contains('open')) {
         mymap.flyTo([marker.getLatLng().lat, marker.getLatLng().lng+.5], 10, {
@@ -242,6 +241,11 @@ function onMarkerMap(mark) {
     }
   }
 }
+
+function changeStep() {
+
+}
+
 
 // Fonction pour retirer les couleurs de tous les marqueurs (timeline et carte)
 function uncolorMarkers() {
