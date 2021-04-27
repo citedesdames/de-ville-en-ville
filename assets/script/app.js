@@ -7,8 +7,8 @@ let mymap = L.map('mapid');
 
 mymap.setView([47, 3], 6);
 
-// Ajout du fond de carte
-L.tileLayer('https://c.tile.stamen.com/watercolor/{z}/{x}/{y}.jpg', {
+// Ajout du fond de carte https://c.tile.stamen.com/watercolor/{z}/{x}/{y}.jpg 
+L.tileLayer('https://c.tile.stamen.com/terrain/{z}/{x}/{y}.png', {
     attribution: '',
     maxZoom: 18,
 }).addTo(mymap); 
@@ -64,7 +64,6 @@ let greenMarkIcon = L.icon({
   iconAnchor:   [14, 55]
 })
 
-
 /*--------------------- Fonctions ---------------------*/
 /*--------------------- Fonctions ---------------------*/
 /*--------------------- Fonctions ---------------------*/
@@ -107,10 +106,12 @@ function ChangeClass() {
 
     
     let timeline = document.querySelector(".timeline");
+    let overflowcard = document.querySelector(".overflow-cards");
     let card = document.querySelector(".card");
     if(timeline.classList.contains("-open")) {
       timeline.classList.remove("-open");
       card.classList.remove("-open");
+      overflowcard.classList.remove("-open");
     }
     // Animation du titre lors de l'ouverture et fermeture du volet
     let el = document.querySelector("header h1");
@@ -151,34 +152,35 @@ function ChangeClassFromMark(e) {
   // Animation de la timeline lors de l'ouverture et fermeture du volet
     // Animation de la timeline lors de l'ouverture et fermeture du volet
     let timeline = document.querySelector(".timeline");
-    let card = document.querySelector(".card");
+    let overflowcard = document.querySelector(".overflow-cards");
       setTimeout(function() {
         timeline.classList.add("-open");
-        card.classList.add("-open");
+        overflowcard.classList.add("-open");
       }, 1000);
 }
 
 // Fonction pour créer les marqueurs sur la carte et dans la timeline
 function createMarkers(data) {
-// Sélection de la timeline
-let e = document.querySelector('.timeline');
-
-var latlngs = [];
-// Itération pour chacune des villes dans le tableau data
-for(i=0; i<3;i++) {
-  // Création du marqueur sur la carte
-  let mark = L.marker([data[i].latitude, data[i].longitude], {icon: blueMarkIcon, riseOnHover: true}).on("click", onMarkerMap);
-  mark.addTo(mymap);
-  // Création du marqueur sur la timeline
-  e.insertAdjacentHTML("beforeend",
-  '<a id="mark'+i+'" class="marker" data-latlng="'+data[i].latitude+', '+data[i].longitude+'" onclick="onMarkerTimeline(this.id)"><img class="timeline-marker" src="https://zupimages.net/up/21/16/pcxc.png" alt=""></a>');
-  // Insertion du marqueur créé dans le tableau markers
-  markers.push(mark);
-  latlngs.push([data[i].latitude, data[i].longitude]);
-}
-var polyline = L.polyline(latlngs, {color: '#004262'});
-polyline.addTo(mymap);
-e.insertAdjacentHTML("beforeend",'<div class="blue-line"></div>');
+  // Sélection de la timeline
+  let e = document.querySelector('.timeline');
+  let card = document.querySelector(".overflow-cards");
+  var latlngs = [];
+  // Itération pour chacune des villes dans le tableau data
+  for(i=0; i<3;i++) {
+    // Création du marqueur sur la carte
+    let mark = L.marker([data[i].latitude, data[i].longitude], {icon: blueMarkIcon, riseOnHover: true}).on("click", onMarkerMap);
+    mark.addTo(mymap);
+    // Création du marqueur sur la timeline
+    e.insertAdjacentHTML("beforeend",
+    '<a id="mark'+i+'" class="marker" data-latlng="'+data[i].latitude+', '+data[i].longitude+'" onclick="onMarkerTimeline(this.id)"><img class="timeline-marker" src="https://zupimages.net/up/21/16/pcxc.png" alt=""></a>');
+    card.insertAdjacentHTML("beforeend", '<div id="card'+i+'"class="card">'+data[i].lieu+'</div>')
+    // Insertion du marqueur créé dans le tableau markers
+    markers.push(mark);
+    latlngs.push([data[i].latitude, data[i].longitude]);
+  }
+  var polyline = L.polyline(latlngs, {color: '#004262'});
+  polyline.addTo(mymap);
+  e.insertAdjacentHTML("beforeend",'<div class="blue-line"></div>');
 }
 
 // Fonction qui agit lors du clic sur un marqueur dans la timeline
@@ -190,6 +192,7 @@ function onMarkerTimeline(id) {
   // Itération pour trouver quel marqueur de la carte est associé au marqueur de la timeline grâce aux coordonnées
   for(i=0; i<3;i++) {
     let mark = markers[i];
+    let card = document.querySelector("#card"+i);
     // Si le marqueur de la carte est le même que le marqueur cliqué, alors on le passe en vert, s'il est vert, on le passe en bleu
     if(mark.getLatLng().lat.toString()+", "+mark.getLatLng().lng.toString() == e.getAttribute("data-latlng")) {
       if(mark.getIcon() == blueMarkIcon) {
@@ -200,6 +203,7 @@ function onMarkerTimeline(id) {
           "animate": true,
           "duration": 1.5
         });
+        card.classList.add("-open");
       }
       else {
         mark.setIcon(blueMarkIcon);
@@ -217,9 +221,12 @@ function onMarkerMap(mark) {
     if(marker.getLatLng().lat.toString()+", "+marker.getLatLng().lng.toString() == mark.latlng.lat.toString()+", "+mark.latlng.lng.toString()) {
       let tab = uncolorMarkers();
       let img = document.querySelector("#mark"+i+" img");
+      let card = document.querySelector("#card"+i);
       img.setAttribute("src", "https://zupimages.net/up/21/16/wnre.png");
       marker.setIcon(greenMarkIcon);
       ChangeClassFromMark(tab);
+      console.log(card);
+      card.classList.add("-open");
       if(document.querySelector(".main_container").classList.contains('open')) {
         mymap.flyTo([marker.getLatLng().lat, marker.getLatLng().lng+.5], 10, {
           "animate": true,
@@ -241,10 +248,13 @@ function uncolorMarkers() {
   let tab = [];
   for(a=0; a<3; a++) {
     let prevmark = markers[a];
+    let prevcard = document.querySelectorAll(".card");
     if(prevmark.getIcon().options.iconUrl == "https://zupimages.net/up/21/16/f5xz.png") {
       let img = document.querySelectorAll(".timeline-marker");
       for (b=0;b<3;b++) {
         img[b].setAttribute("src", "https://zupimages.net/up/21/16/pcxc.png");
+        console.log(prevcard[b]);
+        prevcard[b].classList.remove("-open");
       }
       prevmark.setIcon(blueMarkIcon);
     }
