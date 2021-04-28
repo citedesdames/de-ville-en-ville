@@ -79,7 +79,6 @@ function ChangeClass() {
     let element5 = document.querySelector(".arrow-bottom");
     let element6 = document.querySelector("header");
     let element7 = document.querySelector("section");
-    console.log(element1); 
     element1.classList.toggle("open");
     element2.classList.toggle("short");
     element3.classList.toggle("gauche-open");
@@ -141,7 +140,6 @@ function ChangeClassFromMark(e) {
 
   // Animation du titre lors de l'ouverture et fermeture du volet
   let el = document.querySelector("header h1");
-  console.log(e);
   if(e.length == 3 && !element6.classList.contains("header-open")) {
   fadeOut(el);
   setTimeout(function(){fadeIn(el)}, 1000);
@@ -215,7 +213,6 @@ function onMarkerTimeline(id) {
 
 
 function onMarkerMap(mark) {
-  console.log(mark);
   for(i=0;i<3;i++) {
     let marker = markers[i];
     if(marker.getLatLng().lat.toString()+", "+marker.getLatLng().lng.toString() == mark.latlng.lat.toString()+", "+mark.latlng.lng.toString()) {
@@ -242,8 +239,55 @@ function onMarkerMap(mark) {
   }
 }
 
-function changeStep() {
-
+function changeStep(e) {
+  let card = document.querySelector(".overflow-cards .-open");
+  let scrollitem = document.querySelector(".overflow-cards");
+  if(e.getAttribute("class")=="etape-suiv") {
+    for(i=0;i<3;i++) {
+      if(card.getAttribute("id") == "card"+i) {
+        if(i+1 < 3) {
+          uncolorMarkers();
+          let newcard = document.querySelector("#card"+(i+1));
+          newcard.classList.add("-open");
+          let child = document.querySelector("#mark"+(i+1)+" img");
+          let mark = markers[i+1];
+          mark.setIcon(greenMarkIcon);
+          child.setAttribute("src", "https://zupimages.net/up/21/16/wnre.png");      
+          mymap.flyTo([mark.getLatLng().lat, mark.getLatLng().lng+.5], 10, {
+            "animate": true,
+            "duration": 1.5
+          });
+          scrollitem.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+          });
+        }
+      }
+    }
+  }
+  else {
+    for(i=0;i<3;i++) {
+      if(card.getAttribute("id") == "card"+i) {
+        if(i-1>-1) {
+          uncolorMarkers();
+          let newcard = document.querySelector("#card"+(i-1));
+          newcard.classList.add("-open");
+          let child = document.querySelector("#mark"+(i-1)+" img");
+          let mark = markers[i-1];
+          mark.setIcon(greenMarkIcon);
+          child.setAttribute("src", "https://zupimages.net/up/21/16/wnre.png");      
+          mymap.flyTo([mark.getLatLng().lat, mark.getLatLng().lng+.5], 10, {
+            "animate": true,
+            "duration": 1.5
+          });
+          scrollitem.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+          });
+        }
+      }
+    }
+  }
 }
 
 
@@ -257,7 +301,6 @@ function uncolorMarkers() {
       let img = document.querySelectorAll(".timeline-marker");
       for (b=0;b<3;b++) {
         img[b].setAttribute("src", "https://zupimages.net/up/21/16/pcxc.png");
-        console.log(prevcard[b]);
         prevcard[b].classList.remove("-open");
       }
       prevmark.setIcon(blueMarkIcon);

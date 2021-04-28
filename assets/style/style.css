@@ -181,6 +181,7 @@ header h1 {
     display: none;
     width: 80%;
     margin: 5% auto;
+    margin-top: 0;
     padding: 2%;
     border-radius: 50px;
     min-height: 800px;
