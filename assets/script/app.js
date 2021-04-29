@@ -11,7 +11,8 @@ mymap.setView([47, 3], 6);
 L.tileLayer('https://c.tile.stamen.com/terrain/{z}/{x}/{y}.png', {
     attribution: '',
     maxZoom: 18,
-}).addTo(mymap); 
+}).addTo(mymap);
+
 
 // Tableau de test regroupant les villes et leurs coordonnées
 /* let data = [
@@ -168,10 +169,11 @@ function createMarkers(data) {
     // Création du marqueur sur la carte
     let mark = L.marker([data[i].latitude, data[i].longitude], {icon: blueMarkIcon, riseOnHover: true}).on("click", onMarkerMap);
     mark.addTo(mymap);
+    mark.bindPopup('<div class="popup-container"><div class="vignette">'+data[i].lieu+'</div><div><p class="date">'+data[i].date+'</p><p id="popup'+i+'" class="more" data-latlng="'+data[i].latitude+', '+data[i].longitude+'" onclick="onPopup(this)" >En savoir plus</p></div></div>', {offset: new L.Point(0, -45)}); //onclick="onPopup(this.id)" 
     // Création du marqueur sur la timeline
     e.insertAdjacentHTML("beforeend",
     '<a id="mark'+i+'" class="marker" data-latlng="'+data[i].latitude+', '+data[i].longitude+'" onclick="onMarkerTimeline(this.id)"><img class="timeline-marker" src="https://zupimages.net/up/21/16/pcxc.png" alt=""></a>');
-    card.insertAdjacentHTML("afterbegin", '<div id="card'+i+'"class="card">'+data[i].lieu+'</div>')
+    card.insertAdjacentHTML("afterbegin", '<div id="card'+i+'"class="card">'+data[i].lieu+'</div>');
     // Insertion du marqueur créé dans le tableau markers
     markers.push(mark);
     latlngs.push([data[i].latitude, data[i].longitude]);
@@ -202,6 +204,11 @@ function onMarkerTimeline(id) {
           "duration": 1.5
         });
         card.classList.add("-open");
+        let scrollitem = document.querySelector(".overflow-cards");
+        scrollitem.scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        });
       }
       else {
         mark.setIcon(blueMarkIcon);
@@ -211,14 +218,41 @@ function onMarkerTimeline(id) {
   }
 }
 
-
+// Fonction qui agit lors du clic sur un marqueur dans la carte /!\ A CHANGER /!\
 function onMarkerMap(mark) {
   for(i=0;i<3;i++) {
     let marker = markers[i];
     if(marker.getLatLng().lat.toString()+", "+marker.getLatLng().lng.toString() == mark.latlng.lat.toString()+", "+mark.latlng.lng.toString()) {
+
+      let scrollitem = document.querySelector(".overflow-cards");
+      if(document.querySelector(".main_container").classList.contains('open')) {
+        mymap.flyTo([marker.getLatLng().lat, marker.getLatLng().lng+.5], 10, {
+          "animate": true,
+          "duration": 1.5
+        });
+      }
+      else {
+        mymap.flyTo([marker.getLatLng().lat, marker.getLatLng().lng], 10, {
+          "animate": true,
+          "duration": 1.5
+        });
+      }
+      scrollitem.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    }
+  }
+}
+
+function onPopup(e) {
+  for(i=0;i<3;i++){
+    let marker = markers[i];
+    if(marker.getLatLng().lat.toString()+", "+marker.getLatLng().lng.toString() == e.getAttribute("data-latlng")) {
       let tab = uncolorMarkers();
       let img = document.querySelector("#mark"+i+" img");
       let card = document.querySelector("#card"+i);
+      let scrollitem = document.querySelector(".overflow-cards");
       img.setAttribute("src", "https://zupimages.net/up/21/16/wnre.png");
       marker.setIcon(greenMarkIcon);
       ChangeClassFromMark(tab);
@@ -235,13 +269,19 @@ function onMarkerMap(mark) {
           "duration": 1.5
         });
       }
+      scrollitem.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
     }
-  }
+  }  
 }
 
+// Fonction lors du clic sur les boutons étape suivante ou étape précédente
 function changeStep(e) {
   let card = document.querySelector(".overflow-cards .-open");
   let scrollitem = document.querySelector(".overflow-cards");
+  // Clic sur étape suivante
   if(e.getAttribute("class")=="etape-suiv") {
     for(i=0;i<3;i++) {
       if(card.getAttribute("id") == "card"+i) {
@@ -265,6 +305,7 @@ function changeStep(e) {
       }
     }
   }
+  // Clic sur étape précédente
   else {
     for(i=0;i<3;i++) {
       if(card.getAttribute("id") == "card"+i) {
