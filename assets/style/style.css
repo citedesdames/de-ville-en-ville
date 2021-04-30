@@ -209,3 +209,42 @@ header h1 {
 .-open {
     display: block;
 }
+
+.vignette {
+    background-color: #004262;
+    color: #FFF;
+    margin: 0 auto;
+    height: 80px;
+    border-radius: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-align: center;
+    padding: 10%;
+}
+
+.popup-container {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+.date {
+    margin: 10% 0 5% 0 !important;
+    font-size: 1rem;
+    text-align: center;
+}
+.more {
+    margin: 5% 0 10% 0 !important;
+    color: gray;
+    text-decoration: underline;
+    cursor: pointer;
+}
+.leaflet-popup-content-wrapper {
+    padding: 0;
+}
+.leaflet-popup-content {
+    margin: 0;
+    width: 150px;
+}
