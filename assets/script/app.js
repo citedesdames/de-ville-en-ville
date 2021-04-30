@@ -381,6 +381,7 @@ function changeStep(e) {
         else {
           uncolorMarkers(); 
           document.querySelector(".introduction").classList.add("-open");
+          document.querySelector(".card-intro").classList.add("-open");
           document.querySelector(".timeline").classList.remove("-open");
           document.querySelector(".overflow-cards").classList.remove("-open");
           for(i=0;i<markers.length;i++) {
