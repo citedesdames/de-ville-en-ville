@@ -80,6 +80,8 @@ function ChangeClass() {
     let element5 = document.querySelector(".arrow-bottom");
     let element6 = document.querySelector("header");
     let element7 = document.querySelector("section");
+    let intro1 = document.querySelector(".introduction");
+    let intro2 = document.getElementById("card");
     element1.classList.toggle("open");
     element2.classList.toggle("short");
     element3.classList.toggle("gauche-open");
@@ -87,6 +89,8 @@ function ChangeClass() {
     element5.classList.toggle("arrow-bottom-open");
     element6.classList.toggle("header-open");
     element7.classList.toggle("section-open");
+    intro1.classList.toggle("-open");
+    intro2.classList.toggle("-open");
 
 
     // Animation de la carte lors de l'ouverture et fermeture du volet pour éviter un décalage
@@ -112,6 +116,8 @@ function ChangeClass() {
       timeline.classList.remove("-open");
       card.classList.remove("-open");
       overflowcard.classList.remove("-open");
+      intro1.classList.remove("-open");
+      intro2.classList.remove("-open");
     };
     // Animation du titre lors de l'ouverture et fermeture du volet
     let el = document.querySelector("header h1");
@@ -162,13 +168,11 @@ function createMarkers(data) {
   // Sélection de la timeline
   let e = document.querySelector('.timeline');
   let card = document.querySelector(".overflow-cards");
+  let intro = document.querySelector(".introduction");
   var latlngs = [];
   // Itération pour chacune des villes dans le tableau data
   for(i=0; i<data.length;i++) {
     if(data[i].latitude !== '' && data[i].longitude !== '') {
-    console.log("Marqueur : "+i);
-    console.log(data[i].latitude);
-    console.log(data[i].longitude);
     // Création du marqueur sur la carte
     let mark = L.marker([data[i].latitude, data[i].longitude], {icon: blueMarkIcon, riseOnHover: true}).on("click", onMarkerMap);
     mark.addTo(mymap);
@@ -177,12 +181,15 @@ function createMarkers(data) {
     // Création du marqueur sur la timeline
     e.insertAdjacentHTML("beforeend",
     '<a id="mark'+i+'" class="marker" data-latlng="'+data[i].latitude+', '+data[i].longitude+'" onclick="onMarkerTimeline(this.id)"><img class="timeline-marker" src="https://zupimages.net/up/21/16/pcxc.png" alt=""></a>');
-    card.insertAdjacentHTML("afterbegin", '<div id="card'+i+'"class="card">'+data[i].lieu+'</div>');
+    card.insertAdjacentHTML("beforeend", '<div id="card'+i+'"class="card">'+data[i].lieu+'</div>');
     // Insertion du marqueur créé dans le tableau markers
     markers.push(mark);
     latlngs.push([data[i].latitude, data[i].longitude]);
     }
   };
+  intro.insertAdjacentHTML("beforeend", '<div id="card" class="card-intro"><p>Présentation du Grand tour de France de Charles IX</p></div>')
+  intro.insertAdjacentHTML("beforeend", '<div class="button-start"><a class="etape-start -open" onclick="changeStep(this)">Commencer</a></div>')
+  card.insertAdjacentHTML("beforeend", '<div class="buttons"><a class="etape-prev -open" onclick="changeStep(this)">Étape précédente</a><a class="etape-suiv -open" onclick="changeStep(this)">Étape suivante</a></div>');
   // Création des lignes qui relient les marqueurs
   let polyline = L.polyline(latlngs, {color: '#004262'});
   polyline.addTo(mymap);
@@ -221,6 +228,18 @@ function onMarkerTimeline(id) {
         mark.setIcon(blueMarkIcon);
         child.setAttribute("src", "https://zupimages.net/up/21/16/pcxc.png");
       };
+      if(i == markers.length - 1) {
+        document.querySelector(".etape-suiv").classList.remove("-open");
+      }
+      else {
+        document.querySelector(".etape-suiv").classList.add("-open");
+      }
+      if(i == 0) {
+        document.querySelector(".etape-prev").textContent = "Retour";
+      } 
+      else {
+        document.querySelector(".etape-prev").textContent = "Étape précédente";
+      }
     };  
   };
 };
@@ -277,6 +296,18 @@ function onPopup(e) {
         top: 0,
         behavior: 'smooth'
       });
+      if(i == markers.length - 1) {
+        document.querySelector(".etape-suiv").classList.remove("-open");
+      }
+      else {
+        document.querySelector(".etape-suiv").classList.add("-open");
+      }
+      if(i == 0) {
+        document.querySelector(".etape-prev").textContent = "Retour";
+      } 
+      else {
+        document.querySelector(".etape-prev").textContent = "Étape précédente";
+      }
     };
   };  
 };
@@ -286,7 +317,7 @@ function changeStep(e) {
   let card = document.querySelector(".overflow-cards .-open");
   let scrollitem = document.querySelector(".overflow-cards");
   // Clic sur étape suivante
-  if(e.getAttribute("class")=="etape-suiv") {
+  if(e.getAttribute("class")=="etape-suiv -open" || e.getAttribute("class") == "etape-suiv") {
     for(i=0;i<markers.length;i++) {
     let marker = markers[i];
     marker.closePopup();
@@ -307,12 +338,19 @@ function changeStep(e) {
             top: 0,
             behavior: 'smooth'
           });
+           if(i+1 == markers.length - 1) {
+            document.querySelector(".etape-suiv").classList.remove("-open");
+          }
+          if(i+1 == 1) {
+            document.querySelector(".etape-prev").textContent = "Étape précédente";
+          } 
         };
       };
     };
   }
   // Clic sur étape précédente
   else {
+    if(e.getAttribute("class")=="etape-prev -open" || e.getAttribute("class") == "etape-prev") {
     for(i=0;i<markers.length;i++) {
     let marker = markers[i];
     marker.closePopup();
@@ -333,9 +371,58 @@ function changeStep(e) {
             top: 0,
             behavior: 'smooth'
           });
-        };
-      };
-    };
+          if(i-1 == markers.length - 2) {
+            document.querySelector(".etape-suiv").classList.add("-open");
+          }
+          if(i-1 == 0) {
+            document.querySelector(".etape-prev").textContent = "Retour";
+          }
+        }
+        else {
+          uncolorMarkers(); 
+          document.querySelector(".introduction").classList.add("-open");
+          document.querySelector(".timeline").classList.remove("-open");
+          document.querySelector(".overflow-cards").classList.remove("-open");
+          for(i=0;i<markers.length;i++) {
+            let marker = markers[i];
+            marker.closePopup();
+          }
+          document.querySelector(".introduction").scrollTo({
+            top: 0,
+            behavior: 'smooth'
+          });
+        }
+      }
+    }
+    }
+    if(e.getAttribute("class")=="etape-start -open" || e.getAttribute("class") == "etape-start") {
+      document.querySelector(".introduction").classList.remove("-open");
+      document.querySelector(".timeline").classList.add("-open");
+      let scrollitem = document.querySelector(".overflow-cards");
+      scrollitem.classList.add("-open");
+      for(i=0;i<markers.length;i++) {
+      let marker = markers[i];
+      marker.closePopup();
+      }
+      uncolorMarkers();
+      let newcard = document.querySelector("#card0");
+      newcard.classList.add("-open");
+      let child = document.querySelector("#mark0 img");
+      let mark = markers[0];
+      mark.setIcon(greenMarkIcon);
+      child.setAttribute("src", "https://zupimages.net/up/21/16/wnre.png");      
+      mymap.flyTo([mark.getLatLng().lat, mark.getLatLng().lng+.5], 10, {
+        "animate": true,
+        "duration": 1
+      });
+      scrollitem.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+      document.querySelector(".etape-prev").textContent = "Retour";
+    } 
+        
+    
   };
 };
 
@@ -349,6 +436,7 @@ function uncolorMarkers() {
     if(prevmark.getIcon().options.iconUrl == "https://zupimages.net/up/21/16/f5xz.png") {
       let img = document.querySelectorAll(".timeline-marker");
       for (b=0;b<markers.length;b++) {
+        console.log(b);
         img[b].setAttribute("src", "https://zupimages.net/up/21/16/pcxc.png");
         prevcard[b].classList.remove("-open");
       };

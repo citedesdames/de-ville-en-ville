@@ -177,7 +177,7 @@ header h1 {
     display: none;
 }
 
-.card {
+.card, .card-intro {
     display: none;
     width: 80%;
     margin: 5% auto;
@@ -188,14 +188,15 @@ header h1 {
     background-color: white;
 }
 
-.buttons {
+.buttons, .button-start {
     display:flex;
     justify-content: center;
     align-items: center;
     margin: 5% auto;
 }
 
-.etape-prev, .etape-suiv {
+.etape-prev, .etape-suiv, .etape-start {
+    display: none;
     background-color: #fff;
     padding: 3% 4%;
     color: #004262;
@@ -204,6 +205,23 @@ header h1 {
     margin: 0 5%;
     text-decoration: none;
     cursor: pointer;
+}
+
+.introduction {
+    display: none;
+    height: 813px;
+    margin-top: 5%;
+    overflow-y: scroll;
+    /* Hide scrollbar for IE, Edge and Firefox */
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.introduction::-webkit-scrollbar {
+    display: none;
 }
 
 .-open {
