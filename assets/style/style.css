@@ -139,31 +139,52 @@ header h1 {
 }
 
 .timeline {
-    display: none;
-    background-color: white;
-    width: 80%;
-    margin: 5% auto;
+    display: flex;
+    background-color: white;/* 
+    width: 1500px; */
     padding: 2%;
     border-radius: 50px;
+    width: 693px;
+    overflow-x: scroll;
+    margin: 0 auto;
+    /* Hide scrollbar for IE, Edge and Firefox */
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
 }
-
+/* Hide scrollbar for Chrome, Safari and Opera */
+.timeline::-webkit-scrollbar {
+    display: none;
+}
+.overflow-tl {
+    display: none;
+    margin: 5% auto;
+    width: 80%;
+    position: relative;
+}
+.marker {
+    margin-left: 10px;
+    margin-right: 40px;
+    display: block;
+}
 .timeline-marker {
     cursor: pointer;
     width: 25px;
-    margin-left: 1%;
-    margin-right: 5%;
 }
 
 .blue-line {
     background-color: #24395D;
     height: 2px;
     width: 95%;
-    margin: auto;
+    left: 35px;
+    position: absolute;
+    bottom: 12px;
 }
 
 .overflow-cards {
     display: none;
-    height: 675px;
+    height: 685px;
     overflow-y: scroll;
     /* Hide scrollbar for IE, Edge and Firefox */
     -ms-overflow-style: none;

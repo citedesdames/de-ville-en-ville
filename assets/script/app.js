@@ -34,11 +34,13 @@ L.tileLayer('https://stamen-tiles.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.png', 
 ] */
 
 // Appel du fichier csv qui contient la table étape 
+// https://docs.google.com/spreadsheets/d/e/2PACX-1vTcjDAvojPXjqX9rpfZ0QMKjbq9mTxfKQZTxroaFBFzvyNMkhtfgx5LngTCn7135uAgGSY_cBgb2_wc/pub?&output=csv
 const demarre = new Promise((resolve, reject) => {
   Papa.parse('https://docs.google.com/spreadsheets/d/e/2PACX-1vTcjDAvojPXjqX9rpfZ0QMKjbq9mTxfKQZTxroaFBFzvyNMkhtfgx5LngTCn7135uAgGSY_cBgb2_wc/pub?gid=1773657079&single=true&output=csv', {
       download: true,
       header: true,
       complete: function (results) {
+        console.log(results);
           createMarkers(results.data);
       }
   });
@@ -54,8 +56,8 @@ let markers = [];
 // Marqueur Bleu
 let blueMarkIcon = L.icon({
   iconUrl: 'https://zupimages.net/up/21/16/bawa.png',
-  iconSize: [25.5, 50],
-  iconAnchor:   [13, 48]
+  iconSize: [20.5, 40],
+  iconAnchor:   [10, 40]
 }); 
 
 // Marqueur Vert
@@ -109,7 +111,7 @@ function ChangeClass() {
     };
 
     
-    let timeline = document.querySelector(".timeline");
+    let timeline = document.querySelector(".overflow-tl");
     let overflowcard = document.querySelector(".overflow-cards");
     let card = document.querySelector(".card");
     if(timeline.classList.contains("-open")) {
@@ -155,7 +157,7 @@ function ChangeClassFromMark(e) {
   element6.classList.add("header-open");
 
   // Animation de la timeline lors de l'ouverture et fermeture du volet
-    let timeline = document.querySelector(".timeline");
+    let timeline = document.querySelector(".overflow-tl");
     let overflowcard = document.querySelector(".overflow-cards");
       setTimeout(function() {
         timeline.classList.add("-open");
@@ -193,7 +195,7 @@ function createMarkers(data) {
   // Création des lignes qui relient les marqueurs
   let polyline = L.polyline(latlngs, {color: '#004262'});
   polyline.addTo(mymap);
-  e.insertAdjacentHTML("beforeend",'<div class="blue-line"></div>');
+  document.querySelector(".overflow-tl").insertAdjacentHTML("beforeend",'<div class="blue-line"></div>');
 };
 
 // Fonction qui agit lors du clic sur un marqueur dans la timeline
@@ -382,7 +384,7 @@ function changeStep(e) {
           uncolorMarkers(); 
           document.querySelector(".introduction").classList.add("-open");
           document.querySelector(".card-intro").classList.add("-open");
-          document.querySelector(".timeline").classList.remove("-open");
+          document.querySelector(".overflow-tl").classList.remove("-open");
           document.querySelector(".overflow-cards").classList.remove("-open");
           for(i=0;i<markers.length;i++) {
             let marker = markers[i];
@@ -398,7 +400,7 @@ function changeStep(e) {
     }
     if(e.getAttribute("class")=="etape-start -open" || e.getAttribute("class") == "etape-start") {
       document.querySelector(".introduction").classList.remove("-open");
-      document.querySelector(".timeline").classList.add("-open");
+      document.querySelector(".overflow-tl").classList.add("-open");
       let scrollitem = document.querySelector(".overflow-cards");
       scrollitem.classList.add("-open");
       for(i=0;i<markers.length;i++) {
@@ -437,7 +439,6 @@ function uncolorMarkers() {
     if(prevmark.getIcon().options.iconUrl == "https://zupimages.net/up/21/16/f5xz.png") {
       let img = document.querySelectorAll(".timeline-marker");
       for (b=0;b<markers.length;b++) {
-        console.log(b);
         img[b].setAttribute("src", "https://zupimages.net/up/21/16/pcxc.png");
         prevcard[b].classList.remove("-open");
       };
