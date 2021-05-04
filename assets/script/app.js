@@ -36,19 +36,55 @@ L.tileLayer('https://stamen-tiles.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.png', 
 // Appel du fichier csv qui contient la table étape
  
 // https://docs.google.com/spreadsheets/d/e/2PACX-1vTcjDAvojPXjqX9rpfZ0QMKjbq9mTxfKQZTxroaFBFzvyNMkhtfgx5LngTCn7135uAgGSY_cBgb2_wc/pub?&output=csv
-const demarre = new Promise((resolve, reject) => {
-  Papa.parse('https://docs.google.com/spreadsheets/d/e/2PACX-1vTcjDAvojPXjqX9rpfZ0QMKjbq9mTxfKQZTxroaFBFzvyNMkhtfgx5LngTCn7135uAgGSY_cBgb2_wc/pub?gid=1773657079&single=true&output=csv', {
+/* let file = ["https://docs.google.com/spreadsheets/d/e/2PACX-1vTcjDAvojPXjqX9rpfZ0QMKjbq9mTxfKQZTxroaFBFzvyNMkhtfgx5LngTCn7135uAgGSY_cBgb2_wc/pub?gid=129227231&single=true&output=csv","https://docs.google.com/spreadsheets/d/e/2PACX-1vTcjDAvojPXjqX9rpfZ0QMKjbq9mTxfKQZTxroaFBFzvyNMkhtfgx5LngTCn7135uAgGSY_cBgb2_wc/pub?gid=1773657079&single=true&output=csv","https://docs.google.com/spreadsheets/d/e/2PACX-1vTcjDAvojPXjqX9rpfZ0QMKjbq9mTxfKQZTxroaFBFzvyNMkhtfgx5LngTCn7135uAgGSY_cBgb2_wc/pub?gid=0&single=true&output=csv"];
+let data = [];
+for(i=0;i<file.length;i++) {
+  Papa.parse(file[i], {
       download: true,
       header: true,
       complete: function (results) {
-        console.log(results);
-          createMarkers(results.data);
+        setTimeout(function() {
+          console.log("oui");
+          data.push(results.data);
+        }, 3000);
       }
   });
-  setTimeout(() => {
-      resolve();
-  }, 2000);
-});
+
+};
+setTimeout(function() {
+  console.log(data[0]);
+  console.log(data[1]);
+  console.log(data[2]);
+  createMarkers(data);
+}, 4000); */
+
+let dataintro = [];
+let dataetape = [];
+let datadocs = [];
+Papa.parse("https://docs.google.com/spreadsheets/d/e/2PACX-1vTcjDAvojPXjqX9rpfZ0QMKjbq9mTxfKQZTxroaFBFzvyNMkhtfgx5LngTCn7135uAgGSY_cBgb2_wc/pub?gid=129227231&single=true&output=csv", {
+  download: true,
+  header: true,
+  complete: function (results) {
+    dataintro.push(results.data);
+  }
+})
+Papa.parse("https://docs.google.com/spreadsheets/d/e/2PACX-1vTcjDAvojPXjqX9rpfZ0QMKjbq9mTxfKQZTxroaFBFzvyNMkhtfgx5LngTCn7135uAgGSY_cBgb2_wc/pub?gid=1773657079&single=true&output=csv", {
+  download: true,
+  header: true,
+  complete: function (results) {
+    dataetape.push(results.data);
+  }
+})
+Papa.parse("https://docs.google.com/spreadsheets/d/e/2PACX-1vTcjDAvojPXjqX9rpfZ0QMKjbq9mTxfKQZTxroaFBFzvyNMkhtfgx5LngTCn7135uAgGSY_cBgb2_wc/pub?gid=0&single=true&output=csv", {
+  download: true,
+  header: true,
+  complete: function (results) {
+    datadocs.push(results.data);
+  }
+})
+setTimeout(function() {
+  createMarkers(dataintro[0], dataetape[0], datadocs[0]);
+}, 3000);
 
 // Initialisation des marqueurs
 // Tableau qui va contenir les marqueurs
@@ -95,7 +131,6 @@ function ChangeClass() {
     intro1.classList.toggle("-open");
     intro2.classList.toggle("-open");
 
-
     // Animation de la carte lors de l'ouverture et fermeture du volet pour éviter un décalage
     if(element1.classList.contains('open') && mymap.getZoom()<7) {
       mymap.flyTo([47,11], 6, {
@@ -110,8 +145,7 @@ function ChangeClass() {
       });
       uncolorMarkers();
     };
-
-    
+ 
     let timeline = document.querySelector(".overflow-tl");
     let overflowcard = document.querySelector(".overflow-cards");
     let card = document.querySelector(".card");
@@ -167,30 +201,42 @@ function ChangeClassFromMark(e) {
 };
 
 // Fonction pour créer les marqueurs sur la carte et dans la timeline
-function createMarkers(data) {
+function createMarkers(dataintro, dataetape, datadocs) {
   // Sélection de la timeline
   let e = document.querySelector('.timeline');
   let card = document.querySelector(".overflow-cards");
   let intro = document.querySelector(".introduction");
   var latlngs = [];
   // Itération pour chacune des villes dans le tableau data
-  for(i=0; i<data.length;i++) {
-    if(data[i].latitude !== '' && data[i].longitude !== '') {
+  for(i=0; i<dataetape.length;i++) {
+    if(dataetape[i].latitude !== '' && dataetape[i].longitude !== '') {
     // Création du marqueur sur la carte
-    let mark = L.marker([data[i].latitude, data[i].longitude], {icon: blueMarkIcon, riseOnHover: true}).on("click", onMarkerMap);
+    let mark = L.marker([dataetape[i].latitude, dataetape[i].longitude], {icon: blueMarkIcon, riseOnHover: true}).on("click", onMarkerMap);
     mark.addTo(mymap);
     // Création du pop up du marqueur sur la carte
-    mark.bindPopup('<div class="popup-wrapper"><div class="vignette">'+data[i].lieu+'</div><div class="popup-container"><p class="date">'+data[i].date+'</p><p id="popup'+i+'" class="more" data-latlng="'+data[i].latitude+', '+data[i].longitude+'" onclick="onPopup(this)" >En savoir plus</p></div></div>', {offset: new L.Point(0, -45)});
+    mark.bindPopup('<div class="popup-wrapper"><div class="vignette">'+dataetape[i].lieu+'</div><div class="popup-container"><p class="date">'+dataetape[i].date+'</p><p id="popup'+i+'" class="more" data-latlng="'+dataetape[i].latitude+', '+dataetape[i].longitude+'" onclick="onPopup(this)" >En savoir plus</p></div></div>', {offset: new L.Point(0, -45)});
     // Création du marqueur sur la timeline
     e.insertAdjacentHTML("beforeend",
-    '<a id="mark'+i+'" class="marker" data-latlng="'+data[i].latitude+', '+data[i].longitude+'" onclick="onMarkerTimeline(this.id)"><img class="timeline-marker" src="https://zupimages.net/up/21/16/pcxc.png" alt=""></a>');
-    card.insertAdjacentHTML("beforeend", '<div id="card'+i+'"class="card">'+data[i].lieu+'</div>');
+    '<a id="mark'+i+'" class="marker" data-latlng="'+dataetape[i].latitude+', '+dataetape[i].longitude+'" onclick="onMarkerTimeline(this.id)"><img class="timeline-marker" src="https://zupimages.net/up/21/16/pcxc.png" alt=""></a>');
+
+    let cardcontent = [];
+    let carddoc = [];
+    for(n=0; n<datadocs.length;n++) {
+      if(parseInt(datadocs[n].etape, 10) == i+1) {
+        cardcontent.push('<h2>'+dataetape[i].lieu+'</h2>');
+        carddoc.push('<p>'+datadocs[n].titre_document+'</p>');
+      }
+      else {
+      }
+    }
+    console.log(carddoc.toString().replace(/<\/p(.*)>,<p>/g,'</p><p>'));
+    card.insertAdjacentHTML("beforeend", '<div id="card'+i+'"class="card">'+cardcontent[0]+(carddoc.toString().replace(/<\/p(.*)>.+?<p>/g,'</p><p>'))+'</div>');
     // Insertion du marqueur créé dans le tableau markers
     markers.push(mark);
-    latlngs.push([data[i].latitude, data[i].longitude]);
+    latlngs.push([dataetape[i].latitude, dataetape[i].longitude]);
     }
   };
-  intro.insertAdjacentHTML("beforeend", '<div id="card" class="card-intro"><p>Présentation du Grand tour de France de Charles IX</p></div>')
+  intro.insertAdjacentHTML("beforeend", '<div id="card" class="card-intro"><p>'+dataintro[0].nom_itineraire+'</p><p>'+dataintro[0].description_itineraire+'</p></div>')
   intro.insertAdjacentHTML("beforeend", '<div class="button-start"><a class="etape-start -open" onclick="changeStep(this)">Commencer</a></div>')
   card.insertAdjacentHTML("beforeend", '<div class="buttons"><a class="etape-prev -open" onclick="changeStep(this)">Étape précédente</a><a class="etape-suiv -open" onclick="changeStep(this)">Étape suivante</a></div>');
   // Création des lignes qui relient les marqueurs
