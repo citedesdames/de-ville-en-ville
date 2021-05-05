@@ -203,7 +203,6 @@ header h1 {
     width: 80%;
     margin: 5% auto;
     margin-top: 0;
-    padding: 2%;
     border-radius: 50px;
     min-height: 800px;
     background-color: white;
@@ -286,4 +285,21 @@ header h1 {
 .leaflet-popup-content {
     margin: 0;
     width: 150px;
+}
+
+.card-minia {
+    width: 98%;
+    border-radius: 50px;
+    border: solid #00537B 8px;
+    z-index: 0;
+}
+
+.card-title {
+    position: relative;
+    top: -300px;
+    text-align: center;
+    z-index: 10;
+    font-size: 2rem;
+    color: white;
+    text-shadow: 2px 2px 5px #3b3b3b;
 }

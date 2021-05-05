@@ -214,7 +214,16 @@ function createMarkers(dataintro, dataetape, datadocs) {
     let mark = L.marker([dataetape[i].latitude, dataetape[i].longitude], {icon: blueMarkIcon, riseOnHover: true}).on("click", onMarkerMap);
     mark.addTo(mymap);
     // Création du pop up du marqueur sur la carte
+    
+    //for(n=0; n<datadocs.length;n++) {
+    //  if(parseInt(datadocs[i].etape, 10) == i+1) {
+    //    if(datadocs[i].vignette == "1") {
+    //    }
+    //  }
+    //};
     mark.bindPopup('<div class="popup-wrapper"><div class="vignette">'+dataetape[i].lieu+'</div><div class="popup-container"><p class="date">'+dataetape[i].date+'</p><p id="popup'+i+'" class="more" data-latlng="'+dataetape[i].latitude+', '+dataetape[i].longitude+'" onclick="onPopup(this)" >En savoir plus</p></div></div>', {offset: new L.Point(0, -45)});
+        
+      
     // Création du marqueur sur la timeline
     e.insertAdjacentHTML("beforeend",
     '<a id="mark'+i+'" class="marker" data-latlng="'+dataetape[i].latitude+', '+dataetape[i].longitude+'" onclick="onMarkerTimeline(this.id)"><img class="timeline-marker" src="https://zupimages.net/up/21/16/pcxc.png" alt=""></a>');
@@ -223,14 +232,20 @@ function createMarkers(dataintro, dataetape, datadocs) {
     let carddoc = [];
     for(n=0; n<datadocs.length;n++) {
       if(parseInt(datadocs[n].etape, 10) == i+1) {
-        cardcontent.push('<h2>'+dataetape[i].lieu+'</h2>');
+        if(datadocs[n].vignette == "1") {
+          cardcontent.unshift('<div class="card-header"><img class="card-minia" src="'+datadocs[n].miniature+'" alt""><h2 class="card-title">'+dataetape[i].lieu+'</h2></div>');
+        }
+        else {
+          cardcontent.push('<div class="card-header"><h2>'+dataetape[i].lieu+'</h2></div>');
+        }
+
         carddoc.push('<p>'+datadocs[n].titre_document+'</p>');
       }
       else {
       }
     }
-    console.log(carddoc.toString().replace(/<\/p(.*)>,<p>/g,'</p><p>'));
-    card.insertAdjacentHTML("beforeend", '<div id="card'+i+'"class="card">'+cardcontent[0]+(carddoc.toString().replace(/<\/p(.*)>.+?<p>/g,'</p><p>'))+'</div>');
+    console.log(cardcontent);
+    card.insertAdjacentHTML("beforeend", '<div id="card'+i+'"class="card">'+cardcontent[0]+(carddoc.toString().replace(/<\/p>\,/g,'</p>'))+'</div>');
     // Insertion du marqueur créé dans le tableau markers
     markers.push(mark);
     latlngs.push([dataetape[i].latitude, dataetape[i].longitude]);
