@@ -1,6 +1,18 @@
+@font-face {
+    font-family: 'Montserrat';
+    src: url(/assets/fonts/Montserrat-Regular.woff2) format("woff2"),
+            url(/assets/fonts/Montserrat-Regular.woff) format("woff");
+}
+@font-face {
+    font-family: 'Montserrat SBold';
+    src: url(/assets/fonts/Montserrat-SemiBold.woff2) format('woff2'),
+            url(/assets/fonts/Montserrat-SemiBold.woff) format('woff');
+}
+
 body {
     margin: 0;
     padding: 0;
+    font-family: Montserrat, 'Times New Roman', Times, serif;
 }
 main {
     display: flex;
@@ -116,7 +128,12 @@ header h1 {
     writing-mode: vertical-lr;
     transform: rotate(180deg);
     color: #fff;
-    font-size: 2rem;
+    font-size: 1.8rem;
+    font-family: Montserrat SBold;
+}
+
+header .img-header {
+    display: none;
 }
 
 .header-open {
@@ -132,10 +149,16 @@ header h1 {
 }
 
 .header-open h1 {
-    font-size: 2.5rem;
+    font-size: 2.2rem;
     color: #24395D;
     writing-mode: unset;
     transform: unset;
+    margin: 0 5%;
+    font-family: Montserrat SBold;
+}
+
+.header-open .img-header {
+    width: 40%;
 }
 
 .timeline {
@@ -144,7 +167,7 @@ header h1 {
     width: 1500px; */
     padding: 2%;
     border-radius: 50px;
-    width: 693px;
+    width: 95%;
     overflow-x: scroll;
     margin: 0 auto;
     /* Hide scrollbar for IE, Edge and Firefox */
@@ -177,7 +200,7 @@ header h1 {
     background-color: #24395D;
     height: 2px;
     width: 95%;
-    left: 35px;
+    left: 20px;
     position: absolute;
     bottom: 12px;
 }
@@ -198,7 +221,7 @@ header h1 {
     display: none;
 }
 
-.card, .card-intro {
+.card, .card-intro, .card-about {
     display: none;
     width: 80%;
     margin: 5% auto;
@@ -243,9 +266,15 @@ header h1 {
 .introduction::-webkit-scrollbar {
     display: none;
 }
-
+.about {
+    display: none;
+    margin-top: 5%;
+}
+.card-intro, .card-about {
+    min-height: 50%;
+}
 .-open {
-    display: block;
+    display: block !important;
 }
 
 .vignette {
@@ -301,5 +330,19 @@ header h1 {
     z-index: 10;
     font-size: 2rem;
     color: white;
-    text-shadow: 2px 2px 5px #3b3b3b;
+    text-shadow: 2px 2px 5px #0e0e0e;
+}
+
+.content {
+    padding: 4%;
+}
+
+.card-content {
+    padding: 0 4% 4% 4%;
+}
+
+.title-about, .title-intro {
+    text-align: center;
+    color: #004262;
+    font-size: 2rem;
 }

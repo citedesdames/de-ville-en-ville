@@ -84,7 +84,7 @@ Papa.parse("https://docs.google.com/spreadsheets/d/e/2PACX-1vTcjDAvojPXjqX9rpfZ0
 })
 setTimeout(function() {
   createMarkers(dataintro[0], dataetape[0], datadocs[0]);
-}, 3000);
+}, 2500);
 
 // Initialisation des marqueurs
 // Tableau qui va contenir les marqueurs
@@ -121,6 +121,7 @@ function ChangeClass() {
     let element7 = document.querySelector("section");
     let intro1 = document.querySelector(".introduction");
     let intro2 = document.getElementById("card");
+    let about = document.querySelector(".img-header");
     element1.classList.toggle("open");
     element2.classList.toggle("short");
     element3.classList.toggle("gauche-open");
@@ -128,8 +129,20 @@ function ChangeClass() {
     element5.classList.toggle("arrow-bottom-open");
     element6.classList.toggle("header-open");
     element7.classList.toggle("section-open");
-    intro1.classList.toggle("-open");
-    intro2.classList.toggle("-open");
+
+    if(intro1.classList.contains("-open")) {
+      intro1.classList.remove("-open");
+      intro2.classList.remove("-open");
+      about.classList.remove("-open");
+    }
+    else {
+      setTimeout(function() {
+        intro1.classList.add("-open");
+        intro2.classList.add("-open");
+        about.classList.add("-open");
+      },1000);
+    }
+    
 
     // Animation de la carte lors de l'ouverture et fermeture du volet pour éviter un décalage
     if(element1.classList.contains('open') && mymap.getZoom()<7) {
@@ -190,7 +203,6 @@ function ChangeClassFromMark(e) {
   };
 
   element6.classList.add("header-open");
-
   // Animation de la timeline lors de l'ouverture et fermeture du volet
     let timeline = document.querySelector(".overflow-tl");
     let overflowcard = document.querySelector(".overflow-cards");
@@ -244,16 +256,21 @@ function createMarkers(dataintro, dataetape, datadocs) {
       else {
       }
     }
-    console.log(cardcontent);
-    card.insertAdjacentHTML("beforeend", '<div id="card'+i+'"class="card">'+cardcontent[0]+(carddoc.toString().replace(/<\/p>\,/g,'</p>'))+'</div>');
+    card.insertAdjacentHTML("beforeend", '<div id="card'+i+'"class="card">'+cardcontent[0]+'<div class="card-content">'+(carddoc.toString().replace(/<\/p>\,/g,'</p>'))+'</div></div>');
     // Insertion du marqueur créé dans le tableau markers
     markers.push(mark);
     latlngs.push([dataetape[i].latitude, dataetape[i].longitude]);
     }
   };
-  intro.insertAdjacentHTML("beforeend", '<div id="card" class="card-intro"><p>'+dataintro[0].nom_itineraire+'</p><p>'+dataintro[0].description_itineraire+'</p></div>')
+  intro.insertAdjacentHTML("beforeend", '<div id="card" class="card-intro content"><h2 class="title-intro">'+dataintro[0].nom_itineraire+'</h2><p>'+dataintro[0].description_itineraire+'</p></div>')
   intro.insertAdjacentHTML("beforeend", '<div class="button-start"><a class="etape-start -open" onclick="changeStep(this)">Commencer</a></div>')
   card.insertAdjacentHTML("beforeend", '<div class="buttons"><a class="etape-prev -open" onclick="changeStep(this)">Étape précédente</a><a class="etape-suiv -open" onclick="changeStep(this)">Étape suivante</a></div>');
+
+  // Création du About
+  let about = document.querySelector(".about");
+  console.log(dataintro[0]);
+  about.insertAdjacentHTML("beforeend","<div class='card-about'><div class='content'><h2 class='title-about'>À propos</h2>"+dataintro[0].a_propos+"</div></div>");
+  about.insertAdjacentHTML("beforeend", '<div class="button-start"><a class="etape-start -open" onclick="AboutPage()">Retour</a></div>');
   // Création des lignes qui relient les marqueurs
   let polyline = L.polyline(latlngs, {color: '#004262'});
   polyline.addTo(mymap);
@@ -446,8 +463,10 @@ function changeStep(e) {
           uncolorMarkers(); 
           document.querySelector(".introduction").classList.add("-open");
           document.querySelector(".card-intro").classList.add("-open");
+          document.querySelector(".img-header").classList.add("-open");
           document.querySelector(".overflow-tl").classList.remove("-open");
           document.querySelector(".overflow-cards").classList.remove("-open");
+          
           for(i=0;i<markers.length;i++) {
             let marker = markers[i];
             marker.closePopup();
@@ -463,6 +482,7 @@ function changeStep(e) {
     if(e.getAttribute("class")=="etape-start -open" || e.getAttribute("class") == "etape-start") {
       document.querySelector(".introduction").classList.remove("-open");
       document.querySelector(".overflow-tl").classList.add("-open");
+      document.querySelector(".img-header").classList.remove("-open");
       let scrollitem = document.querySelector(".overflow-cards");
       scrollitem.classList.add("-open");
       for(i=0;i<markers.length;i++) {
@@ -490,6 +510,23 @@ function changeStep(e) {
     
   };
 };
+
+function AboutPage() {
+  let about = document.querySelector(".about");
+  document.querySelector(".introduction").classList.remove("-open");
+  console.log(dataintro[0][0].a_propos);
+  if(about.classList.contains("-open")) {
+    let cardabout = document.querySelector('.card-about');
+    about.classList.remove('-open');
+    cardabout.classList.remove("-open");
+    document.querySelector(".introduction").classList.add("-open");
+  }
+  else {
+    let cardabout = document.querySelector('.card-about');
+    about.classList.add("-open");
+    cardabout.classList.add("-open");
+  }
+}
 
 
 // Fonction pour retirer les couleurs de tous les marqueurs (timeline et carte)
