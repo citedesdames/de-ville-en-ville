@@ -290,6 +290,10 @@ header .img-header {
     font-weight: bold;
     text-align: center;
     padding: 10%;
+    text-shadow: 2px 2px 5px #0e0e0e;
+    background-size: 170px; 
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
 }
 
 .popup-container {

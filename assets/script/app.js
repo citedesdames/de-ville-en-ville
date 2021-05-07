@@ -197,9 +197,16 @@ function ChangeClassFromMark(e) {
 
   // Animation du titre lors de l'ouverture et fermeture du volet
   let el = document.querySelector("header h1");
+  
+  let intro1 = document.querySelector(".introduction");
+  let intro2 = document.getElementById("card");
+  let about = document.querySelector(".img-header");
   if(e.length == 3 && !element6.classList.contains("header-open")) {
   fadeOut(el);
   setTimeout(function(){fadeIn(el)}, 1000);
+  intro1.classList.remove("-open");
+  intro2.classList.remove("-open");
+  about.classList.remove("-open");
   };
 
   element6.classList.add("header-open");
@@ -224,18 +231,7 @@ function createMarkers(dataintro, dataetape, datadocs) {
     if(dataetape[i].latitude !== '' && dataetape[i].longitude !== '') {
     // Création du marqueur sur la carte
     let mark = L.marker([dataetape[i].latitude, dataetape[i].longitude], {icon: blueMarkIcon, riseOnHover: true}).on("click", onMarkerMap);
-    mark.addTo(mymap);
-    // Création du pop up du marqueur sur la carte
-    
-    //for(n=0; n<datadocs.length;n++) {
-    //  if(parseInt(datadocs[i].etape, 10) == i+1) {
-    //    if(datadocs[i].vignette == "1") {
-    //    }
-    //  }
-    //};
-    mark.bindPopup('<div class="popup-wrapper"><div class="vignette">'+dataetape[i].lieu+'</div><div class="popup-container"><p class="date">'+dataetape[i].date+'</p><p id="popup'+i+'" class="more" data-latlng="'+dataetape[i].latitude+', '+dataetape[i].longitude+'" onclick="onPopup(this)" >En savoir plus</p></div></div>', {offset: new L.Point(0, -45)});
-        
-      
+    mark.addTo(mymap);          
     // Création du marqueur sur la timeline
     e.insertAdjacentHTML("beforeend",
     '<a id="mark'+i+'" class="marker" data-latlng="'+dataetape[i].latitude+', '+dataetape[i].longitude+'" onclick="onMarkerTimeline(this.id)"><img class="timeline-marker" src="https://zupimages.net/up/21/16/pcxc.png" alt=""></a>');
@@ -246,6 +242,9 @@ function createMarkers(dataintro, dataetape, datadocs) {
       if(parseInt(datadocs[n].etape, 10) == i+1) {
         if(datadocs[n].vignette == "1") {
           cardcontent.unshift('<div class="card-header"><img class="card-minia" src="'+datadocs[n].miniature+'" alt""><h2 class="card-title">'+dataetape[i].lieu+'</h2></div>');
+          
+          // Création du pop up du marqueur sur la carte
+          mark.bindPopup('<div class="popup-wrapper"><div class="vignette" style="background-image: url('+datadocs[n].miniature+');">'+dataetape[i].lieu+'</div><div class="popup-container"><p class="date">'+dataetape[i].date+'</p><p id="popup'+i+'" class="more" data-latlng="'+dataetape[i].latitude+', '+dataetape[i].longitude+'" onclick="onPopup(this)" >En savoir plus</p></div></div>', {offset: new L.Point(0, -45)});
         }
         else {
           cardcontent.push('<div class="card-header"><h2>'+dataetape[i].lieu+'</h2></div>');
@@ -253,10 +252,9 @@ function createMarkers(dataintro, dataetape, datadocs) {
 
         carddoc.push('<p>'+datadocs[n].titre_document+'</p>');
       }
-      else {
-      }
     }
     card.insertAdjacentHTML("beforeend", '<div id="card'+i+'"class="card">'+cardcontent[0]+'<div class="card-content">'+(carddoc.toString().replace(/<\/p>\,/g,'</p>'))+'</div></div>');
+   
     // Insertion du marqueur créé dans le tableau markers
     markers.push(mark);
     latlngs.push([dataetape[i].latitude, dataetape[i].longitude]);
