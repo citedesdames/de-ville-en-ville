@@ -350,3 +350,25 @@ header .img-header {
     color: #004262;
     font-size: 2rem;
 }
+
+.leaflet-touch .leaflet-bar {
+    border: none;
+}
+.leaflet-bar a {
+    background-color: #004262;
+    color: white;
+    border: none;
+    box-shadow: 4px 4px 10px 0px rgba(0,0,0,0.5);
+    -webkit-box-shadow: 4px 4px 10px 0px rgba(0,0,0,0.5);
+    -moz-box-shadow: 4px 4px 10px 0px rgba(0,0,0,0.5);
+}
+.leaflet-bar a:hover {
+    color: #004262;
+}
+.leaflet-touch .leaflet-bar a:first-child {
+    border-radius: 15px;
+    margin-bottom: 10px;
+}
+.leaflet-touch .leaflet-bar a:last-child {
+    border-radius: 15px;
+}
