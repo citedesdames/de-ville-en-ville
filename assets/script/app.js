@@ -58,9 +58,13 @@ setTimeout(function() {
   createMarkers(data);
 }, 4000); */
 
+
+// Tableaux qui vont contenir les données des .csv
 let dataintro = [];
 let dataetape = [];
 let datadocs = [];
+
+// Appel des .csv et push dans les tableaux correspondants
 Papa.parse("https://docs.google.com/spreadsheets/d/e/2PACX-1vTcjDAvojPXjqX9rpfZ0QMKjbq9mTxfKQZTxroaFBFzvyNMkhtfgx5LngTCn7135uAgGSY_cBgb2_wc/pub?gid=129227231&single=true&output=csv", {
   download: true,
   header: true,
@@ -82,6 +86,8 @@ Papa.parse("https://docs.google.com/spreadsheets/d/e/2PACX-1vTcjDAvojPXjqX9rpfZ0
     datadocs.push(results.data);
   }
 })
+
+// Appel de la fonction avec les données en entrées
 setTimeout(function() {
   createMarkers(dataintro[0], dataetape[0], datadocs[0]);
 }, 2500);
@@ -130,20 +136,20 @@ function ChangeClass() {
     element6.classList.toggle("header-open");
     element7.classList.toggle("section-open");
 
-    if(intro1.classList.contains("-open")) {
-      intro1.classList.remove("-open");
-      intro2.classList.remove("-open");
-      about.classList.remove("-open");
-    }
-    else {
+    // Affichage de la page "d'accueil"
+    if(element1.classList.contains("open")) {      
       setTimeout(function() {
         intro1.classList.add("-open");
         intro2.classList.add("-open");
         about.classList.add("-open");
       },1000);
     }
+    else {
+      intro1.classList.remove("-open");
+      intro2.classList.remove("-open");
+      about.classList.remove("-open");
+    }
     
-
     // Animation de la carte lors de l'ouverture et fermeture du volet pour éviter un décalage
     if(element1.classList.contains('open') && mymap.getZoom()<7) {
       mymap.flyTo([47,11], 6, {
@@ -159,6 +165,7 @@ function ChangeClass() {
       uncolorMarkers();
     };
  
+    // Affichage des timelines et cards 
     let timeline = document.querySelector(".overflow-tl");
     let overflowcard = document.querySelector(".overflow-cards");
     let card = document.querySelector(".card");
@@ -169,6 +176,7 @@ function ChangeClass() {
       intro1.classList.remove("-open");
       intro2.classList.remove("-open");
     };
+
     // Animation du titre lors de l'ouverture et fermeture du volet
     let el = document.querySelector("header h1");
     if(el.classList.contains('is-hidden')){
@@ -180,6 +188,7 @@ function ChangeClass() {
     };
 };
 
+// Fonction pour les animations si le volet est ouvert depuis un pop-up
 function ChangeClassFromMark(e) {
   let element1 = document.querySelector(".main_container");
   let element2 = document.getElementById("mapid");
@@ -196,17 +205,10 @@ function ChangeClassFromMark(e) {
   element7.classList.add("section-open");
 
   // Animation du titre lors de l'ouverture et fermeture du volet
-  let el = document.querySelector("header h1");
-  
-  let intro1 = document.querySelector(".introduction");
-  let intro2 = document.getElementById("card");
-  let about = document.querySelector(".img-header");
+  let el = document.chanquerySelector("header h1");
   if(e.length == 3 && !element6.classList.contains("header-open")) {
   fadeOut(el);
   setTimeout(function(){fadeIn(el)}, 1000);
-  intro1.classList.remove("-open");
-  intro2.classList.remove("-open");
-  about.classList.remove("-open");
   };
 
   element6.classList.add("header-open");
@@ -236,32 +238,42 @@ function createMarkers(dataintro, dataetape, datadocs) {
     e.insertAdjacentHTML("beforeend",
     '<a id="mark'+i+'" class="marker" data-latlng="'+dataetape[i].latitude+', '+dataetape[i].longitude+'" onclick="onMarkerTimeline(this.id)"><img class="timeline-marker" src="https://zupimages.net/up/21/16/pcxc.png" alt=""></a>');
 
+    // Création des tableaux qui vont stocker les contenus
     let cardcontent = [];
     let carddoc = [];
+    // Boucle For pour parcourir les documents reliés à l'étape
     for(n=0; n<datadocs.length;n++) {
       if(parseInt(datadocs[n].etape, 10) == i+1) {
+        // Si un document est une vignette, alors
         if(datadocs[n].vignette == "1") {
+          // Push au début du tableau la ligne qu'il faudra mettre dans l'html
           cardcontent.unshift('<div class="card-header"><img class="card-minia" src="'+datadocs[n].miniature+'" alt""><h2 class="card-title">'+dataetape[i].lieu+'</h2></div>');
-          
           // Création du pop up du marqueur sur la carte
           mark.bindPopup('<div class="popup-wrapper"><div class="vignette" style="background-image: url('+datadocs[n].miniature+');">'+dataetape[i].lieu+'</div><div class="popup-container"><p class="date">'+dataetape[i].date+'</p><p id="popup'+i+'" class="more" data-latlng="'+dataetape[i].latitude+', '+dataetape[i].longitude+'" onclick="onPopup(this)" >En savoir plus</p></div></div>', {offset: new L.Point(0, -45)});
         }
         else {
+          // Push dans le tableau une ligne par défaut
           cardcontent.push('<div class="card-header"><h2>'+dataetape[i].lieu+'</h2></div>');
         }
 
+        // Push du titre du document /!\ ICI CHANGER LE CONTENU POUR LES DOCUMENTS
         carddoc.push('<p>'+datadocs[n].titre_document+'</p>');
       }
     }
+    // Insertion dans l'html des lignes définies plus tôt
     card.insertAdjacentHTML("beforeend", '<div id="card'+i+'"class="card">'+cardcontent[0]+'<div class="card-content">'+(carddoc.toString().replace(/<\/p>\,/g,'</p>'))+'</div></div>');
    
     // Insertion du marqueur créé dans le tableau markers
     markers.push(mark);
+    // Insertion de chaque coordonnées dans le tableau latlngs
     latlngs.push([dataetape[i].latitude, dataetape[i].longitude]);
     }
   };
+  // Insertion dans l'html le texte et titre d'introduction
   intro.insertAdjacentHTML("beforeend", '<div id="card" class="card-intro content"><h2 class="title-intro">'+dataintro[0].nom_itineraire+'</h2><p>'+dataintro[0].description_itineraire+'</p></div>')
+  // Insertion dans l'html le bouton Commencer
   intro.insertAdjacentHTML("beforeend", '<div class="button-start"><a class="etape-start -open" onclick="changeStep(this)">Commencer</a></div>')
+  // Insertion dans l'html les boutons suivant et précédent
   card.insertAdjacentHTML("beforeend", '<div class="buttons"><a class="etape-prev -open" onclick="changeStep(this)">Étape précédente</a><a class="etape-suiv -open" onclick="changeStep(this)">Étape suivante</a></div>');
 
   // Création du About
@@ -307,6 +319,7 @@ function onMarkerTimeline(id) {
         mark.setIcon(blueMarkIcon);
         child.setAttribute("src", "https://zupimages.net/up/21/16/pcxc.png");
       };
+      // Conditions pour changer les boutons suivant et précédent si on est à la première ou la dernière étape
       if(i == markers.length - 1) {
         document.querySelector(".etape-suiv").classList.remove("-open");
       }
@@ -328,13 +341,14 @@ function onMarkerMap(mark) {
   for(i=0;i<markers.length;i++) {
     let marker = markers[i];
     if(marker.getLatLng().lat.toString()+", "+marker.getLatLng().lng.toString() == mark.latlng.lat.toString()+", "+mark.latlng.lng.toString()) {
-      let scrollitem = document.querySelector(".overflow-cards");
+      // Déplacement vers le marqueur un peu décallé car le volet est ouvert
       if(document.querySelector(".main_container").classList.contains('open')) {
         mymap.flyTo([marker.getLatLng().lat, marker.getLatLng().lng+.5], 10, {
           "animate": true,
           "duration": 1
         });
       }
+      // Déplacement vers le marqueur sans décalage
       else {
         mymap.flyTo([marker.getLatLng().lat, marker.getLatLng().lng], 10, {
           "animate": true,
@@ -349,6 +363,7 @@ function onMarkerMap(mark) {
 function onPopup(e) {
   for(i=0;i<markers.length;i++){
     let marker = markers[i];
+    // Condition pour avoir le marqueur et la card correspondants au pop-up
     if(marker.getLatLng().lat.toString()+", "+marker.getLatLng().lng.toString() == e.getAttribute("data-latlng")) {
       let tab = uncolorMarkers();
       let img = document.querySelector("#mark"+i+" img");
@@ -359,12 +374,14 @@ function onPopup(e) {
       marker.closePopup();
       ChangeClassFromMark(tab);
       card.classList.add("-open");
+      // Déplacement vers le marqueur un peu décallé car le volet est ouvert
       if(document.querySelector(".main_container").classList.contains('open')) {
         mymap.flyTo([marker.getLatLng().lat, marker.getLatLng().lng+.5], 10, {
           "animate": true,
           "duration": 1
         });
       }
+      // Déplacement vers le marqueur sans décalage
       else {
         mymap.flyTo([marker.getLatLng().lat, marker.getLatLng().lng], 10, {
           "animate": true,
@@ -374,7 +391,8 @@ function onPopup(e) {
       scrollitem.scrollTo({
         top: 0,
         behavior: 'smooth'
-      });
+      });      
+      // Conditions pour changer les boutons suivant et précédent si on est à la première ou la dernière étape
       if(i == markers.length - 1) {
         document.querySelector(".etape-suiv").classList.remove("-open");
       }
@@ -477,6 +495,7 @@ function changeStep(e) {
       }
     }
     }
+    // Clic sur Commencer
     if(e.getAttribute("class")=="etape-start -open" || e.getAttribute("class") == "etape-start") {
       document.querySelector(".introduction").classList.remove("-open");
       document.querySelector(".overflow-tl").classList.add("-open");
@@ -509,6 +528,7 @@ function changeStep(e) {
   };
 };
 
+// Clic sur le bouton informations
 function AboutPage() {
   let about = document.querySelector(".about");
   document.querySelector(".introduction").classList.remove("-open");
