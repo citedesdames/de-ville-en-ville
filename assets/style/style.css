@@ -329,7 +329,7 @@ header .img-header {
 
 .card-title {
     position: relative;
-    top: -300px;
+    top: -30vh;
     text-align: center;
     z-index: 10;
     font-size: 2rem;
@@ -371,4 +371,17 @@ header .img-header {
 }
 .leaflet-touch .leaflet-bar a:last-child {
     border-radius: 15px;
+}
+
+.subtitle-doc {
+    color: gray;
+    font-size: .8rem;
+}
+
+.subtitle-doc a {
+    color: gray;
+}
+.img-doc img {
+    display: block;
+    margin: 10% auto;
 }

@@ -158,7 +158,7 @@ function ChangeClass() {
       });
     }
     else {
-      mymap.flyTo([47,3], 6, {
+      mymap.flyTo([47,3], mymap.getZoom(), {
         "animate": true,
         "duration": 2
       });
@@ -204,9 +204,11 @@ function ChangeClassFromMark(e) {
   element5.classList.add("arrow-bottom-open");
   element7.classList.add("section-open");
 
+  console.log(e.length);
+  console.log(markers.length);
   // Animation du titre lors de l'ouverture et fermeture du volet
-  let el = document.chanquerySelector("header h1");
-  if(e.length == 3 && !element6.classList.contains("header-open")) {
+  let el = document.querySelector("header h1");
+  if(e.length == markers.length && !element6.classList.contains("header-open")) {
   fadeOut(el);
   setTimeout(function(){fadeIn(el)}, 1000);
   };
@@ -257,11 +259,30 @@ function createMarkers(dataintro, dataetape, datadocs) {
         }
 
         // Push du titre du document /!\ ICI CHANGER LE CONTENU POUR LES DOCUMENTS
-        carddoc.push('<p>'+datadocs[n].titre_document+'</p>');
+        if(datadocs[n].type == "image") {
+          console.log(datadocs[n].titre_document_original.replace("<a href",'<a target="_blank" href'));
+          if(datadocs[n].url_creation.search(/http/) !== 0 && datadocs[n].titre_document_original.search(/\<a href+/) !== 0) {
+            carddoc.push('<div><p class="title-doc">'+datadocs[n].titre_document+'</p><p class="subtitle-doc">'+datadocs[n].titre_document_original.replace("<a href",'<a target="_blank" href')+'</p><img src="'+datadocs[n].url_document+'" width="400px" margin="0 auto"></div>');
+          }
+          else {
+            carddoc.push('<div><p class="title-doc">'+datadocs[n].titre_document+'</p><p class="subtitle-doc">'+datadocs[n].titre_document_original.replace("<a href",'<a target="_blank" href')+'</p><a class="img-doc" target="_blank" href="'+datadocs[n].url_creation+'" alt=""><img src="'+datadocs[n].url_document+'" width="400px"></a></div>');
+          }
+
+        }
+        else {
+          if(datadocs[n].titre_document !== '') {
+            carddoc.push('<div><p>'+datadocs[n].titre_document+'</p></div>');
+          }
+          else {
+            carddoc.push('<div><p>'+datadocs[n].titre_document_original+'</p></div>');
+          }
+        }
+        
       }
     }
+    carddoc = carddoc.toString().replace(/<\/p>\,/g,'</p>');
     // Insertion dans l'html des lignes définies plus tôt
-    card.insertAdjacentHTML("beforeend", '<div id="card'+i+'"class="card">'+cardcontent[0]+'<div class="card-content">'+(carddoc.toString().replace(/<\/p>\,/g,'</p>'))+'</div></div>');
+    card.insertAdjacentHTML("beforeend", '<div id="card'+i+'"class="card">'+cardcontent[0]+'<div class="card-content">'+(carddoc.toString().replace(/<\/div>\,/g,'</div>'))+'</div></div>');
    
     // Insertion du marqueur créé dans le tableau markers
     markers.push(mark);
