@@ -329,7 +329,8 @@ header .img-header {
 
 .card-title {
     position: relative;
-    top: -30vh;
+    top: -28vh;
+    margin: 0;
     text-align: center;
     z-index: 10;
     font-size: 2rem;
@@ -381,7 +382,38 @@ header .img-header {
 .subtitle-doc a {
     color: gray;
 }
+
 .img-doc img {
     display: block;
     margin: 10% auto;
+}
+.hidden-doc {
+    height: 0px;
+    overflow: hidden;
+    transition: height ease 1s;
+}
+.transi {
+    transition: all ease 1s;
+}
+.doc-open {
+    height: 80%;
+}
+.title-doc {
+    font-weight: unset;
+}
+.title-doc span {
+    font-size: 1.5rem;
+    font-family: Montserrat SBold,'Times New Roman', Times, serif;
+    color: #004262;
+}
+.title-doc:hover {
+    font-weight: 600;
+    cursor: pointer;
+}
+.title-doc-clicked {
+    font-weight: 600;
+}
+.rotate-span {
+    display: inline-block;
+    transform: rotate(90deg);
 }

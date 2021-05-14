@@ -204,8 +204,6 @@ function ChangeClassFromMark(e) {
   element5.classList.add("arrow-bottom-open");
   element7.classList.add("section-open");
 
-  console.log(e.length);
-  console.log(markers.length);
   // Animation du titre lors de l'ouverture et fermeture du volet
   let el = document.querySelector("header h1");
   if(e.length == markers.length && !element6.classList.contains("header-open")) {
@@ -260,22 +258,23 @@ function createMarkers(dataintro, dataetape, datadocs) {
 
         // Push du titre du document /!\ ICI CHANGER LE CONTENU POUR LES DOCUMENTS
         if(datadocs[n].type == "image") {
-          console.log(datadocs[n].titre_document_original.replace("<a href",'<a target="_blank" href'));
           if(datadocs[n].url_creation.search(/http/) !== 0 && datadocs[n].titre_document_original.search(/\<a href+/) !== 0) {
-            carddoc.push('<div><p class="title-doc">'+datadocs[n].titre_document+'</p><p class="subtitle-doc">'+datadocs[n].titre_document_original.replace("<a href",'<a target="_blank" href')+'</p><img src="'+datadocs[n].url_document+'" width="400px" margin="0 auto"></div>');
+            carddoc.push('<div class="doc" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>></span> '+datadocs[n].titre_document+'</h3><div class="hidden-doc"><p class="subtitle-doc">'+datadocs[n].titre_document_original.replace("<a href",'<a target="_blank" href')+'</p><img src="'+datadocs[n].url_document+'" width="400px" margin="0 auto"></div></div>');
           }
           else {
-            carddoc.push('<div><p class="title-doc">'+datadocs[n].titre_document+'</p><p class="subtitle-doc">'+datadocs[n].titre_document_original.replace("<a href",'<a target="_blank" href')+'</p><a class="img-doc" target="_blank" href="'+datadocs[n].url_creation+'" alt=""><img src="'+datadocs[n].url_document+'" width="400px"></a></div>');
+            carddoc.push('<div class="doc" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>></span> '+datadocs[n].titre_document+'</h3><div class="hidden-doc"><p class="subtitle-doc">'+datadocs[n].titre_document_original.replace("<a href",'<a target="_blank" href')+'</p><a class="img-doc" target="_blank" href="'+datadocs[n].url_creation+'" alt=""><img src="'+datadocs[n].url_document+'" width="400px"></a></div></div>');
           }
-
         }
-        else {
+        /*else {
           if(datadocs[n].titre_document !== '') {
             carddoc.push('<div><p>'+datadocs[n].titre_document+'</p></div>');
           }
           else {
             carddoc.push('<div><p>'+datadocs[n].titre_document_original+'</p></div>');
           }
+        }*/
+        if(datadocs[n].type == "texte") {
+          carddoc.push('<div><p>'+datadocs[n].titre_document+'</p></div>');
         }
         
       }
@@ -299,7 +298,6 @@ function createMarkers(dataintro, dataetape, datadocs) {
 
   // Création du About
   let about = document.querySelector(".about");
-  console.log(dataintro[0]);
   about.insertAdjacentHTML("beforeend","<div class='card-about'><div class='content'><h2 class='title-about'>À propos</h2>"+dataintro[0].a_propos+"</div></div>");
   about.insertAdjacentHTML("beforeend", '<div class="button-start"><a class="etape-start -open" onclick="AboutPage()">Retour</a></div>');
   // Création des lignes qui relient les marqueurs
@@ -553,7 +551,6 @@ function changeStep(e) {
 function AboutPage() {
   let about = document.querySelector(".about");
   document.querySelector(".introduction").classList.remove("-open");
-  console.log(dataintro[0][0].a_propos);
   if(about.classList.contains("-open")) {
     let cardabout = document.querySelector('.card-about');
     about.classList.remove('-open');
@@ -567,6 +564,46 @@ function AboutPage() {
   }
 }
 
+function ClicSurDoc(e) {
+/*   if(!e.lastChild.classList.contains("doc-open")) {
+    let doc = document.querySelectorAll(".doc");
+    for (c=0;c<doc.length;c++) {
+      if(doc[c].lastChild.classList.contains('doc-open')) {
+        doc[c].lastChild.classList.remove('doc-open');
+        doc[c].firstChild.classList.remove('title-doc-clicked');
+        doc[c].firstChild.firstChild.classList.remove('rotate-span');
+      }
+    }
+  }
+  e.lastChild.classList.toggle("doc-open");
+  e.firstChild.firstChild.classList.toggle("rotate-span");
+  e.firstChild.classList.toggle("title-doc-clicked");
+  if(e.lastChild.classList.contains("doc-open")) {
+    let test = e.lastChild.offsetHeight;
+    console.log(test);
+    e.lastChild.style.height = "0px";
+    e.lastChild.classList.add("transi");
+    setTimeout(function() {
+      e.lastChild.style.height = test+"px";
+    }, 100);
+  }
+  
+  setTimeout(function() {
+    e.lastChild.classList.remove("transi");
+  }, 500); */
+
+  e.lastChild.classList.toggle("doc-open");
+  e.firstChild.firstChild.classList.toggle("rotate-span");
+  e.firstChild.classList.toggle("title-doc-clicked");
+  
+
+  let scrollitem = document.querySelector(".overflow-cards");
+  scrollitem.scrollTo({
+    top: (e.offsetTop-300),
+    behavior: 'smooth'
+  });
+}
+
 
 // Fonction pour retirer les couleurs de tous les marqueurs (timeline et carte)
 function uncolorMarkers() {
@@ -574,12 +611,20 @@ function uncolorMarkers() {
   for(a=0; a<markers.length; a++) {
     let prevmark = markers[a];
     let prevcard = document.querySelectorAll(".card");
+    let doc = document.querySelectorAll(".doc");
     if(prevmark.getIcon().options.iconUrl == "https://zupimages.net/up/21/16/f5xz.png") {
       let img = document.querySelectorAll(".timeline-marker");
       for (b=0;b<markers.length;b++) {
         img[b].setAttribute("src", "https://zupimages.net/up/21/16/pcxc.png");
         prevcard[b].classList.remove("-open");
       };
+      for (c=0;c<doc.length;c++) {
+        if(doc[c].lastChild.classList.contains('doc-open')) {
+          doc[c].lastChild.classList.remove('doc-open');
+          doc[c].firstChild.classList.remove('title-doc-clicked');
+          doc[c].firstChild.firstChild.classList.remove('rotate-span');
+        }
+      }
       prevmark.setIcon(blueMarkIcon);
     }
     else {
