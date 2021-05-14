@@ -387,17 +387,17 @@ header .img-header {
     display: block;
     margin: 10% auto;
 }
+
 .hidden-doc {
-    height: 0px;
+    max-height: 0px;
     overflow: hidden;
-    transition: height ease 1s;
+    transition: all ease .5s;
 }
-.transi {
-    transition: all ease 1s;
-}
+
 .doc-open {
-    height: 80%;
+    max-height: 1000px;
 }
+
 .title-doc {
     font-weight: unset;
 }

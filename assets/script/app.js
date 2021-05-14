@@ -565,7 +565,7 @@ function AboutPage() {
 }
 
 function ClicSurDoc(e) {
-/*   if(!e.lastChild.classList.contains("doc-open")) {
+  if(!e.lastChild.classList.contains("doc-open")) {
     let doc = document.querySelectorAll(".doc");
     for (c=0;c<doc.length;c++) {
       if(doc[c].lastChild.classList.contains('doc-open')) {
@@ -574,34 +574,19 @@ function ClicSurDoc(e) {
         doc[c].firstChild.firstChild.classList.remove('rotate-span');
       }
     }
+    let scrollitem = document.querySelector(".overflow-cards");
+    scrollitem.scrollTo({
+      top: (e.offsetTop-300),
+      behavior: 'smooth'
+    });
   }
-  e.lastChild.classList.toggle("doc-open");
-  e.firstChild.firstChild.classList.toggle("rotate-span");
-  e.firstChild.classList.toggle("title-doc-clicked");
-  if(e.lastChild.classList.contains("doc-open")) {
-    let test = e.lastChild.offsetHeight;
-    console.log(test);
-    e.lastChild.style.height = "0px";
-    e.lastChild.classList.add("transi");
-    setTimeout(function() {
-      e.lastChild.style.height = test+"px";
-    }, 100);
-  }
-  
-  setTimeout(function() {
-    e.lastChild.classList.remove("transi");
-  }, 500); */
 
   e.lastChild.classList.toggle("doc-open");
   e.firstChild.firstChild.classList.toggle("rotate-span");
   e.firstChild.classList.toggle("title-doc-clicked");
   
 
-  let scrollitem = document.querySelector(".overflow-cards");
-  scrollitem.scrollTo({
-    top: (e.offsetTop-300),
-    behavior: 'smooth'
-  });
+
 }
 
 
