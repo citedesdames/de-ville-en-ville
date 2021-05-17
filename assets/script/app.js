@@ -243,7 +243,7 @@ function createMarkers(dataintro, dataetape, datadocs) {
     let carddoc = [];
     // Boucle For pour parcourir les documents reliés à l'étape
     for(n=0; n<datadocs.length;n++) {
-      if(parseInt(datadocs[n].etape, 10) == i+1) {
+      if(datadocs[n].ville == dataetape[i].lieu) {
         // Si un document est une vignette, alors
         if(datadocs[n].vignette == "1") {
           // Push au début du tableau la ligne qu'il faudra mettre dans l'html
@@ -256,7 +256,8 @@ function createMarkers(dataintro, dataetape, datadocs) {
           cardcontent.push('<div class="card-header"><h2>'+dataetape[i].lieu+'</h2></div>');
         }
 
-        // Push du titre du document /!\ ICI CHANGER LE CONTENU POUR LES DOCUMENTS
+        // DOCUMENTS
+        // Documents avec image
         if(datadocs[n].type == "image") {
           if(datadocs[n].url_creation.search(/http/) !== 0 && datadocs[n].titre_document_original.search(/\<a href+/) !== 0) {
             carddoc.push('<div class="doc" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>></span> '+datadocs[n].titre_document+'</h3><div class="hidden-doc"><p class="subtitle-doc">'+datadocs[n].titre_document_original.replace("<a href",'<a target="_blank" href')+'</p><img src="'+datadocs[n].url_document+'" width="400px" margin="0 auto"></div></div>');
@@ -265,16 +266,32 @@ function createMarkers(dataintro, dataetape, datadocs) {
             carddoc.push('<div class="doc" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>></span> '+datadocs[n].titre_document+'</h3><div class="hidden-doc"><p class="subtitle-doc">'+datadocs[n].titre_document_original.replace("<a href",'<a target="_blank" href')+'</p><a class="img-doc" target="_blank" href="'+datadocs[n].url_creation+'" alt=""><img src="'+datadocs[n].url_document+'" width="400px"></a></div></div>');
           }
         }
-        /*else {
+        // Documnents avec texte
+        if(datadocs[n].type == "texte") {          
           if(datadocs[n].titre_document !== '') {
             carddoc.push('<div><p>'+datadocs[n].titre_document+'</p></div>');
           }
           else {
             carddoc.push('<div><p>'+datadocs[n].titre_document_original+'</p></div>');
           }
-        }*/
-        if(datadocs[n].type == "texte") {
-          carddoc.push('<div><p>'+datadocs[n].titre_document+'</p></div>');
+        }
+        // Documents avec vidéo
+        if(datadocs[n].type == "site web") {
+          if(datadocs[n].titre_document !== '') {
+            carddoc.push('<div><p>'+datadocs[n].titre_document+'</p></div>');
+          }
+          else {
+            carddoc.push('<div><p>'+datadocs[n].titre_document_original+'</p></div>');
+          }
+        }
+        // Documents avec site web
+        if(datadocs[n].type == "vidéo") {
+          if(datadocs[n].titre_document !== '') {
+            carddoc.push('<div><p>'+datadocs[n].titre_document+'</p></div>');
+          }
+          else {
+            carddoc.push('<div><p>'+datadocs[n].titre_document_original+'</p></div>');
+          }
         }
         
       }
@@ -584,9 +601,6 @@ function ClicSurDoc(e) {
   e.lastChild.classList.toggle("doc-open");
   e.firstChild.firstChild.classList.toggle("rotate-span");
   e.firstChild.classList.toggle("title-doc-clicked");
-  
-
-
 }
 
 
