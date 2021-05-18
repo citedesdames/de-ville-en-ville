@@ -268,14 +268,43 @@ function createMarkers(dataintro, dataetape, datadocs) {
         }
         // Documnents avec texte
         if(datadocs[n].type == "texte") {          
-          if(datadocs[n].titre_document !== '') {
-            carddoc.push('<div><p>'+datadocs[n].titre_document+'</p></div>');
+          if(datadocs[n].titre_document.length > 1) {
+            if(datadocs[n].texte.length > 1) {
+              if(datadocs[n].titre_document_original.length > 1) {
+                carddoc.push('<div class="doc" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>></span> '+datadocs[n].titre_document+'</h3><div class="hidden-doc"><p class="subtitle-doc">'+datadocs[n].titre_document_original.replace("<a href",'<a target="_blank" href')+'</p><p>'+datadocs[n].texte+'</p></div></div>');
+              }
+              else {
+                if(datadocs[n].url_document.length > 1) {
+                  carddoc.push('<div class="doc" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>></span> '+datadocs[n].titre_document+'</h3><div class="hidden-doc"><p    class="subtitle-doc"><a href="'+datadocs[n].url_document+'">'+datadocs[n].url_document+'</a></p><p>'+datadocs[n].texte+'</p></div></div>');
+                }
+                else {
+                  carddoc.push('<div class="doc" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>></span> '+datadocs[n].titre_document+'</h3><div class="hidden-doc"><p    class="subtitle-doc"><a href="'+datadocs[n].url_creation+'">'+datadocs[n].url_creation+'</a></p><p>'+datadocs[n].texte+'</p></div></div>');
+                }
+              }
+            }
+            else {
+              if(datadocs[n].titre_document_original.length > 1) {
+                if(datadocs[n].titre_document_original.search(/http/) == -1) {
+                  if(datadocs[n].url_document.length > 1) {
+                    carddoc.push('<div class="doc" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>></span> '+datadocs[n].titre_document+'</h3><div class="hidden-doc"><p class="subtitle-doc"><a href="'+datadocs[n].url_document+'" target="_blank">'+datadocs[n].titre_document_original.replace("<a href",'<a target="_blank" href')+'</a></p></div></div>');
+                  }
+                }
+              }
+              else {
+                if(datadocs[n].url_document.length > 1) {
+                  carddoc.push('<div class="doc" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>></span> '+datadocs[n].titre_document+'</h3><div class="hidden-doc"><p    class="subtitle-doc"><a href="'+datadocs[n].url_document+'">'+datadocs[n].url_document+'</a></p></div></div>');
+                }
+                else {
+                  carddoc.push('<div class="doc" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>></span> '+datadocs[n].titre_document+'</h3><div class="hidden-doc"><p    class="subtitle-doc"><a href="'+datadocs[n].url_creation+'">'+datadocs[n].url_creation+'</a></p></div></div>');
+                }
+              }
+            }
           }
           else {
             carddoc.push('<div><p>'+datadocs[n].titre_document_original+'</p></div>');
           }
         }
-        // Documents avec vidéo
+        // Documents avec site web
         if(datadocs[n].type == "site web") {
           if(datadocs[n].titre_document !== '') {
             carddoc.push('<div><p>'+datadocs[n].titre_document+'</p></div>');
@@ -284,8 +313,17 @@ function createMarkers(dataintro, dataetape, datadocs) {
             carddoc.push('<div><p>'+datadocs[n].titre_document_original+'</p></div>');
           }
         }
-        // Documents avec site web
+        // Documents avec vidéo
         if(datadocs[n].type == "vidéo") {
+          if(datadocs[n].titre_document !== '') {
+            carddoc.push('<div><p>'+datadocs[n].titre_document+'</p></div>');
+          }
+          else {
+            carddoc.push('<div><p>'+datadocs[n].titre_document_original+'</p></div>');
+          }
+        }
+        // Documents avec audio
+        if(datadocs[n].type == "audio") {
           if(datadocs[n].titre_document !== '') {
             carddoc.push('<div><p>'+datadocs[n].titre_document+'</p></div>');
           }
