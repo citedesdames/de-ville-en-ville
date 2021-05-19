@@ -10,9 +10,24 @@ mymap.zoomControl.setPosition('topright');
 // Ajout du fond de carte https://c.tile.stamen.com/watercolor/{z}/{x}/{y}.jpg http://tile.stamen.com/terrain/{z}/{x}/{y}.png
 L.tileLayer('https://stamen-tiles.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.png', {
     attribution: '',
-    maxZoom: 18,
+    maxZoom: 14,
+    minZoom: 3
 }).addTo(mymap);
 
+let url = window.location.href.split('?');
+url = url[1].split("&");
+let etape = "";
+if(url.length>1) {
+  etape = url[1].split("=")[1];
+}
+else {
+  etape = undefined;
+}
+
+let parametresUrl = {
+  "site": url[0].split("=")[1],
+  "etape": etape
+}
 
 // Tableau de test regroupant les villes et leurs coordonnées
 /* let data = [
@@ -64,28 +79,30 @@ let dataintro = [];
 let dataetape = [];
 let datadocs = [];
 
+if(parametresUrl.site == "1") {
 // Appel des .csv et push dans les tableaux correspondants
-Papa.parse("https://docs.google.com/spreadsheets/d/e/2PACX-1vTcjDAvojPXjqX9rpfZ0QMKjbq9mTxfKQZTxroaFBFzvyNMkhtfgx5LngTCn7135uAgGSY_cBgb2_wc/pub?gid=129227231&single=true&output=csv", {
-  download: true,
-  header: true,
-  complete: function (results) {
-    dataintro.push(results.data);
-  }
-})
-Papa.parse("https://docs.google.com/spreadsheets/d/e/2PACX-1vTcjDAvojPXjqX9rpfZ0QMKjbq9mTxfKQZTxroaFBFzvyNMkhtfgx5LngTCn7135uAgGSY_cBgb2_wc/pub?gid=1773657079&single=true&output=csv", {
-  download: true,
-  header: true,
-  complete: function (results) {
-    dataetape.push(results.data);
-  }
-})
-Papa.parse("https://docs.google.com/spreadsheets/d/e/2PACX-1vTcjDAvojPXjqX9rpfZ0QMKjbq9mTxfKQZTxroaFBFzvyNMkhtfgx5LngTCn7135uAgGSY_cBgb2_wc/pub?gid=0&single=true&output=csv", {
-  download: true,
-  header: true,
-  complete: function (results) {
-    datadocs.push(results.data);
-  }
-})
+  Papa.parse("https://docs.google.com/spreadsheets/d/e/2PACX-1vTcjDAvojPXjqX9rpfZ0QMKjbq9mTxfKQZTxroaFBFzvyNMkhtfgx5LngTCn7135uAgGSY_cBgb2_wc/pub?gid=129227231&single=true&output=csv", {
+    download: true,
+    header: true,
+    complete: function (results) {
+      dataintro.push(results.data);
+    }
+  })
+  Papa.parse("https://docs.google.com/spreadsheets/d/e/2PACX-1vTcjDAvojPXjqX9rpfZ0QMKjbq9mTxfKQZTxroaFBFzvyNMkhtfgx5LngTCn7135uAgGSY_cBgb2_wc/pub?gid=1773657079&single=true&output=csv", {
+    download: true,
+    header: true,
+    complete: function (results) {
+      dataetape.push(results.data);
+    }
+  })
+  Papa.parse("https://docs.google.com/spreadsheets/d/e/2PACX-1vTcjDAvojPXjqX9rpfZ0QMKjbq9mTxfKQZTxroaFBFzvyNMkhtfgx5LngTCn7135uAgGSY_cBgb2_wc/pub?gid=0&single=true&output=csv", {
+    download: true,
+    header: true,
+    complete: function (results) {
+      datadocs.push(results.data);
+    }
+  })
+}
 
 // Appel de la fonction avec les données en entrées
 setTimeout(function() {
@@ -158,11 +175,20 @@ function ChangeClass() {
       });
     }
     else {
-      mymap.flyTo([47,3], mymap.getZoom(), {
-        "animate": true,
-        "duration": 2
-      });
+      if(mymap.getCenter().lat == 47 && mymap.getCenter().lng == 11) {
+        mymap.flyTo([47,3], mymap.getZoom(), {
+          "animate": true,
+          "duration": 2
+        });
+      }
+      else {
+        mymap.flyTo([mymap.getCenter().lat, mymap.getCenter().lng+.5], mymap.getZoom(), {
+          "animate": true,
+          "duration": 2
+        })
+      }
       uncolorMarkers();
+    
     };
  
     // Affichage des timelines et cards 
@@ -260,25 +286,25 @@ function createMarkers(dataintro, dataetape, datadocs) {
         // Documents avec image
         if(datadocs[n].type == "image") {
           if(datadocs[n].url_creation.search(/http/) !== 0 && datadocs[n].titre_document_original.search(/\<a href+/) !== 0) {
-            carddoc.push('<div class="doc" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>></span> '+datadocs[n].titre_document+'</h3><div class="hidden-doc"><p class="subtitle-doc">'+datadocs[n].titre_document_original.replace("<a href",'<a target="_blank" href')+'</p><img src="'+datadocs[n].url_document+'" width="400px" margin="0 auto"></div></div>');
+            carddoc.push('<div class="doc" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>></span><span><img src="assets/images/image.png" alt=""></span> '+datadocs[n].titre_document+'</h3><div class="hidden-doc"><p class="subtitle-doc">'+datadocs[n].titre_document_original.replace("<a href",'<a target="_blank" href')+'</p><img src="'+datadocs[n].url_document+'" width="400px" margin="0 auto"></div></div>');
           }
           else {
-            carddoc.push('<div class="doc" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>></span> '+datadocs[n].titre_document+'</h3><div class="hidden-doc"><p class="subtitle-doc">'+datadocs[n].titre_document_original.replace("<a href",'<a target="_blank" href')+'</p><a class="img-doc" target="_blank" href="'+datadocs[n].url_creation+'" alt=""><img src="'+datadocs[n].url_document+'" width="400px"></a></div></div>');
+            carddoc.push('<div class="doc" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>></span><span><img src="assets/images/image.png" alt=""></span> '+datadocs[n].titre_document+'</h3><div class="hidden-doc"><p class="subtitle-doc">'+datadocs[n].titre_document_original.replace("<a href",'<a target="_blank" href')+'</p><a class="img-doc" target="_blank" href="'+datadocs[n].url_creation+'" alt=""><img src="'+datadocs[n].url_document+'" width="400px"></a></div></div>');
           }
         }
-        // Documnents avec texte
+        // Documnents avec texte 
         if(datadocs[n].type == "texte") {          
           if(datadocs[n].titre_document.length > 1) {
             if(datadocs[n].texte.length > 1) {
               if(datadocs[n].titre_document_original.length > 1) {
-                carddoc.push('<div class="doc" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>></span> '+datadocs[n].titre_document+'</h3><div class="hidden-doc"><p class="subtitle-doc">'+datadocs[n].titre_document_original.replace("<a href",'<a target="_blank" href')+'</p><p>'+datadocs[n].texte+'</p></div></div>');
+                carddoc.push('<div class="doc" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>></span><span><img src="assets/images/texte.png" alt=""></span> '+datadocs[n].titre_document+'</h3><div class="hidden-doc"><p class="subtitle-doc">'+datadocs[n].titre_document_original.replace("<a href",'<a target="_blank" href')+'</p><p>'+datadocs[n].texte+'</p></div></div>');
               }
               else {
                 if(datadocs[n].url_document.length > 1) {
-                  carddoc.push('<div class="doc" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>></span> '+datadocs[n].titre_document+'</h3><div class="hidden-doc"><p    class="subtitle-doc"><a href="'+datadocs[n].url_document+'">'+datadocs[n].url_document+'</a></p><p>'+datadocs[n].texte+'</p></div></div>');
+                  carddoc.push('<div class="doc" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>></span><span><img src="assets/images/texte.png" alt=""></span> '+datadocs[n].titre_document+'</h3><div class="hidden-doc"><p    class="subtitle-doc"><a href="'+datadocs[n].url_document+'">'+datadocs[n].url_document+'</a></p><p>'+datadocs[n].texte+'</p></div></div>');
                 }
                 else {
-                  carddoc.push('<div class="doc" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>></span> '+datadocs[n].titre_document+'</h3><div class="hidden-doc"><p    class="subtitle-doc"><a href="'+datadocs[n].url_creation+'">'+datadocs[n].url_creation+'</a></p><p>'+datadocs[n].texte+'</p></div></div>');
+                  carddoc.push('<div class="doc" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>></span><span><img src="assets/images/texte.png" alt=""></span> '+datadocs[n].titre_document+'</h3><div class="hidden-doc"><p    class="subtitle-doc"><a href="'+datadocs[n].url_creation+'">'+datadocs[n].url_creation+'</a></p><p>'+datadocs[n].texte+'</p></div></div>');
                 }
               }
             }
@@ -286,16 +312,16 @@ function createMarkers(dataintro, dataetape, datadocs) {
               if(datadocs[n].titre_document_original.length > 1) {
                 if(datadocs[n].titre_document_original.search(/http/) == -1) {
                   if(datadocs[n].url_document.length > 1) {
-                    carddoc.push('<div class="doc" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>></span> '+datadocs[n].titre_document+'</h3><div class="hidden-doc"><p class="subtitle-doc"><a href="'+datadocs[n].url_document+'" target="_blank">'+datadocs[n].titre_document_original.replace("<a href",'<a target="_blank" href')+'</a></p></div></div>');
+                    carddoc.push('<div class="doc" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>></span><span><img src="assets/images/texte.png" alt=""></span> '+datadocs[n].titre_document+'</h3><div class="hidden-doc"><p class="subtitle-doc"><a href="'+datadocs[n].url_document+'" target="_blank">'+datadocs[n].titre_document_original.replace("<a href",'<a target="_blank" href')+'</a></p></div></div>');
                   }
                 }
               }
               else {
                 if(datadocs[n].url_document.length > 1) {
-                  carddoc.push('<div class="doc" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>></span> '+datadocs[n].titre_document+'</h3><div class="hidden-doc"><p    class="subtitle-doc"><a href="'+datadocs[n].url_document+'">'+datadocs[n].url_document+'</a></p></div></div>');
+                  carddoc.push('<div class="doc" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>></span><span><img src="assets/images/texte.png" alt=""></span> '+datadocs[n].titre_document+'</h3><div class="hidden-doc"><p    class="subtitle-doc"><a href="'+datadocs[n].url_document+'">'+datadocs[n].url_document+'</a></p></div></div>');
                 }
                 else {
-                  carddoc.push('<div class="doc" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>></span> '+datadocs[n].titre_document+'</h3><div class="hidden-doc"><p    class="subtitle-doc"><a href="'+datadocs[n].url_creation+'">'+datadocs[n].url_creation+'</a></p></div></div>');
+                  carddoc.push('<div class="doc" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>></span><span><img src="assets/images/texte.png" alt=""></span> '+datadocs[n].titre_document+'</h3><div class="hidden-doc"><p    class="subtitle-doc"><a href="'+datadocs[n].url_creation+'">'+datadocs[n].url_creation+'</a></p></div></div>');
                 }
               }
             }
@@ -631,7 +657,7 @@ function ClicSurDoc(e) {
     }
     let scrollitem = document.querySelector(".overflow-cards");
     scrollitem.scrollTo({
-      top: (e.offsetTop-300),
+      top: (e.offsetTop),
       behavior: 'smooth'
     });
   }
