@@ -1,12 +1,12 @@
 @font-face {
     font-family: 'Montserrat';
-    src: url(../assets/fonts/Montserrat-Regular.woff2) format("woff2"),
-            url(../assets/fonts/Montserrat-Regular.woff) format("woff");
+    src: url(../fonts/Montserrat-Regular.woff2) format("woff2"),
+            url(../fonts/Montserrat-Regular.woff) format("woff");
 }
 @font-face {
     font-family: 'Montserrat SBold';
-    src: url(../assets/fonts/Montserrat-SemiBold.woff2) format('woff2'),
-            url(../assets/fonts/Montserrat-SemiBold.woff) format('woff');
+    src: url(../fonts/Montserrat-SemiBold.woff2) format('woff2'),
+            url(../fonts/Montserrat-SemiBold.woff) format('woff');
 }
 
 body {
