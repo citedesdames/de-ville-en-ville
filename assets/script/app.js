@@ -120,14 +120,14 @@ setTimeout(function() {
 let markers = [];
 
 // Marqueur Bleu
-let blueMarkIcon = L.icon({
+const blueMarkIcon = L.icon({
   iconUrl: 'https://zupimages.net/up/21/16/bawa.png',
   iconSize: [20.5, 40],
   iconAnchor:   [10, 40]
 }); 
 
 // Marqueur Vert
-let greenMarkIcon = L.icon({
+const greenMarkIcon = L.icon({
   iconUrl: 'https://zupimages.net/up/21/16/f5xz.png',
   iconSize: [30.6, 60],
   iconAnchor:   [14, 55]
@@ -158,6 +158,7 @@ function ChangeClass() {
     element5.classList.toggle("arrow-bottom-open");
     element6.classList.toggle("header-open");
     element7.classList.toggle("section-open");
+    ChangeURL(-1);
 
     // Affichage de la page "d'accueil"
     if(element1.classList.contains("open")) {      
@@ -188,10 +189,32 @@ function ChangeClass() {
         });
       }
       else {
-        mymap.flyTo([mymap.getCenter().lat, mymap.getCenter().lng+.5], mymap.getZoom(), {
-          "animate": true,
-          "duration": 2
-        })
+        let test1 = 0;
+        let test2 = 0;
+        for(i=0; i<markers.length;i++) {
+          let mark = markers[i];
+          if(mymap.getCenter().lat == mark.getLatLng().lat && mymap.getCenter().lng == mark.getLatLng().lng) {
+            test1 = 1;
+          }
+          else {
+            test2 = 2;
+          }
+        }
+        console.log(test1, test2);
+        if(test1 == 1) {
+          mymap.flyTo([mymap.getCenter().lat, mymap.getCenter().lng+.5], mymap.getZoom(), {
+            "animate": true,
+            "duration": 2
+          });
+        }
+        else {
+          if(test2 == 2) {
+            mymap.flyTo([mymap.getCenter().lat, mymap.getCenter().lng-.5], mymap.getZoom(), {
+              "animate": true,
+              "duration": 2
+            });
+          }
+        }
       }
       uncolorMarkers();
     
@@ -291,11 +314,22 @@ function createMarkers(dataintro, dataetape, datadocs) {
         // DOCUMENTS
         // Documents avec image
         if(datadocs[n].type == "image") {
-          if(datadocs[n].url_creation.search(/http/) !== 0 && datadocs[n].titre_document_original.search(/\<a href+/) !== 0) {
-            carddoc.push('<div class="doc" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>></span><span><img src="assets/images/image.png" alt=""></span> '+datadocs[n].titre_document+'</h3><div class="hidden-doc"><p class="subtitle-doc">'+datadocs[n].titre_document_original.replace("<a href",'<a target="_blank" href')+'</p><img src="'+datadocs[n].url_document+'" width="400px" margin="0 auto"></div></div>');
+          if(datadocs[n].titre_document.length>1) {
+            if(datadocs[n].url_creation.search(/http/) !== 0 && datadocs[n].titre_document_original.search(/\<a href+/) !== 0) {
+              carddoc.push('<div class="doc" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>></span><span><img src="assets/images/image.png" alt=""></span> '+datadocs[n].titre_document+'</h3><div class="hidden-doc"><p class="subtitle-doc">'+datadocs[n].titre_document_original.replace("<a href",'<a target="_blank" href')+'</p><img src="'+datadocs[n].url_document+'" width="400px" margin="0 auto"></div></div>');
+            }
+            else {
+              carddoc.push('<div class="doc" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>></span><span><img src="assets/images/image.png" alt=""></span> '+datadocs[n].titre_document+'</h3><div class="hidden-doc"><p class="subtitle-doc">'+datadocs[n].titre_document_original.replace("<a href",'<a target="_blank" href')+'</p><a class="img-doc" target="_blank" href="'+datadocs[n].url_creation+'" alt=""><img src="'+datadocs[n].url_document+'" width="400px"></a></div></div>');
+            }
           }
           else {
-            carddoc.push('<div class="doc" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>></span><span><img src="assets/images/image.png" alt=""></span> '+datadocs[n].titre_document+'</h3><div class="hidden-doc"><p class="subtitle-doc">'+datadocs[n].titre_document_original.replace("<a href",'<a target="_blank" href')+'</p><a class="img-doc" target="_blank" href="'+datadocs[n].url_creation+'" alt=""><img src="'+datadocs[n].url_document+'" width="400px"></a></div></div>');
+            if(datadocs[n].url_creation.search(/http/) !== 0 && datadocs[n].titre_document_original.search(/\<a href+/) !== 0) {
+              carddoc.push('<div class="doc" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>></span><span><img src="assets/images/image.png" alt=""></span> '+datadocs[n].titre_document_original.replace("<a href",'<a target="_blank" href')+'</h3><div class="hidden-doc"><img src="'+datadocs[n].url_document+'" width="400px" margin="0 auto"></div></div>');
+            }
+            else {
+              carddoc.push('<div class="doc" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>></span><span><img src="assets/images/image.png" alt=""></span> '+datadocs[n].titre_document_original.replace("<a href",'<a target="_blank" href')+'</h3><div class="hidden-doc"><a class="img-doc" target="_blank" href="'+datadocs[n].url_creation+'" alt=""><img src="'+datadocs[n].url_document+'" width="400px"></a></div></div>');
+            }
+
           }
         }
         // Documnents avec texte 
@@ -369,13 +403,16 @@ function createMarkers(dataintro, dataetape, datadocs) {
     carddoc = carddoc.toString().replace(/<\/p>\,/g,'</p>');
     // Insertion dans l'html des lignes définies plus tôt
     card.insertAdjacentHTML("beforeend", '<div id="card'+i+'"class="card">'+cardcontent[0]+'<div class="card-content">'+(carddoc.toString().replace(/<\/div>\,/g,'</div>'))+'</div></div>');
-   
     // Insertion du marqueur créé dans le tableau markers
     markers.push(mark);
     // Insertion de chaque coordonnées dans le tableau latlngs
     latlngs.push([dataetape[i].latitude, dataetape[i].longitude]);
     }
   };
+
+  
+  e.insertAdjacentHTML("afterbegin", '<div class="slideLeft"><</div>')
+  e.insertAdjacentHTML("beforeend", '<div class="slideRight">></div>')
   // Insertion dans l'html le texte et titre d'introduction
   intro.insertAdjacentHTML("beforeend", '<div id="card" class="card-intro content"><h2 class="title-intro">'+dataintro[0].nom_itineraire+'</h2><p>'+dataintro[0].description_itineraire+'</p></div>')
   // Insertion dans l'html le bouton Commencer
@@ -397,6 +434,8 @@ function createMarkers(dataintro, dataetape, datadocs) {
 function onMarkerTimeline(id) {
   // Sélection du marqueur cliqué dans la timeline
   let e = document.querySelector("#"+id);
+  //
+  let timeline = document.querySelector('.timeline');
   // Ainsi que son image
   let child = document.querySelector("#"+id+" img");
   // Itération pour trouver quel marqueur de la carte est associé au marqueur de la timeline grâce aux coordonnées
@@ -421,6 +460,10 @@ function onMarkerTimeline(id) {
           top: 0,
           behavior: 'smooth'
         });
+        timeline.scrollTo({
+          left:e.offsetLeft-75,
+          behavior:'smooth'
+        })
       }
 
       // Conditions pour changer les boutons suivant et précédent si on est à la première ou la dernière étape
@@ -499,6 +542,11 @@ function onPopup(e) {
         top: 0,
         behavior: 'smooth'
       });      
+      let timeline = document.querySelector('.timeline');
+      timeline.scrollTo({
+        left:document.querySelector("#mark"+i).offsetLeft-75,
+        behavior:'smooth'
+      })
       // Conditions pour changer les boutons suivant et précédent si on est à la première ou la dernière étape
       if(i == markers.length - 1) {
         document.querySelector(".etape-suiv").classList.remove("-open");
@@ -543,7 +591,12 @@ function changeStep(e) {
             top: 0,
             behavior: 'smooth'
           });
-           if(i+1 == markers.length - 1) {
+          let timeline = document.querySelector('.timeline');
+          timeline.scrollTo({
+            left:document.querySelector("#mark"+(i+1)).offsetLeft-75,
+            behavior:'smooth'
+          })
+          if(i+1 == markers.length - 1) {
             document.querySelector(".etape-suiv").classList.remove("-open");
           }
           if(i+1 == 1) {
@@ -577,6 +630,11 @@ function changeStep(e) {
             top: 0,
             behavior: 'smooth'
           });
+          let timeline = document.querySelector('.timeline');
+          timeline.scrollTo({
+            left:document.querySelector("#mark"+(i-1)).offsetLeft-75,
+            behavior:'smooth'
+          })
           if(i-1 == markers.length - 2) {
             document.querySelector(".etape-suiv").classList.add("-open");
           }
@@ -586,6 +644,11 @@ function changeStep(e) {
         }
         else {
           ChangeURL(i-1);
+          let timeline = document.querySelector('.timeline');
+          timeline.scrollTo({
+            left:0,
+            behavior:'smooth'
+          })
           uncolorMarkers(); 
           document.querySelector(".introduction").classList.add("-open");
           document.querySelector(".card-intro").classList.add("-open");
@@ -696,6 +759,27 @@ function ChangeURL(i) {
     history.pushState({},'', url)
   }
 }
+
+// Fonction pour les boutons sur la timeline
+setTimeout(function() {
+  const buttonRight = document.querySelector('.slideRight');
+  const buttonLeft = document.querySelector('.slideLeft');
+
+  buttonRight.onclick = function () {
+    document.querySelector('.timeline').scrollBy({
+      left: 200,
+      behavior: 'smooth'
+    });     
+  };
+  buttonLeft.onclick = function () {
+    document.querySelector('.timeline').scrollBy({
+      left: -200,
+      behavior: 'smooth'
+    });     
+  };
+},2600);
+
+
 // Fonction pour retirer les couleurs de tous les marqueurs (timeline et carte)
 function uncolorMarkers() {
   let tab = [];
