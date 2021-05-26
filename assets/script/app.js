@@ -2,6 +2,17 @@
 /*--------------------- Paramétrage de la carte ---------------------*/
 /*--------------------- Paramétrage de la carte ---------------------*/
 
+let reg = /https:\/\/gallica\.bnf\.fr\/ark:\/12148\/[^\/]+\//;
+
+let string = "https://gallica.bnf.fr/ark:/12148/bpt6k298707k/f341.thumbnail";
+
+let test = string.split(reg);
+console.log(test[1]);
+let test2 = test[1].split(/\.[a-z]+/);
+console.log(test2[0]);
+
+
+
 // Paramétrage de la vue sur la carte
 let mymap = L.map('mapid');
 
@@ -81,7 +92,7 @@ let dataintro = [];
 let dataetape = [];
 let datadocs = [];
 
-if(parametresUrl.site == "1") {
+if(parametresUrl.site == "0") {
 // Appel des .csv et push dans les tableaux correspondants
   Papa.parse("https://docs.google.com/spreadsheets/d/e/2PACX-1vTcjDAvojPXjqX9rpfZ0QMKjbq9mTxfKQZTxroaFBFzvyNMkhtfgx5LngTCn7135uAgGSY_cBgb2_wc/pub?gid=129227231&single=true&output=csv", {
     download: true,
@@ -104,6 +115,15 @@ if(parametresUrl.site == "1") {
       datadocs.push(results.data);
     }
   })
+  document.querySelector("title").textContent = "Tour de France";
+  document.querySelector("h1").textContent = "Le Grand tour de France de Charles IX";
+}
+else {
+  if(parametresUrl.site="1") {
+    
+  document.querySelector("title").textContent = "Le voyage des Flandres";
+  document.querySelector("h1").textContent = "Marguerite de Valois : le voyage des Flandres";
+  }
 }
 
 // Appel de la fonction avec les données en entrées
@@ -112,7 +132,7 @@ setTimeout(function() {
   if(typeof(etape) == 'number') {
     document.querySelectorAll(".leaflet-marker-icon")[etape].click();
     document.getElementById("popup"+etape).click();
-  }
+  } 
 }, 2500);
 
 // Initialisation des marqueurs
@@ -463,7 +483,7 @@ function onMarkerTimeline(id) {
         timeline.scrollTo({
           left:e.offsetLeft-75,
           behavior:'smooth'
-        })
+        });
       }
 
       // Conditions pour changer les boutons suivant et précédent si on est à la première ou la dernière étape
@@ -546,7 +566,7 @@ function onPopup(e) {
       timeline.scrollTo({
         left:document.querySelector("#mark"+i).offsetLeft-75,
         behavior:'smooth'
-      })
+      });
       // Conditions pour changer les boutons suivant et précédent si on est à la première ou la dernière étape
       if(i == markers.length - 1) {
         document.querySelector(".etape-suiv").classList.remove("-open");
@@ -595,7 +615,7 @@ function changeStep(e) {
           timeline.scrollTo({
             left:document.querySelector("#mark"+(i+1)).offsetLeft-75,
             behavior:'smooth'
-          })
+          });
           if(i+1 == markers.length - 1) {
             document.querySelector(".etape-suiv").classList.remove("-open");
           }
@@ -634,7 +654,8 @@ function changeStep(e) {
           timeline.scrollTo({
             left:document.querySelector("#mark"+(i-1)).offsetLeft-75,
             behavior:'smooth'
-          })
+          });
+
           if(i-1 == markers.length - 2) {
             document.querySelector(".etape-suiv").classList.add("-open");
           }
@@ -648,7 +669,7 @@ function changeStep(e) {
           timeline.scrollTo({
             left:0,
             behavior:'smooth'
-          })
+          });
           uncolorMarkers(); 
           document.querySelector(".introduction").classList.add("-open");
           document.querySelector(".card-intro").classList.add("-open");
@@ -659,7 +680,7 @@ function changeStep(e) {
           for(i=0;i<markers.length;i++) {
             let marker = markers[i];
             marker.closePopup();
-          }
+          };
           document.querySelector(".introduction").scrollTo({
             top: 0,
             behavior: 'smooth'
@@ -717,6 +738,7 @@ function AboutPage() {
   }
 }
 
+// Animation lors de l'ouverture et fermeture d'un document
 function ClicSurDoc(e) {
   if(!e.lastChild.classList.contains("doc-open")) {
     let doc = document.querySelectorAll(".doc");
@@ -733,12 +755,12 @@ function ClicSurDoc(e) {
       behavior: 'smooth'
     });
   }
-
   e.lastChild.classList.toggle("doc-open");
   e.firstChild.firstChild.classList.toggle("rotate-span");
   e.firstChild.classList.toggle("title-doc-clicked");
 }
 
+// Changement de l'URL quand on change d'étape
 function ChangeURL(i) {
   const url = new URL(window.location);
 
