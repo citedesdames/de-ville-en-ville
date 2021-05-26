@@ -140,6 +140,7 @@ header h1 {
 
 header .img-header {
     display: none;
+    cursor: pointer;
 }
 
 .header-open {

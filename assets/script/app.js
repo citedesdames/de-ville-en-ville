@@ -19,6 +19,8 @@ url = url[1].split("&");
 let etape = "";
 if(url.length>1) {
   etape = url[1].split("=")[1];
+  etape = etape - 1;
+  console.log(etape)
 }
 else {
   etape = undefined;
@@ -107,6 +109,10 @@ if(parametresUrl.site == "1") {
 // Appel de la fonction avec les données en entrées
 setTimeout(function() {
   createMarkers(dataintro[0], dataetape[0], datadocs[0]);
+  if(typeof(etape) == 'number') {
+    document.querySelectorAll(".leaflet-marker-icon")[etape].click();
+    document.getElementById("popup"+etape).click();
+  }
 }, 2500);
 
 // Initialisation des marqueurs
@@ -275,7 +281,7 @@ function createMarkers(dataintro, dataetape, datadocs) {
           // Push au début du tableau la ligne qu'il faudra mettre dans l'html
           cardcontent.unshift('<div class="card-header"><img class="card-minia" src="'+datadocs[n].miniature+'" alt""><h2 class="card-title">'+dataetape[i].lieu+'</h2></div>');
           // Création du pop up du marqueur sur la carte
-          mark.bindPopup('<div class="popup-wrapper"><div class="vignette" style="background-image: url('+datadocs[n].miniature+');">'+dataetape[i].lieu+'</div><div class="popup-container"><p class="date">'+dataetape[i].date+'</p><p id="popup'+i+'" class="more" data-latlng="'+dataetape[i].latitude+', '+dataetape[i].longitude+'" onclick="onPopup(this)" >En savoir plus</p></div></div>', {offset: new L.Point(0, -45)});
+          mark.bindPopup('<div class="popup-wrapper"><div class="vignette" style="background-image: url('+datadocs[n].miniature+');">'+dataetape[i].lieu+'</div><div class="popup-container"><p class="date">'+dataetape[i].date+'</p><p id="popup'+i+'" class="more" data-latlng="'+dataetape[i].latitude+', '+dataetape[i].longitude+'" onclick="onPopup(this)">En savoir plus</p></div></div>', {offset: new L.Point(0, -45)});
         }
         else {
           // Push dans le tableau une ligne par défaut
@@ -301,10 +307,10 @@ function createMarkers(dataintro, dataetape, datadocs) {
               }
               else {
                 if(datadocs[n].url_document.length > 1) {
-                  carddoc.push('<div class="doc" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>></span><span><img src="assets/images/texte.png" alt=""></span> '+datadocs[n].titre_document+'</h3><div class="hidden-doc"><p    class="subtitle-doc"><a href="'+datadocs[n].url_document+'">'+datadocs[n].url_document+'</a></p><p>'+datadocs[n].texte+'</p></div></div>');
+                  carddoc.push('<div class="doc" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>></span><span><img src="assets/images/texte.png" alt=""></span> '+datadocs[n].titre_document+'</h3><div class="hidden-doc"><p class="subtitle-doc"><a href="'+datadocs[n].url_document+'">'+datadocs[n].url_document+'</a></p><p>'+datadocs[n].texte+'</p></div></div>');
                 }
                 else {
-                  carddoc.push('<div class="doc" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>></span><span><img src="assets/images/texte.png" alt=""></span> '+datadocs[n].titre_document+'</h3><div class="hidden-doc"><p    class="subtitle-doc"><a href="'+datadocs[n].url_creation+'">'+datadocs[n].url_creation+'</a></p><p>'+datadocs[n].texte+'</p></div></div>');
+                  carddoc.push('<div class="doc" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>></span><span><img src="assets/images/texte.png" alt=""></span> '+datadocs[n].titre_document+'</h3><div class="hidden-doc"><p class="subtitle-doc"><a href="'+datadocs[n].url_creation+'">'+datadocs[n].url_creation+'</a></p><p>'+datadocs[n].texte+'</p></div></div>');
                 }
               }
             }
@@ -318,10 +324,10 @@ function createMarkers(dataintro, dataetape, datadocs) {
               }
               else {
                 if(datadocs[n].url_document.length > 1) {
-                  carddoc.push('<div class="doc" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>></span><span><img src="assets/images/texte.png" alt=""></span> '+datadocs[n].titre_document+'</h3><div class="hidden-doc"><p    class="subtitle-doc"><a href="'+datadocs[n].url_document+'">'+datadocs[n].url_document+'</a></p></div></div>');
+                  carddoc.push('<div class="doc" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>></span><span><img src="assets/images/texte.png" alt=""></span> '+datadocs[n].titre_document+'</h3><div class="hidden-doc"><p class="subtitle-doc"><a href="'+datadocs[n].url_document+'">'+datadocs[n].url_document+'</a></p></div></div>');
                 }
                 else {
-                  carddoc.push('<div class="doc" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>></span><span><img src="assets/images/texte.png" alt=""></span> '+datadocs[n].titre_document+'</h3><div class="hidden-doc"><p    class="subtitle-doc"><a href="'+datadocs[n].url_creation+'">'+datadocs[n].url_creation+'</a></p></div></div>');
+                  carddoc.push('<div class="doc" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>></span><span><img src="assets/images/texte.png" alt=""></span> '+datadocs[n].titre_document+'</h3><div class="hidden-doc"><p class="subtitle-doc"><a href="'+datadocs[n].url_creation+'">'+datadocs[n].url_creation+'</a></p></div></div>');
                 }
               }
             }
@@ -401,6 +407,7 @@ function onMarkerTimeline(id) {
     // Si le marqueur de la carte est le même que le marqueur cliqué, alors on le passe en vert, s'il est vert, on le passe en bleu
     if(mark.getLatLng().lat.toString()+", "+mark.getLatLng().lng.toString() == e.getAttribute("data-latlng")) {
       if(mark.getIcon() == blueMarkIcon) {
+        ChangeURL(i);
         uncolorMarkers();
         mark.setIcon(greenMarkIcon);
         child.setAttribute("src", "https://zupimages.net/up/21/16/wnre.png");      
@@ -415,10 +422,7 @@ function onMarkerTimeline(id) {
           behavior: 'smooth'
         });
       }
-      else {
-        mark.setIcon(blueMarkIcon);
-        child.setAttribute("src", "https://zupimages.net/up/21/16/pcxc.png");
-      };
+
       // Conditions pour changer les boutons suivant et précédent si on est à la première ou la dernière étape
       if(i == markers.length - 1) {
         document.querySelector(".etape-suiv").classList.remove("-open");
@@ -465,6 +469,9 @@ function onPopup(e) {
     let marker = markers[i];
     // Condition pour avoir le marqueur et la card correspondants au pop-up
     if(marker.getLatLng().lat.toString()+", "+marker.getLatLng().lng.toString() == e.getAttribute("data-latlng")) {
+      ChangeURL(i);
+      document.querySelector(".introduction").classList.remove("-open");
+      document.querySelector(".img-header").classList.remove("-open");
       let tab = uncolorMarkers();
       let img = document.querySelector("#mark"+i+" img");
       let card = document.querySelector("#card"+i);
@@ -520,6 +527,7 @@ function changeStep(e) {
     marker.closePopup();
       if(card.getAttribute("id") == "card"+i) {
         if(i+1 < markers.length) {
+          ChangeURL(i+1);
           uncolorMarkers();
           let newcard = document.querySelector("#card"+(i+1));
           newcard.classList.add("-open");
@@ -553,6 +561,7 @@ function changeStep(e) {
     marker.closePopup();
       if(card.getAttribute("id") == "card"+i) {
         if(i-1>-1) {
+          ChangeURL(i-1);
           uncolorMarkers();
           let newcard = document.querySelector("#card"+(i-1));
           newcard.classList.add("-open");
@@ -576,6 +585,7 @@ function changeStep(e) {
           }
         }
         else {
+          ChangeURL(i-1);
           uncolorMarkers(); 
           document.querySelector(".introduction").classList.add("-open");
           document.querySelector(".card-intro").classList.add("-open");
@@ -603,6 +613,7 @@ function changeStep(e) {
       let scrollitem = document.querySelector(".overflow-cards");
       scrollitem.classList.add("-open");
       for(i=0;i<markers.length;i++) {
+      ChangeURL(0);
       let marker = markers[i];
       marker.closePopup();
       }
@@ -623,8 +634,6 @@ function changeStep(e) {
       });
       document.querySelector(".etape-prev").textContent = "Retour";
     } 
-        
-    
   };
 };
 
@@ -667,7 +676,26 @@ function ClicSurDoc(e) {
   e.firstChild.classList.toggle("title-doc-clicked");
 }
 
+function ChangeURL(i) {
+  const url = new URL(window.location);
 
+  let urlparam = window.location.href.split('?');
+  urlparam = urlparam[1].split("&");
+  if(i>=0) {
+    if(urlparam.length>1) {
+      url.searchParams.set('etape', dataetape[0][i].id_etape);
+      window.history.pushState({}, '', url);
+    }
+    else {
+      url.searchParams.set('etape', dataetape[0][i].id_etape);
+      history.pushState({},'', url)
+    }
+  }
+  else {
+    url.searchParams.set('etape', '');
+    history.pushState({},'', url)
+  }
+}
 // Fonction pour retirer les couleurs de tous les marqueurs (timeline et carte)
 function uncolorMarkers() {
   let tab = [];
