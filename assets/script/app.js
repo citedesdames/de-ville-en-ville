@@ -131,14 +131,16 @@ if(parametresUrl.site == "0") {
       datadocs.push(results.data);
     }
   })
-  document.querySelector("title").textContent = "Tour de France";
-  document.querySelector("h1").textContent = "Le Grand tour de France de Charles IX";
+  setTimeout(function() {
+    document.querySelector("title").textContent = "Tour de France";
+    document.querySelector("h1").textContent = "Le Grand tour de France de Charles IX";
+    document.querySelector("head").insertAdjacentHTML("beforeend",'<link rel="icon" type="image/png" href="'+dataintro[0][0].favicon+'" />')
+  },2500);
 }
 else {
   if(parametresUrl.site="1") {
-    
-  document.querySelector("title").textContent = "Le voyage des Flandres";
-  document.querySelector("h1").textContent = "Marguerite de Valois : le voyage des Flandres";
+    document.querySelector("title").textContent = "Le voyage des Flandres";
+    document.querySelector("h1").textContent = "Marguerite de Valois : le voyage des Flandres";
   }
 }
 
