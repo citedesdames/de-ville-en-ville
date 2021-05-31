@@ -137,6 +137,7 @@ header h1 {
     color: #fff;
     font-size: 1.8rem;
     font-family: Montserrat SBold;
+    cursor: pointer;
 }
 
 header .img-header {

@@ -25,21 +25,37 @@ L.tileLayer('https://stamen-tiles.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.png', 
     minZoom: 3
 }).addTo(mymap);
 
+// Récupération de l'URL au chargement de la page
 let url = window.location.href.split('?');
-url = url[1].split("&");
-let etape = "";
-if(url.length>1) {
-  etape = url[1].split("=")[1];
-  etape = etape - 1;
-  console.log(etape)
-}
-else {
-  etape = undefined;
-}
+let url2;
+let etape;
+let parametresUrl;
 
-let parametresUrl = {
-  "site": url[0].split("=")[1],
-  "etape": etape
+// Ajout de paramètres dans l'URL s'il n'y en a pas
+if(typeof url[1] == "undefined") {
+  window.history.pushState({site: 0}, '', "?site=0");
+  url2 = window.location.href.split('?');
+  etape = undefined;
+  
+  parametresUrl = {
+    "site": url2[1].split("=")[1],
+    "etape": etape
+  }
+}
+// Récupération des paramètres de l'URL s'il y en a
+else {
+  url = url[1].split("&");
+  if(url.length>1) {
+    etape = url[1].split("=")[1];
+    etape = etape - 1;
+  }
+  else {
+    etape = undefined;
+  }
+  parametresUrl = {
+    "site": url[0].split("=")[1],
+    "etape": etape
+  }
 }
 
 // Tableau de test regroupant les villes et leurs coordonnées
@@ -721,6 +737,30 @@ function changeStep(e) {
   };
 };
 
+function HeaderClick() {
+  let i = Number(document.querySelector(".card.-open").getAttribute("id").split("card")[1]);
+  ChangeURL(i, "header");
+  let timeline = document.querySelector('.timeline');
+  timeline.scrollTo({
+    left:0,
+    behavior:'smooth'
+  });
+  uncolorMarkers(); 
+  document.querySelector(".introduction").classList.add("-open");
+  document.querySelector(".card-intro").classList.add("-open");
+  document.querySelector(".img-header").classList.add("-open");
+  document.querySelector(".overflow-tl").classList.remove("-open");
+  document.querySelector(".overflow-cards").classList.remove("-open");
+  
+  for(i=0;i<markers.length;i++) {
+    let marker = markers[i];
+    marker.closePopup();
+  };
+  document.querySelector(".introduction").scrollTo({
+    top: 0,
+    behavior: 'smooth'
+  });
+}
 // Clic sur le bouton informations
 function AboutPage() {
   let about = document.querySelector(".about");
@@ -761,7 +801,7 @@ function ClicSurDoc(e) {
 }
 
 // Changement de l'URL quand on change d'étape
-function ChangeURL(i) {
+function ChangeURL(i, e) {
   const url = new URL(window.location);
 
   let urlparam = window.location.href.split('?');
@@ -773,12 +813,16 @@ function ChangeURL(i) {
     }
     else {
       url.searchParams.set('etape', dataetape[0][i].id_etape);
-      history.pushState({},'', url)
+      window.history.pushState({},'', url)
     }
   }
   else {
     url.searchParams.set('etape', '');
-    history.pushState({},'', url)
+    window.history.pushState({},'', url)
+  }
+  if(typeof e === "string") {
+    url.searchParams.set('etape', '');
+    window.history.pushState({},'', url)
   }
 }
 
