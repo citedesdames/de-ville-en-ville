@@ -11,8 +11,6 @@ console.log(test[1]);
 let test2 = test[1].split(/\.[a-z]+/);
 console.log(test2[0]);
 
-
-
 // Paramétrage de la vue sur la carte
 let mymap = L.map('mapid');
 
@@ -104,45 +102,55 @@ setTimeout(function() {
 
 
 // Tableaux qui vont contenir les données des .csv
+
 let dataintro = [];
 let dataetape = [];
 let datadocs = [];
 
-if(parametresUrl.site == "0") {
-// Appel des .csv et push dans les tableaux correspondants
-  Papa.parse("https://docs.google.com/spreadsheets/d/e/2PACX-1vTcjDAvojPXjqX9rpfZ0QMKjbq9mTxfKQZTxroaFBFzvyNMkhtfgx5LngTCn7135uAgGSY_cBgb2_wc/pub?gid=129227231&single=true&output=csv", {
-    download: true,
-    header: true,
-    complete: function (results) {
-      dataintro.push(results.data);
-    }
+// IMPORT DU FICHIER JSON
+fetch('../itineraires.json')
+  .then((response) => {
+    return response.json()
   })
-  Papa.parse("https://docs.google.com/spreadsheets/d/e/2PACX-1vTcjDAvojPXjqX9rpfZ0QMKjbq9mTxfKQZTxroaFBFzvyNMkhtfgx5LngTCn7135uAgGSY_cBgb2_wc/pub?gid=1773657079&single=true&output=csv", {
-    download: true,
-    header: true,
-    complete: function (results) {
-      dataetape.push(results.data);
+  .then((data) => {
+    // UTILISATION DES DONNEES DU FICHIERS JSON
+    if(parametresUrl.site == "0") {
+    // Appel des .csv et push dans les tableaux correspondants
+      Papa.parse(data.tourdefrance[0], {
+        download: true,
+        header: true,
+        complete: function (results) {
+          dataintro.push(results.data);
+        }
+      })
+      Papa.parse(data.tourdefrance[1], {
+        download: true,
+        header: true,
+        complete: function (results) {
+          dataetape.push(results.data);
+        }
+      })
+      Papa.parse(data.tourdefrance[2], {
+        download: true,
+        header: true,
+        complete: function (results) {
+          datadocs.push(results.data);
+        }
+      })
+      // Changement des titres et du favicon
+      setTimeout(function() {
+        document.querySelector("title").textContent = "Tour de France";
+        document.querySelector("h1").textContent = "Le Grand tour de France de Charles IX";
+        document.querySelector("head").insertAdjacentHTML("beforeend",'<link rel="icon" type="image/png" href="'+dataintro[0][0].favicon+'" />')
+      },2500);
     }
-  })
-  Papa.parse("https://docs.google.com/spreadsheets/d/e/2PACX-1vTcjDAvojPXjqX9rpfZ0QMKjbq9mTxfKQZTxroaFBFzvyNMkhtfgx5LngTCn7135uAgGSY_cBgb2_wc/pub?gid=0&single=true&output=csv", {
-    download: true,
-    header: true,
-    complete: function (results) {
-      datadocs.push(results.data);
+    else {
+      if(parametresUrl.site="1") {
+        document.querySelector("title").textContent = "Le voyage des Flandres";
+        document.querySelector("h1").textContent = "Marguerite de Valois : le voyage des Flandres";
+      }
     }
-  })
-  setTimeout(function() {
-    document.querySelector("title").textContent = "Tour de France";
-    document.querySelector("h1").textContent = "Le Grand tour de France de Charles IX";
-    document.querySelector("head").insertAdjacentHTML("beforeend",'<link rel="icon" type="image/png" href="'+dataintro[0][0].favicon+'" />')
-  },2500);
-}
-else {
-  if(parametresUrl.site="1") {
-    document.querySelector("title").textContent = "Le voyage des Flandres";
-    document.querySelector("h1").textContent = "Marguerite de Valois : le voyage des Flandres";
-  }
-}
+});
 
 // Appel de la fonction avec les données en entrées
 setTimeout(function() {
