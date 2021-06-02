@@ -17,7 +17,7 @@ let mymap = L.map('mapid');
 mymap.setView([47, 3], 6);
 mymap.zoomControl.setPosition('topright');
 // Ajout du fond de carte https://c.tile.stamen.com/watercolor/{z}/{x}/{y}.jpg http://tile.stamen.com/terrain/{z}/{x}/{y}.png
-L.tileLayer('https://stamen-tiles.a.ssl.fastly.net/terrain/{z}/{x}/{y}.png', {
+L.tileLayer('https://stamen-tiles.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.png', {
     attribution: '',
     maxZoom: 14,
     minZoom: 3
