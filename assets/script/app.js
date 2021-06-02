@@ -108,7 +108,7 @@ let dataetape = [];
 let datadocs = [];
 
 // IMPORT DU FICHIER JSON
-fetch('../itineraires.json')
+fetch('./itineraires.json')
   .then((response) => {
     return response.json()
   })
