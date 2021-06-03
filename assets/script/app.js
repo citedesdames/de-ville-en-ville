@@ -2,15 +2,6 @@
 /*--------------------- Paramétrage de la carte ---------------------*/
 /*--------------------- Paramétrage de la carte ---------------------*/
 
-let reg = /https:\/\/gallica\.bnf\.fr\/ark:\/12148\/[^\/]+\//;
-
-let string = "https://gallica.bnf.fr/ark:/12148/bpt6k298707k/f341.thumbnail";
-
-let test = string.split(reg);
-console.log(test[1]);
-let test2 = test[1].split(/\.[a-z]+/);
-console.log(test2[0]);
-
 // Paramétrage de la vue sur la carte
 let mymap = L.map('mapid');
 
@@ -344,7 +335,7 @@ function createMarkers(dataintro, dataetape, datadocs) {
     let carddoc = [];
     // Boucle For pour parcourir les documents reliés à l'étape
     for(n=0; n<datadocs.length;n++) {
-      if(datadocs[n].ville == dataetape[i].lieu) {
+      if(datadocs[n].id_etape == dataetape[i].id_etape) {
         // Si un document est une vignette, alors
         if(datadocs[n].vignette == "1") {
           // Push au début du tableau la ligne qu'il faudra mettre dans l'html
@@ -380,40 +371,63 @@ function createMarkers(dataintro, dataetape, datadocs) {
         }
         // Documnents avec texte 
         if(datadocs[n].type == "texte") {          
-          if(datadocs[n].titre_document.length > 1) {
-            if(datadocs[n].texte.length > 1) {
-              if(datadocs[n].titre_document_original.length > 1) {
-                carddoc.push('<div class="doc" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>></span><span><img src="assets/images/texte.png" alt=""></span> '+datadocs[n].titre_document+'</h3><div class="hidden-doc"><p class="subtitle-doc">'+datadocs[n].titre_document_original.replace("<a href",'<a target="_blank" href')+'</p><p>'+datadocs[n].texte+'</p></div></div>');
-              }
-              else {
-                if(datadocs[n].url_document.length > 1) {
-                  carddoc.push('<div class="doc" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>></span><span><img src="assets/images/texte.png" alt=""></span> '+datadocs[n].titre_document+'</h3><div class="hidden-doc"><p class="subtitle-doc"><a href="'+datadocs[n].url_document+'">'+datadocs[n].url_document+'</a></p><p>'+datadocs[n].texte+'</p></div></div>');
+          let reg = /https:\/\/gallica\.bnf\.fr\/ark:\/12148\//;
+          if(reg.test(datadocs[n].url_document) === true) {
+            let text = datadocs[n].url_document.split(reg);
+            let textbis = text[1].split(/\.[a-z]+/);
+            if(datadocs[n].titre_document.length > 1) {
+                if(datadocs[n].titre_document_original.length > 1) {
+                  carddoc.push('<div class="doc" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>></span><span><img src="assets/images/texte.png" alt=""></span> '+datadocs[n].titre_document+'</h3><div class="hidden-doc"><p class="subtitle-doc">'+datadocs[n].titre_document_original.replace("<a href",'<a target="_blank" href')+'</p><p class="img-doc"><img src="https://gallica.bnf.fr/ark:/12148/'+textbis[0]+'.medres" alt=""</p></div></div>');
                 }
                 else {
-                  carddoc.push('<div class="doc" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>></span><span><img src="assets/images/texte.png" alt=""></span> '+datadocs[n].titre_document+'</h3><div class="hidden-doc"><p class="subtitle-doc"><a href="'+datadocs[n].url_creation+'">'+datadocs[n].url_creation+'</a></p><p>'+datadocs[n].texte+'</p></div></div>');
+                  if(datadocs[n].url_document.length > 1) {
+                    carddoc.push('<div class="doc" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>></span><span><img src="assets/images/texte.png" alt=""></span> '+datadocs[n].titre_document+'</h3><div class="hidden-doc"><p class="subtitle-doc"><a href="'+datadocs[n].url_document+'">'+datadocs[n].url_document+'</a></p><p>'+datadocs[n].texte+'</p><p class="img-doc"><img src="https://gallica.bnf.fr/ark:/12148/'+textbis[0]+'.medres" alt=""</p></div></div>');
+                  }
+                  else {
+                    carddoc.push('<div class="doc" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>></span><span><img src="assets/images/texte.png" alt=""></span> '+datadocs[n].titre_document+'</h3><div class="hidden-doc"><p class="subtitle-doc"><a href="'+datadocs[n].url_creation+'">'+datadocs[n].url_creation+'</a></p><p>'+datadocs[n].texte+'</p><p class="img-doc"><img src="https://gallica.bnf.fr/ark:/12148/'+textbis[0]+'.medres" alt=""</p></div></div>');
+                  }
                 }
-              }
             }
             else {
-              if(datadocs[n].titre_document_original.length > 1) {
-                if(datadocs[n].titre_document_original.search(/http/) == -1) {
+              carddoc.push('<div><p>'+datadocs[n].titre_document_original+'</p></div>');
+            }
+          }
+          else {
+            if(datadocs[n].titre_document.length > 1) {
+              if(datadocs[n].texte.length > 1) {
+                if(datadocs[n].titre_document_original.length > 1) {
+                  carddoc.push('<div class="doc" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>></span><span><img src="assets/images/texte.png" alt=""></span> '+datadocs[n].titre_document+'</h3><div class="hidden-doc"><p class="subtitle-doc">'+datadocs[n].titre_document_original.replace("<a href",'<a target="_blank" href')+'</p><p>'+datadocs[n].texte+'</p></div></div>');
+                }
+                else {
                   if(datadocs[n].url_document.length > 1) {
-                    carddoc.push('<div class="doc" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>></span><span><img src="assets/images/texte.png" alt=""></span> '+datadocs[n].titre_document+'</h3><div class="hidden-doc"><p class="subtitle-doc"><a href="'+datadocs[n].url_document+'" target="_blank">'+datadocs[n].titre_document_original.replace("<a href",'<a target="_blank" href')+'</a></p></div></div>');
+                    carddoc.push('<div class="doc" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>></span><span><img src="assets/images/texte.png" alt=""></span> '+datadocs[n].titre_document+'</h3><div class="hidden-doc"><p class="subtitle-doc"><a href="'+datadocs[n].url_document+'">'+datadocs[n].url_document+'</a></p><p>'+datadocs[n].texte+'</p></div></div>');
+                  }
+                  else {
+                    carddoc.push('<div class="doc" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>></span><span><img src="assets/images/texte.png" alt=""></span> '+datadocs[n].titre_document+'</h3><div class="hidden-doc"><p class="subtitle-doc"><a href="'+datadocs[n].url_creation+'">'+datadocs[n].url_creation+'</a></p><p>'+datadocs[n].texte+'</p></div></div>');
                   }
                 }
               }
               else {
-                if(datadocs[n].url_document.length > 1) {
-                  carddoc.push('<div class="doc" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>></span><span><img src="assets/images/texte.png" alt=""></span> '+datadocs[n].titre_document+'</h3><div class="hidden-doc"><p class="subtitle-doc"><a href="'+datadocs[n].url_document+'">'+datadocs[n].url_document+'</a></p></div></div>');
+                if(datadocs[n].titre_document_original.length > 1) {
+                  if(datadocs[n].titre_document_original.search(/http/) == -1) {
+                    if(datadocs[n].url_document.length > 1) {
+                      carddoc.push('<div class="doc" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>></span><span><img src="assets/images/texte.png" alt=""></span> '+datadocs[n].titre_document+'</h3><div class="hidden-doc"><p class="subtitle-doc"><a href="'+datadocs[n].url_document+'" target="_blank">'+datadocs[n].titre_document_original.replace("<a href",'<a target="_blank" href')+'</a></p></div></div>');
+                    }
+                  }
                 }
                 else {
-                  carddoc.push('<div class="doc" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>></span><span><img src="assets/images/texte.png" alt=""></span> '+datadocs[n].titre_document+'</h3><div class="hidden-doc"><p class="subtitle-doc"><a href="'+datadocs[n].url_creation+'">'+datadocs[n].url_creation+'</a></p></div></div>');
+                  if(datadocs[n].url_document.length > 1) {
+                    carddoc.push('<div class="doc" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>></span><span><img src="assets/images/texte.png" alt=""></span> '+datadocs[n].titre_document+'</h3><div class="hidden-doc"><p class="subtitle-doc"><a href="'+datadocs[n].url_document+'">'+datadocs[n].url_document+'</a></p></div></div>');
+                  }
+                  else {
+                    carddoc.push('<div class="doc" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>></span><span><img src="assets/images/texte.png" alt=""></span> '+datadocs[n].titre_document+'</h3><div class="hidden-doc"><p class="subtitle-doc"><a href="'+datadocs[n].url_creation+'">'+datadocs[n].url_creation+'</a></p></div></div>');
+                  }
                 }
               }
             }
-          }
-          else {
-            carddoc.push('<div><p>'+datadocs[n].titre_document_original+'</p></div>');
+            else {
+              carddoc.push('<div><p>'+datadocs[n].titre_document_original+'</p></div>');
+            }
           }
         }
         // Documents avec site web
