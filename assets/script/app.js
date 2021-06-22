@@ -8,7 +8,7 @@ let mymap = L.map('mapid');
 mymap.setView([47, 3], 6);
 mymap.zoomControl.setPosition('topright');
 // Ajout du fond de carte https://c.tile.stamen.com/watercolor/{z}/{x}/{y}.jpg http://tile.stamen.com/terrain/{z}/{x}/{y}.png
-L.tileLayer('https://stamen-tiles.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.png', {
+L.tileLayer('https://stamen-tiles.a.ssl.fastly.net/terrain/{z}/{x}/{y}.png', {
     attribution: '',
     maxZoom: 14,
     minZoom: 3
@@ -137,8 +137,33 @@ fetch('./itineraires.json')
     }
     else {
       if(parametresUrl.site="1") {
-        document.querySelector("title").textContent = "Le voyage des Flandres";
-        document.querySelector("h1").textContent = "Marguerite de Valois : le voyage des Flandres";
+              // Appel des .csv et push dans les tableaux correspondants
+        Papa.parse(data.marguerite[0], {
+          download: true,
+          header: true,
+          complete: function (results) {
+            dataintro.push(results.data);
+          }
+        })
+        Papa.parse(data.marguerite[1], {
+          download: true,
+          header: true,
+          complete: function (results) {
+            dataetape.push(results.data);
+          }
+        })
+        Papa.parse(data.marguerite[2], {
+          download: true,
+          header: true,
+          complete: function (results) {
+            datadocs.push(results.data);
+          }
+        })
+        setTimeout(function() {
+          document.querySelector("title").textContent = "Le voyage des Flandres";
+          document.querySelector("h1").textContent = "Marguerite de Valois : le voyage des Flandres";
+          document.querySelector("head").insertAdjacentHTML("beforeend",'<link rel="icon" type="image/png" href="'+dataintro[0][0].favicon+'" />')
+        },2500);
       }
     }
 });
@@ -148,7 +173,7 @@ setTimeout(function() {
   createMarkers(dataintro[0], dataetape[0], datadocs[0]);
   if(typeof(etape) == 'number') {
     document.querySelectorAll(".leaflet-marker-icon")[etape].click();
-    document.getElementById("popup"+etape).click();
+    document.getElementById("popup"+dataetape[0][etape].id_etape).click();
   } 
 }, 2500);
 
@@ -237,7 +262,6 @@ function ChangeClass() {
             test2 = 2;
           }
         }
-        console.log(test1, test2);
         if(test1 == 1) {
           mymap.flyTo([mymap.getCenter().lat, mymap.getCenter().lng+.5], mymap.getZoom(), {
             "animate": true,
@@ -320,6 +344,7 @@ function createMarkers(dataintro, dataetape, datadocs) {
   let card = document.querySelector(".overflow-cards");
   let intro = document.querySelector(".introduction");
   var latlngs = [];
+  let test = [];
   // Itération pour chacune des villes dans le tableau data
   for(i=0; i<dataetape.length;i++) {
     if(dataetape[i].latitude !== '' && dataetape[i].longitude !== '') {
@@ -328,7 +353,7 @@ function createMarkers(dataintro, dataetape, datadocs) {
     mark.addTo(mymap);          
     // Création du marqueur sur la timeline
     e.insertAdjacentHTML("beforeend",
-    '<a id="mark'+i+'" class="marker" data-latlng="'+dataetape[i].latitude+', '+dataetape[i].longitude+'" onclick="onMarkerTimeline(this.id)"><img class="timeline-marker" src="https://zupimages.net/up/21/16/pcxc.png" alt=""></a>');
+    '<a id="mark'+dataetape[i].id_etape+'" class="marker" data-latlng="'+dataetape[i].latitude+', '+dataetape[i].longitude+'" onclick="onMarkerTimeline(this.id)"><img class="timeline-marker" src="https://zupimages.net/up/21/16/pcxc.png" alt=""></a>');
 
     // Création des tableaux qui vont stocker les contenus
     let cardcontent = [];
@@ -341,11 +366,11 @@ function createMarkers(dataintro, dataetape, datadocs) {
           // Push au début du tableau la ligne qu'il faudra mettre dans l'html
           cardcontent.unshift('<div class="card-header"><img class="card-minia" src="'+datadocs[n].miniature+'" alt""><h2 class="card-title">'+dataetape[i].lieu+'</h2></div>');
           // Création du pop up du marqueur sur la carte
-          mark.bindPopup('<div class="popup-wrapper"><div class="vignette" style="background-image: url('+datadocs[n].miniature+');">'+dataetape[i].lieu+'</div><div class="popup-container"><p class="date">'+dataetape[i].date+'</p><p id="popup'+i+'" class="more" data-latlng="'+dataetape[i].latitude+', '+dataetape[i].longitude+'" onclick="onPopup(this)">En savoir plus</p></div></div>', {offset: new L.Point(0, -45)});
+          test.unshift(mark.bindPopup('<div class="popup-wrapper"><div class="vignette" style="background-image: url('+datadocs[n].miniature+');">'+dataetape[i].lieu+'</div><div class="popup-container"><p class="date">'+dataetape[i].date+'</p><p id="popup'+dataetape[i].id_etape+'" class="more" data-latlng="'+dataetape[i].latitude+', '+dataetape[i].longitude+'" onclick="onPopup(this)">En savoir plus</p></div></div>', {offset: new L.Point(0, -45)}));
         }
         else {
           // Push dans le tableau une ligne par défaut
-          cardcontent.push('<div class="card-header"><h2>'+dataetape[i].lieu+'</h2></div>');
+          cardcontent.push('<div class="card-header"><img class="card-minia" src="assets/thumbnails/thumbnail-default.jpg" alt""><h2 class="card-title">'+dataetape[i].lieu+'</h2></div>');
         }
 
         // DOCUMENTS
@@ -459,10 +484,28 @@ function createMarkers(dataintro, dataetape, datadocs) {
         }
         
       }
+      else {
+        // Push au début du tableau la ligne qu'il faudra mettre dans l'html
+        cardcontent.push('<div class="card-header"><img class="card-minia" src="assets/thumbnails/thumbnail-default.jpg" alt""><h2 class="card-title">'+dataetape[i].lieu+'</h2></div>');
+      }
+        for(z=0;z<test.length;z++) {
+          
+          if(dataetape[i].id_etape !== test[z]._popup._content.split("id=\"popup")[1].split('"')[0]) {
+            //test.push(mark.bindPopup('<div class="popup-wrapper"><div class="vignette" style="background-image: url(assets/thumbnails/thumbnail-default.jpg);">'+dataetape[i].lieu+'</div><div class="popup-container"><p class="date">'+dataetape[i].date+'</p><p id="popup'+dataetape[i].id_etape+'" class="more" data-latlng="'+dataetape[i].latitude+', '+dataetape[i].longitude+'" onclick="onPopup(this)">En savoir plus</p></div></div>', {offset: new L.Point(0, -45)}));
+            mark.bindPopup('<div class="popup-wrapper"><div class="vignette" style="background-image: url(assets/thumbnails/thumbnail-default.jpg);">'+dataetape[i].lieu+'</div><div class="popup-container"><p class="date">'+dataetape[i].date+'</p><p id="popup'+dataetape[i].id_etape+'" class="more" data-latlng="'+dataetape[i].latitude+', '+dataetape[i].longitude+'" onclick="onPopup(this)">En savoir plus</p></div></div>', {offset: new L.Point(0, -45)});  
+          //}
+        //}
+      }}
+      
+      
+        // Création du pop up du marqueur sur la carte
+        //mark.bindPopup('<div class="popup-wrapper"><div class="vignette" style="background-image: url(assets/thumbnails/thumbnail-default.jpg);">'+dataetape[i].lieu+'</div><div class="popup-container"><p class="date">'+dataetape[i].date+'</p><p id="popup'+dataetape[i].id_etape+'" class="more" data-latlng="'+dataetape[i].latitude+', '+dataetape[i].longitude+'" onclick="onPopup(this)">En savoir plus</p></div></div>', {offset: new L.Point(0, -45)});  
+        
+      
     }
     carddoc = carddoc.toString().replace(/<\/p>\,/g,'</p>');
     // Insertion dans l'html des lignes définies plus tôt
-    card.insertAdjacentHTML("beforeend", '<div id="card'+i+'"class="card">'+cardcontent[0]+'<div class="card-content">'+(carddoc.toString().replace(/<\/div>\,/g,'</div>'))+'</div></div>');
+    card.insertAdjacentHTML("beforeend", '<div id="card'+dataetape[i].id_etape+'"class="card">'+cardcontent[0]+'<div class="card-content">'+(carddoc.toString().replace(/<\/div>\,/g,'</div>'))+'</div></div>');
     // Insertion du marqueur créé dans le tableau markers
     markers.push(mark);
     // Insertion de chaque coordonnées dans le tableau latlngs
@@ -499,9 +542,10 @@ function onMarkerTimeline(id) {
   // Ainsi que son image
   let child = document.querySelector("#"+id+" img");
   // Itération pour trouver quel marqueur de la carte est associé au marqueur de la timeline grâce aux coordonnées
-  for(i=0; i<markers.length;i++) {
+  for(i=0; i<dataetape[0].length;i++) {
+    if(dataetape[0][i].latitude != "" && dataetape[0][i].longitude != "") {
     let mark = markers[i];
-    let card = document.querySelector("#card"+i);
+    let card = document.querySelector("#card"+dataetape[0][i].id_etape);
     mark.closePopup();
     // Si le marqueur de la carte est le même que le marqueur cliqué, alors on le passe en vert, s'il est vert, on le passe en bleu
     if(mark.getLatLng().lat.toString()+", "+mark.getLatLng().lng.toString() == e.getAttribute("data-latlng")) {
@@ -541,6 +585,7 @@ function onMarkerTimeline(id) {
       }
     };  
   };
+  }
 };
 
 // Fonction qui agit lors du clic sur un marqueur dans la carte
@@ -576,8 +621,8 @@ function onPopup(e) {
       document.querySelector(".introduction").classList.remove("-open");
       document.querySelector(".img-header").classList.remove("-open");
       let tab = uncolorMarkers();
-      let img = document.querySelector("#mark"+i+" img");
-      let card = document.querySelector("#card"+i);
+      let img = document.querySelector("#mark"+dataetape[0][i].id_etape+" img");
+      let card = document.querySelector("#card"+dataetape[0][i].id_etape);
       let scrollitem = document.querySelector(".overflow-cards");
       img.setAttribute("src", "https://zupimages.net/up/21/16/wnre.png");
       marker.setIcon(greenMarkIcon);
@@ -604,7 +649,7 @@ function onPopup(e) {
       });      
       let timeline = document.querySelector('.timeline');
       timeline.scrollTo({
-        left:document.querySelector("#mark"+i).offsetLeft-75,
+        left:document.querySelector("#mark"+dataetape[0][i].id_etape).offsetLeft-75,
         behavior:'smooth'
       });
       // Conditions pour changer les boutons suivant et précédent si on est à la première ou la dernière étape
@@ -633,13 +678,13 @@ function changeStep(e) {
     for(i=0;i<markers.length;i++) {
     let marker = markers[i];
     marker.closePopup();
-      if(card.getAttribute("id") == "card"+i) {
+      if(card.getAttribute("id") == "card"+dataetape[0][i].id_etape) {
         if(i+1 < markers.length) {
           ChangeURL(i+1);
           uncolorMarkers();
-          let newcard = document.querySelector("#card"+(i+1));
+          let newcard = card.nextSibling;
           newcard.classList.add("-open");
-          let child = document.querySelector("#mark"+(i+1)+" img");
+          let child = document.querySelector("#mark"+Number(dataetape[0][i].id_etape)).nextSibling.firstChild;
           let mark = markers[i+1];
           mark.setIcon(greenMarkIcon);
           child.setAttribute("src", "https://zupimages.net/up/21/16/wnre.png");      
@@ -653,7 +698,7 @@ function changeStep(e) {
           });
           let timeline = document.querySelector('.timeline');
           timeline.scrollTo({
-            left:document.querySelector("#mark"+(i+1)).offsetLeft-75,
+            left:document.querySelector("#mark"+Number(dataetape[0][i].id_etape)).nextSibling.offsetLeft-75,
             behavior:'smooth'
           });
           if(i+1 == markers.length - 1) {
@@ -672,13 +717,13 @@ function changeStep(e) {
     for(i=0;i<markers.length;i++) {
     let marker = markers[i];
     marker.closePopup();
-      if(card.getAttribute("id") == "card"+i) {
+      if(card.getAttribute("id") == "card"+Number(dataetape[0][i].id_etape)) {
         if(i-1>-1) {
           ChangeURL(i-1);
           uncolorMarkers();
-          let newcard = document.querySelector("#card"+(i-1));
+          let newcard = card.previousSibling;
           newcard.classList.add("-open");
-          let child = document.querySelector("#mark"+(i-1)+" img");
+          let child = document.querySelector("#mark"+Number(dataetape[0][i].id_etape)).previousSibling.firstChild;
           let mark = markers[i-1];
           mark.setIcon(greenMarkIcon);
           child.setAttribute("src", "https://zupimages.net/up/21/16/wnre.png");      
@@ -692,7 +737,7 @@ function changeStep(e) {
           });
           let timeline = document.querySelector('.timeline');
           timeline.scrollTo({
-            left:document.querySelector("#mark"+(i-1)).offsetLeft-75,
+            left:document.querySelector("#mark"+Number(dataetape[0][i].id_etape)).previousSibling.offsetLeft-75,
             behavior:'smooth'
           });
 
@@ -742,9 +787,9 @@ function changeStep(e) {
       marker.closePopup();
       }
       uncolorMarkers();
-      let newcard = document.querySelector("#card0");
+      let newcard = document.querySelector("#card1");
       newcard.classList.add("-open");
-      let child = document.querySelector("#mark0 img");
+      let child = document.querySelector("#mark1 img");
       let mark = markers[0];
       mark.setIcon(greenMarkIcon);
       child.setAttribute("src", "https://zupimages.net/up/21/16/wnre.png");      
@@ -832,11 +877,11 @@ function ChangeURL(i, e) {
   urlparam = urlparam[1].split("&");
   if(i>=0) {
     if(urlparam.length>1) {
-      url.searchParams.set('etape', dataetape[0][i].id_etape);
+      url.searchParams.set('etape', i);
       window.history.pushState({}, '', url);
     }
     else {
-      url.searchParams.set('etape', dataetape[0][i].id_etape);
+      url.searchParams.set('etape', i);
       window.history.pushState({},'', url)
     }
   }
