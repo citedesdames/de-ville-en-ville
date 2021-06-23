@@ -131,7 +131,7 @@ fetch('./itineraires.json')
       // Changement des titres et du favicon
       setTimeout(function() {
         document.querySelector("title").textContent = "Tour de France";
-        document.querySelector("h1").textContent = "Le Grand tour de France de Charles IX";
+        document.querySelector("h1").textContent = "Le tour de France de Catherine de Médicis et Charles IX";
         document.querySelector("head").insertAdjacentHTML("beforeend",'<link rel="icon" type="image/png" href="'+dataintro[0][0].favicon+'" />')
       },2500);
     }
