@@ -224,7 +224,7 @@ header .img-header {
 
 .overflow-cards {
     display: none;
-    height: 685px;
+    height: 65%;
     overflow-y: scroll;
     /* Hide scrollbar for IE, Edge and Firefox */
     -ms-overflow-style: none;
@@ -275,7 +275,7 @@ header .img-header {
 
 .introduction {
     display: none;
-    height: 813px;
+    height: 80%;
     margin-top: 5%;
     overflow-y: scroll;
     /* Hide scrollbar for IE, Edge and Firefox */
