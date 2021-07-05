@@ -411,10 +411,12 @@ header .img-header {
 .subtitle-doc {
     color: gray;
     font-size: .8rem;
+    font-weight: normal;
 }
 
 .subtitle-doc a {
     color: gray;
+    font-weight: normal;
 }
 
 .img-doc img {
