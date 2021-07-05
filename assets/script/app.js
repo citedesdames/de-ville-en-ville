@@ -381,7 +381,11 @@ function createMarkers(dataintro, dataetape, datadocs) {
               carddoc.push('<div class="doc" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>></span><span><img src="assets/images/image.png" alt=""></span> '+datadocs[n].titre_document+'</h3><h4 class="subtitle-doc">'+datadocs[n].titre_document_original.replace("<a href",'<a target="_blank" href')+'</h4><div class="hidden-doc"><img src="'+datadocs[n].url_document+'" width="400px" margin="0 auto"></div></div>');
             }
             else {
-              carddoc.push('<div class="doc" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>></span><span><img src="assets/images/image.png" alt=""></span> '+datadocs[n].titre_document+'</h3><h4 class="subtitle-doc"><a target="_blank" href="'+datadocs[n].url_creation+'">'+datadocs[n].creation+'</a> - '+datadocs[n].titre_document_original.replace("<a href",'<a target="_blank" href')+'</h4><div class="hidden-doc"><p class="subtitle-doc"></p><a class="img-doc" target="_blank" href="'+datadocs[n].url_creation+'" alt=""><img src="'+datadocs[n].url_document+'" width="400px"></a></div></div>');
+              if(datadocs[n].creation.length>1) {
+                carddoc.push('<div class="doc" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>></span><span><img src="assets/images/image.png" alt=""></span> '+datadocs[n].titre_document+'</h3><h4 class="subtitle-doc"><a target="_blank" href="'+datadocs[n].url_creation+'">'+datadocs[n].creation+'</a> - '+datadocs[n].titre_document_original.replace("<a href",'<a target="_blank" href')+'</h4><div class="hidden-doc"><p class="subtitle-doc"></p><a class="img-doc" target="_blank" href="'+datadocs[n].url_creation+'" alt=""><img src="'+datadocs[n].url_document+'" width="400px"></a></div></div>');
+              }
+              else {
+                carddoc.push('<div class="doc" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>></span><span><img src="assets/images/image.png" alt=""></span> '+datadocs[n].titre_document+'</h3><h4 class="subtitle-doc">'+datadocs[n].titre_document_original.replace("<a href",'<a target="_blank" href')+'</h4><div class="hidden-doc"><p class="subtitle-doc"></p><a class="img-doc" target="_blank" href="'+datadocs[n].url_creation+'" alt=""><img src="'+datadocs[n].url_document+'" width="400px"></a></div></div>');}
             }
           }
           else {
