@@ -344,7 +344,6 @@ function createMarkers(dataintro, dataetape, datadocs) {
   let card = document.querySelector(".overflow-cards");
   let intro = document.querySelector(".introduction");
   var latlngs = [];
-  let test = [];
   // Itération pour chacune des villes dans le tableau data
   for(i=0; i<dataetape.length;i++) {
     if(dataetape[i].latitude !== '' && dataetape[i].longitude !== '') {
@@ -358,19 +357,23 @@ function createMarkers(dataintro, dataetape, datadocs) {
     // Création des tableaux qui vont stocker les contenus
     let cardcontent = [];
     let carddoc = [];
+    let test = [];
+    let vignette = "assets/thumbnails/thumbnail-default.jpg";
     // Boucle For pour parcourir les documents reliés à l'étape
     for(n=0; n<datadocs.length;n++) {
       if(datadocs[n].id_etape == dataetape[i].id_etape) {
         // Si un document est une vignette, alors
         if(datadocs[n].vignette == "1") {
           // Push au début du tableau la ligne qu'il faudra mettre dans l'html
-          cardcontent.unshift('<div class="card-header"><img class="card-minia" src="'+datadocs[n].miniature+'" alt""><h2 class="card-title">'+dataetape[i].lieu+'</h2></div>');
+          vignette = datadocs[n].miniature;
+          cardcontent.unshift('<div class="card-header"><img class="card-minia" src="'+vignette+'" alt""><h2 class="card-title">'+dataetape[i].lieu+'</h2></div>');
           // Création du pop up du marqueur sur la carte
-          test.unshift(mark.bindPopup('<div class="popup-wrapper"><div class="vignette" style="background-image: url('+datadocs[n].miniature+');">'+dataetape[i].lieu+'</div><div class="popup-container"><p class="date">'+dataetape[i].date+'</p><p id="popup'+dataetape[i].id_etape+'" class="more" data-latlng="'+dataetape[i].latitude+', '+dataetape[i].longitude+'" onclick="onPopup(this)">En savoir plus</p></div></div>', {offset: new L.Point(0, -45)}));
+          test.unshift(mark.bindPopup('<div class="popup-wrapper"><div class="vignette" style="background-image: url('+vignette+');">'+dataetape[i].lieu+'</div><div class="popup-container"><p class="date">'+dataetape[i].date+'</p><p id="popup'+dataetape[i].id_etape+'" class="more" data-latlng="'+dataetape[i].latitude+', '+dataetape[i].longitude+'" onclick="onPopup(this)">En savoir plus</p></div></div>', {offset: new L.Point(0, -45)}));
         }
         else {
           // Push dans le tableau une ligne par défaut
-          cardcontent.push('<div class="card-header"><img class="card-minia" src="assets/thumbnails/thumbnail-default.jpg" alt""><h2 class="card-title">'+dataetape[i].lieu+'</h2></div>');
+          cardcontent.push('<div class="card-header"><img class="card-minia" src="'+vignette+'" alt""><h2 class="card-title">'+dataetape[i].lieu+'</h2></div>');
+          test.push(mark.bindPopup('<div class="popup-wrapper"><div class="vignette" style="background-image: url('+vignette+');">'+dataetape[i].lieu+'</div><div class="popup-container"><p class="date">'+dataetape[i].date+'</p><p id="popup'+dataetape[i].id_etape+'" class="more" data-latlng="'+dataetape[i].latitude+', '+dataetape[i].longitude+'" onclick="onPopup(this)">En savoir plus</p></div></div>', {offset: new L.Point(0, -45)}));
         }
 
         // DOCUMENTS
@@ -490,22 +493,10 @@ function createMarkers(dataintro, dataetape, datadocs) {
       }
       else {
         // Push au début du tableau la ligne qu'il faudra mettre dans l'html
-        cardcontent.push('<div class="card-header"><img class="card-minia" src="assets/thumbnails/thumbnail-default.jpg" alt""><h2 class="card-title">'+dataetape[i].lieu+'</h2></div>');
+        cardcontent.push('<div class="card-header"><img class="card-minia" src="'+vignette+'" alt""><h2 class="card-title">'+dataetape[i].lieu+'</h2></div>');
+        test.push(mark.bindPopup('<div class="popup-wrapper"><div class="vignette" style="background-image: url('+vignette+');">'+dataetape[i].lieu+'</div><div class="popup-container"><p class="date">'+dataetape[i].date+'</p><p id="popup'+dataetape[i].id_etape+'" class="more" data-latlng="'+dataetape[i].latitude+', '+dataetape[i].longitude+'" onclick="onPopup(this)">En savoir plus</p></div></div>', {offset: new L.Point(0, -45)}));
       }
-        for(z=0;z<test.length;z++) {
-          
-          if(dataetape[i].id_etape !== test[z]._popup._content.split("id=\"popup")[1].split('"')[0]) {
-            //test.push(mark.bindPopup('<div class="popup-wrapper"><div class="vignette" style="background-image: url(assets/thumbnails/thumbnail-default.jpg);">'+dataetape[i].lieu+'</div><div class="popup-container"><p class="date">'+dataetape[i].date+'</p><p id="popup'+dataetape[i].id_etape+'" class="more" data-latlng="'+dataetape[i].latitude+', '+dataetape[i].longitude+'" onclick="onPopup(this)">En savoir plus</p></div></div>', {offset: new L.Point(0, -45)}));
-            mark.bindPopup('<div class="popup-wrapper"><div class="vignette" style="background-image: url(assets/thumbnails/thumbnail-default.jpg);">'+dataetape[i].lieu+'</div><div class="popup-container"><p class="date">'+dataetape[i].date+'</p><p id="popup'+dataetape[i].id_etape+'" class="more" data-latlng="'+dataetape[i].latitude+', '+dataetape[i].longitude+'" onclick="onPopup(this)">En savoir plus</p></div></div>', {offset: new L.Point(0, -45)});  
-          //}
-        //}
-      }}
-      
-      
-        // Création du pop up du marqueur sur la carte
-        //mark.bindPopup('<div class="popup-wrapper"><div class="vignette" style="background-image: url(assets/thumbnails/thumbnail-default.jpg);">'+dataetape[i].lieu+'</div><div class="popup-container"><p class="date">'+dataetape[i].date+'</p><p id="popup'+dataetape[i].id_etape+'" class="more" data-latlng="'+dataetape[i].latitude+', '+dataetape[i].longitude+'" onclick="onPopup(this)">En savoir plus</p></div></div>', {offset: new L.Point(0, -45)});  
-        
-      
+           
     }
     carddoc = carddoc.toString().replace(/<\/p>\,/g,'</p>');
     // Insertion dans l'html des lignes définies plus tôt
