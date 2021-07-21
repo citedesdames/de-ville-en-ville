@@ -47,56 +47,15 @@ else {
   }
 }
 
-// Tableau de test regroupant les villes et leurs coordonnées
-/* let data = [
-  {
-    'name': 'Paris',
-    'lat':'48.85341',
-    'lng':'2.3488'
-  },
-  {
-    'name':'Lyon',
-    'lat':'45.764043',
-    'lng':'4.835659'
-  },
-  {
-    'name':'Nîmes',
-    'lat':'43.83333',
-    'lng':'4.35'
-  }
-] */
-
-// Appel du fichier csv qui contient la table étape
- 
-// https://docs.google.com/spreadsheets/d/e/2PACX-1vTcjDAvojPXjqX9rpfZ0QMKjbq9mTxfKQZTxroaFBFzvyNMkhtfgx5LngTCn7135uAgGSY_cBgb2_wc/pub?&output=csv
-/* let file = ["https://docs.google.com/spreadsheets/d/e/2PACX-1vTcjDAvojPXjqX9rpfZ0QMKjbq9mTxfKQZTxroaFBFzvyNMkhtfgx5LngTCn7135uAgGSY_cBgb2_wc/pub?gid=129227231&single=true&output=csv","https://docs.google.com/spreadsheets/d/e/2PACX-1vTcjDAvojPXjqX9rpfZ0QMKjbq9mTxfKQZTxroaFBFzvyNMkhtfgx5LngTCn7135uAgGSY_cBgb2_wc/pub?gid=1773657079&single=true&output=csv","https://docs.google.com/spreadsheets/d/e/2PACX-1vTcjDAvojPXjqX9rpfZ0QMKjbq9mTxfKQZTxroaFBFzvyNMkhtfgx5LngTCn7135uAgGSY_cBgb2_wc/pub?gid=0&single=true&output=csv"];
-let data = [];
-for(i=0;i<file.length;i++) {
-  Papa.parse(file[i], {
-      download: true,
-      header: true,
-      complete: function (results) {
-        setTimeout(function() {
-          console.log("oui");
-          data.push(results.data);
-        }, 3000);
-      }
-  });
-
-};
-setTimeout(function() {
-  console.log(data[0]);
-  console.log(data[1]);
-  console.log(data[2]);
-  createMarkers(data);
-}, 4000); */
-
-
 // Tableaux qui vont contenir les données des .csv
 
 let dataintro = [];
 let dataetape = [];
 let datadocs = [];
+
+/* -------------------------- IMPORT DES DONNEES -------------------------- */
+/* -------------------------- IMPORT DES DONNEES -------------------------- */
+/* -------------------------- IMPORT DES DONNEES -------------------------- */
 
 // IMPORT DU FICHIER JSON
 fetch('./itineraires.json')
@@ -167,7 +126,7 @@ fetch('./itineraires.json')
     }
 });
 
-// Appel de la fonction avec les données en entrées
+// Fonction avec les données en entrées
 function Start() {
   createMarkers(dataintro[0], dataetape[0], datadocs[0]);
   let load = document.querySelector(".loader");
@@ -468,7 +427,7 @@ function createMarkers(dataintro, dataetape, datadocs) {
           }
         }
         // Documents avec site web
-        if(datadocs[n].type == "site web") {
+        if(datadocs[n].type == "site web") { 
           if(datadocs[n].titre_document !== '') {
             carddoc.push('<div><p>'+datadocs[n].titre_document+'</p></div>');
           }
