@@ -107,69 +107,68 @@ fetch('./itineraires.json')
     // UTILISATION DES DONNEES DU FICHIERS JSON
     if(parametresUrl.site == "0") {
     // Appel des .csv et push dans les tableaux correspondants
-      Papa.parse(data.tourdefrance[0], {
+      Papa.parse(data.tourdefrance.proprietes, {
         download: true,
         header: true,
         complete: function (results) {
           dataintro.push(results.data);
-        }
-      })
-      Papa.parse(data.tourdefrance[1], {
-        download: true,
-        header: true,
-        complete: function (results) {
-          dataetape.push(results.data);
-        }
-      })
-      Papa.parse(data.tourdefrance[2], {
-        download: true,
-        header: true,
-        complete: function (results) {
-          datadocs.push(results.data);
+          Papa.parse(data.tourdefrance.etapes, {
+            download: true,
+            header: true,
+            complete: function (results) {
+              dataetape.push(results.data);
+              Papa.parse(data.tourdefrance.documents, {
+                download: true,
+                header: true,
+                complete: function (results) {
+                  datadocs.push(results.data);
+                  document.querySelector("title").textContent = dataintro[0][0].title;
+                  document.querySelector("h1").textContent = dataintro[0][0].titre_court;
+                  document.querySelector("head").insertAdjacentHTML("beforeend",'<link rel="icon" type="image/png" href="'+dataintro[0][0].favicon+'" />');
+                  Start();
+                }
+              })
+            }
+          })
         }
       })
       // Changement des titres et du favicon
-      setTimeout(function() {
-        document.querySelector("title").textContent = "Tour de France";
-        document.querySelector("h1").textContent = "Le tour de France de Catherine de Médicis et Charles IX";
-        document.querySelector("head").insertAdjacentHTML("beforeend",'<link rel="icon" type="image/png" href="'+dataintro[0][0].favicon+'" />')
-      },2500);
+
     }
     else {
       if(parametresUrl.site="1") {
               // Appel des .csv et push dans les tableaux correspondants
-        Papa.parse(data.marguerite[0], {
+        Papa.parse(data.marguerite.proprietes, {
           download: true,
           header: true,
           complete: function (results) {
             dataintro.push(results.data);
+            Papa.parse(data.marguerite.etapes, {
+              download: true,
+              header: true,
+              complete: function (results) {
+                dataetape.push(results.data);
+                Papa.parse(data.marguerite.documents, {
+                  download: true,
+                  header: true,
+                  complete: function (results) {
+                    datadocs.push(results.data);
+                    document.querySelector("title").textContent = dataintro[0][0].title;
+                    document.querySelector("h1").textContent = dataintro[0][0].titre_court;
+                    document.querySelector("head").insertAdjacentHTML("beforeend",'<link rel="icon" type="image/png" href="'+dataintro[0][0].favicon+'" />');
+                    Start();
+                  }
+                })
+              }
+            })
           }
         })
-        Papa.parse(data.marguerite[1], {
-          download: true,
-          header: true,
-          complete: function (results) {
-            dataetape.push(results.data);
-          }
-        })
-        Papa.parse(data.marguerite[2], {
-          download: true,
-          header: true,
-          complete: function (results) {
-            datadocs.push(results.data);
-          }
-        })
-        setTimeout(function() {
-          document.querySelector("title").textContent = "Le voyage des Flandres";
-          document.querySelector("h1").textContent = "Marguerite de Valois : le voyage des Flandres";
-          document.querySelector("head").insertAdjacentHTML("beforeend",'<link rel="icon" type="image/png" href="'+dataintro[0][0].favicon+'" />')
-        },2500);
       }
     }
 });
 
 // Appel de la fonction avec les données en entrées
-setTimeout(function() {
+function Start() {
   createMarkers(dataintro[0], dataetape[0], datadocs[0]);
   let load = document.querySelector(".loader");
   load.classList.add("load-open");
@@ -177,7 +176,7 @@ setTimeout(function() {
     document.querySelectorAll(".leaflet-marker-icon")[etape].click();
     document.getElementById("popup"+dataetape[0][etape].id_etape).click();
   }
-}, 2500);
+}
 
 // Initialisation des marqueurs
 // Tableau qui va contenir les marqueurs
