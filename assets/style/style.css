@@ -356,6 +356,9 @@ header .img-header {
     border: solid #00537B 8px;
     z-index: 0;
 }
+.card-header {
+    height: 520px;
+}
 
 .card-title {
     position: relative;
@@ -528,4 +531,14 @@ span img {
 
 .load-open {
     display: none;
+}
+
+.description {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.description-content {
+    width: 80%;
+    text-align: center;
 }

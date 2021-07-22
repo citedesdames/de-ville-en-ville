@@ -326,7 +326,7 @@ function createMarkers(dataintro, dataetape, datadocs) {
         if(datadocs[n].vignette == "1") {
           // Push au début du tableau la ligne qu'il faudra mettre dans l'html
           vignette = datadocs[n].miniature;
-          cardcontent.unshift('<div class="card-header"><img class="card-minia" src="'+vignette+'" alt""><h2 class="card-title">'+dataetape[i].lieu+'</h2></div>');
+          cardcontent.unshift('<div class="card-header"><img class="card-minia" src="'+vignette+'" alt""><h2 class="card-title">'+dataetape[i].lieu+'</h2><p class="card-title">'+dataetape[i].date+'</p></div><div class="description"><p class="description-content">'+dataetape[i].description+'</p></div>');
           // Création du pop up du marqueur sur la carte
           if(dataetape[i].date != "?") {
             test.unshift(mark.bindPopup('<div class="popup-wrapper"><div class="vignette" style="background-image: url('+vignette+');">'+dataetape[i].lieu+'</div><div class="popup-container"><p class="date">'+dataetape[i].date+'</p><p id="popup'+dataetape[i].id_etape+'" class="more" data-latlng="'+dataetape[i].latitude+', '+dataetape[i].longitude+'" onclick="onPopup(this)">En savoir plus</p></div></div>', {offset: new L.Point(0, -45)}));}
@@ -336,7 +336,7 @@ function createMarkers(dataintro, dataetape, datadocs) {
         }
         else {
           // Push dans le tableau une ligne par défaut
-          cardcontent.push('<div class="card-header"><img class="card-minia" src="'+vignette+'" alt""><h2 class="card-title">'+dataetape[i].lieu+'</h2></div>');
+          cardcontent.push('<div class="card-header"><img class="card-minia" src="'+vignette+'" alt""><h2 class="card-title">'+dataetape[i].lieu+'</h2></div><div class="description"><p class="description-content">'+dataetape[i].description+'</p></div>');
           test.push(mark.bindPopup('<div class="popup-wrapper"><div class="vignette" style="background-image: url('+vignette+');">'+dataetape[i].lieu+'</div><div class="popup-container"><p class="date">'+dataetape[i].date+'</p><p id="popup'+dataetape[i].id_etape+'" class="more" data-latlng="'+dataetape[i].latitude+', '+dataetape[i].longitude+'" onclick="onPopup(this)">En savoir plus</p></div></div>', {offset: new L.Point(0, -45)}));
         }
 
@@ -457,7 +457,7 @@ function createMarkers(dataintro, dataetape, datadocs) {
       }
       else {
         // Push au début du tableau la ligne qu'il faudra mettre dans l'html
-        cardcontent.push('<div class="card-header"><img class="card-minia" src="'+vignette+'" alt""><h2 class="card-title">'+dataetape[i].lieu+'</h2></div>');
+        cardcontent.push('<div class="card-header"><img class="card-minia" src="'+vignette+'" alt""><h2 class="card-title">'+dataetape[i].lieu+'</h2></div><div class="description"><p class="description-content">'+dataetape[i].description+'</p></div>');
         if(dataetape[i].date != "?") {
           test.push(mark.bindPopup('<div class="popup-wrapper"><div class="vignette" style="background-image: url('+vignette+');">'+dataetape[i].lieu+'</div><div class="popup-container"><p class="date">'+dataetape[i].date+'</p><p id="popup'+dataetape[i].id_etape+'" class="more" data-latlng="'+dataetape[i].latitude+', '+dataetape[i].longitude+'" onclick="onPopup(this)">En savoir plus</p></div></div>', {offset: new L.Point(0, -45)}));}
         else {
