@@ -52,6 +52,7 @@ else {
 let dataintro = [];
 let dataetape = [];
 let datadocs = [];
+let DocParEtape = {}
 
 /* -------------------------- IMPORT DES DONNEES -------------------------- */
 /* -------------------------- IMPORT DES DONNEES -------------------------- */
@@ -64,19 +65,19 @@ fetch('./itineraires.json')
   })
   .then((data) => {
     // UTILISATION DES DONNEES DU FICHIERS JSON
-    if(parametresUrl.site == "0") {
+
     // Appel des .csv et push dans les tableaux correspondants
-      Papa.parse(data.tourdefrance.proprietes, {
+      Papa.parse(data[parametresUrl.site].proprietes, {
         download: true,
         header: true,
         complete: function (results) {
           dataintro.push(results.data);
-          Papa.parse(data.tourdefrance.etapes, {
+          Papa.parse(data[parametresUrl.site].etapes, {
             download: true,
             header: true,
             complete: function (results) {
               dataetape.push(results.data);
-              Papa.parse(data.tourdefrance.documents, {
+              Papa.parse(data[parametresUrl.site].documents, {
                 download: true,
                 header: true,
                 complete: function (results) {
@@ -91,39 +92,6 @@ fetch('./itineraires.json')
           })
         }
       })
-      // Changement des titres et du favicon
-
-    }
-    else {
-      if(parametresUrl.site="1") {
-              // Appel des .csv et push dans les tableaux correspondants
-        Papa.parse(data.marguerite.proprietes, {
-          download: true,
-          header: true,
-          complete: function (results) {
-            dataintro.push(results.data);
-            Papa.parse(data.marguerite.etapes, {
-              download: true,
-              header: true,
-              complete: function (results) {
-                dataetape.push(results.data);
-                Papa.parse(data.marguerite.documents, {
-                  download: true,
-                  header: true,
-                  complete: function (results) {
-                    datadocs.push(results.data);
-                    document.querySelector("title").textContent = dataintro[0][0].title;
-                    document.querySelector("h1").textContent = dataintro[0][0].titre_court;
-                    document.querySelector("head").insertAdjacentHTML("beforeend",'<link rel="icon" type="image/png" href="'+dataintro[0][0].favicon+'" />');
-                    Start();
-                  }
-                })
-              }
-            })
-          }
-        })
-      }
-    }
 });
 
 // Fonction avec les données en entrées
@@ -303,6 +271,7 @@ function createMarkers(dataintro, dataetape, datadocs) {
   let e = document.querySelector('.timeline');
   let card = document.querySelector(".overflow-cards");
   let intro = document.querySelector(".introduction");
+  DocumentsParEtape(datadocs, DocParEtape);
   var latlngs = [];
   // Itération pour chacune des villes dans le tableau data
   for(i=0; i<dataetape.length;i++) {
@@ -496,6 +465,21 @@ function createMarkers(dataintro, dataetape, datadocs) {
   document.querySelector(".overflow-tl").insertAdjacentHTML("beforeend",'<div class="blue-line"></div>');
 };
 
+
+function DocumentsParEtape(docs, obj) {
+console.log(docs);
+
+for(i=0;i<docs.length;i++) {
+  if(docs[i].id_etape.length < 5) {
+    //obj += docs[i].id_etape;
+    //console.log(obj)
+  }
+}
+// var obj = {key1: "value1", key2: "value2"};
+// Object.assign(obj, {key3: "value3"});
+console.log(obj)
+
+}
 // Fonction qui agit lors du clic sur un marqueur dans la timeline
 function onMarkerTimeline(id) {
   // Sélection du marqueur cliqué dans la timeline
