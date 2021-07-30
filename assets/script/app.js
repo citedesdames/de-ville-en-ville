@@ -93,7 +93,6 @@ fetch('./itineraires.json')
         }
       })
 });
-
 // Fonction avec les données en entrées
 function Start() {
   createMarkers(dataintro[0], dataetape[0], datadocs[0]);
@@ -103,6 +102,23 @@ function Start() {
     document.querySelectorAll(".leaflet-marker-icon")[etape].click();
     document.getElementById("popup"+dataetape[0][etape].id_etape).click();
   }
+}
+
+// Appel des textes des itinéraires
+file_get_contents('./assets/textes/tourdefrance.html', text_treatment);
+
+// Fonction qui effectue l'appel
+function file_get_contents(uri, callback) {
+  fetch(uri)
+  .then(res => res.text())
+  .then(text=> callback(text));
+}
+
+// Fonction qui change la string obtenue en élément HTML -> page HTML dans une variable
+function text_treatment(str) {
+  let parser = new DOMParser();
+	let doc = parser.parseFromString(str, 'text/html');
+	return console.log(doc);
 }
 
 // Initialisation des marqueurs
