@@ -85,7 +85,11 @@ fetch('./itineraires.json')
                   document.querySelector("title").textContent = dataintro[0][0].title;
                   document.querySelector("h1").textContent = dataintro[0][0].titre_court;
                   document.querySelector("head").insertAdjacentHTML("beforeend",'<link rel="icon" type="image/png" href="'+dataintro[0][0].favicon+'" />');
+
+                  // Appel de la fonction qui initialise la création des marqueurs
                   Start();
+                  // Appel des textes des itinéraires
+                  file_get_contents(dataintro[0][0].url_texte_code, text_treatment, dataintro[0][0].class_texte);
                 }
               })
             }
@@ -93,6 +97,7 @@ fetch('./itineraires.json')
         }
       })
 });
+
 // Fonction avec les données en entrées
 function Start() {
   createMarkers(dataintro[0], dataetape[0], datadocs[0]);
@@ -104,21 +109,20 @@ function Start() {
   }
 }
 
-// Appel des textes des itinéraires
-file_get_contents('./assets/textes/tourdefrance.html', text_treatment);
-
 // Fonction qui effectue l'appel
-function file_get_contents(uri, callback) {
+function file_get_contents(uri, callback, class_text) {
   fetch(uri)
   .then(res => res.text())
-  .then(text=> callback(text));
+  .then(text=> callback(text, class_text));
 }
 
 // Fonction qui change la string obtenue en élément HTML -> page HTML dans une variable
-function text_treatment(str) {
+function text_treatment(str, class_text) {
   let parser = new DOMParser();
 	let doc = parser.parseFromString(str, 'text/html');
-	return console.log(doc);
+  let container = document.querySelector(".overflow-texte");
+  container.appendChild(doc.querySelector(class_text));
+  console.log(doc.querySelector(class_text));
 }
 
 // Initialisation des marqueurs
@@ -311,7 +315,7 @@ function createMarkers(dataintro, dataetape, datadocs) {
         if(datadocs[n].vignette == "1") {
           // Push au début du tableau la ligne qu'il faudra mettre dans l'html
           vignette = datadocs[n].miniature;
-          cardcontent.unshift('<div class="card-header"><img class="card-minia" src="'+vignette+'" alt""><h2 class="card-title">'+dataetape[i].lieu+'</h2><p class="card-title">'+dataetape[i].date+'</p></div><div class="description"><p class="description-content">'+dataetape[i].description+'</p></div>');
+          cardcontent.unshift('<div class="card-header"><img class="card-minia" src="'+vignette+'" alt""><h2 class="card-title">'+dataetape[i].lieu+'</h2><p class="card-title">'+dataetape[i].date+'</p></div><div class="description"><p class="description-content">'+dataetape[i].description+'</p></div><p class="text-click" onclick="onText()">[Texte]</p>');
           // Création du pop up du marqueur sur la carte
           if(dataetape[i].date != "?") {
             test.unshift(mark.bindPopup('<div class="popup-wrapper"><div class="vignette" style="background-image: url('+vignette+');">'+dataetape[i].lieu+'</div><div class="popup-container"><p class="date">'+dataetape[i].date+'</p><p id="popup'+dataetape[i].id_etape+'" class="more" data-latlng="'+dataetape[i].latitude+', '+dataetape[i].longitude+'" onclick="onPopup(this)">En savoir plus</p></div></div>', {offset: new L.Point(0, -45)}));}
@@ -483,7 +487,7 @@ function createMarkers(dataintro, dataetape, datadocs) {
 
 
 function DocumentsParEtape(docs, obj) {
-console.log(docs);
+//console.log(docs);
 
 for(i=0;i<docs.length;i++) {
   if(docs[i].id_etape.length < 5) {
@@ -493,7 +497,25 @@ for(i=0;i<docs.length;i++) {
 }
 // var obj = {key1: "value1", key2: "value2"};
 // Object.assign(obj, {key3: "value3"});
-console.log(obj)
+//console.log(obj)
+}
+
+// Click pour voir le texte
+function onText() {
+  // Appartition du texte et disparition de l'étape
+  document.querySelector(".overflow-tl").classList.remove("-open");
+  document.querySelector(".overflow-cards").classList.remove("-open");
+  document.querySelector(".texte").classList.add("text-open1");
+  setTimeout(function (){
+    document.querySelector(".texte").classList.add("text-open2");
+  },100);
+  setTimeout(function() {
+    document.querySelector(".overflow-texte").classList.add("-open");
+  },1100)
+
+  // Suite
+
+
 
 }
 // Fonction qui agit lors du clic sur un marqueur dans la timeline

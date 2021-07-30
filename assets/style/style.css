@@ -542,3 +542,44 @@ span img {
     width: 80%;
     text-align: center;
 }
+.etape {
+    display: inline;
+}
+
+.texte {
+    display: none;
+    position: absolute;
+    left:47.5%;
+    height: 88.5%;
+    width: 5px;
+    background-color: #00537B;
+    justify-content: center;
+    transition: all 1s ease;
+}
+.text-open1 {
+    display: flex;
+}
+.text-open2 {
+    left: 0%;
+    width: 47.5%;
+}
+
+.overflow-texte {
+    display: none;
+    height: 70vh;
+    width: 80%;
+    overflow-y: scroll;
+    /* Hide scrollbar for IE, Edge and Firefox */
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
+    background-color: white;
+    border-radius: 40px;
+    padding: 2%;
+    margin-top: 7%;
+}
+
+.text-click {
+    text-align: center;
+}
