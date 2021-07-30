@@ -840,11 +840,11 @@ function ChangeURL(i, e) {
   urlparam = urlparam[1].split("&");
   if(i>=0) {
     if(urlparam.length>1) {
-      url.searchParams.set('etape', i);
+      url.searchParams.set('etape', i+1);
       window.history.pushState({}, '', url);
     }
     else {
-      url.searchParams.set('etape', i);
+      url.searchParams.set('etape', i+1);
       window.history.pushState({},'', url)
     }
   }
