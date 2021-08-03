@@ -352,12 +352,12 @@ header .img-header {
 
 .card-minia {
     width: 98%;
-    border-radius: 50px;
-    border: solid #00537B 8px;
     z-index: 0;
 }
 .card-header {
     height: 440px;
+    border-radius: 50px;
+    border: solid #00537B 8px;
     overflow: hidden;
 }
 
