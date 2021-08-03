@@ -318,9 +318,9 @@ function createMarkers(dataintro, dataetape, datadocs) {
           cardcontent.unshift('<div class="card-header"><img class="card-minia" src="'+vignette+'" alt""><h2 class="card-title">'+dataetape[i].lieu+'</h2><p class="card-title">'+dataetape[i].date+'</p></div><div class="description"><p class="description-content">'+dataetape[i].description+'</p></div><p class="text-click" onclick="onText()">[Texte]</p>');
           // Création du pop up du marqueur sur la carte
           if(dataetape[i].date != "?") {
-            test.unshift(mark.bindPopup('<div class="popup-wrapper"><div class="vignette" style="background-image: url('+vignette+');">'+dataetape[i].lieu+'</div><div class="popup-container"><p class="date">'+dataetape[i].date+'</p><p id="popup'+dataetape[i].id_etape+'" class="more" data-latlng="'+dataetape[i].latitude+', '+dataetape[i].longitude+'" onclick="onPopup(this)">En savoir plus</p></div></div>', {offset: new L.Point(0, -45)}));}
+            test.unshift(mark.bindPopup('<div class="popup-wrapper"><div class="vignette" style="background-image: url(\''+vignette+'\');">'+dataetape[i].lieu+'</div><div class="popup-container"><p class="date">'+dataetape[i].date+'</p><p id="popup'+dataetape[i].id_etape+'" class="more" data-latlng="'+dataetape[i].latitude+', '+dataetape[i].longitude+'" onclick="onPopup(this)">En savoir plus</p></div></div>', {offset: new L.Point(0, -45)}));}
           else {
-            test.unshift(mark.bindPopup('<div class="popup-wrapper"><div class="vignette" style="background-image: url('+vignette+');">'+dataetape[i].lieu+'</div><div class="popup-container"><p class="date"></p><p id="popup'+dataetape[i].id_etape+'" class="more" data-latlng="'+dataetape[i].latitude+', '+dataetape[i].longitude+'" onclick="onPopup(this)">En savoir plus</p></div></div>', {offset: new L.Point(0, -45)}));
+            test.unshift(mark.bindPopup('<div class="popup-wrapper"><div class="vignette" style="background-image: url(\''+vignette+'\');">'+dataetape[i].lieu+'</div><div class="popup-container"><p class="date"></p><p id="popup'+dataetape[i].id_etape+'" class="more" data-latlng="'+dataetape[i].latitude+', '+dataetape[i].longitude+'" onclick="onPopup(this)">En savoir plus</p></div></div>', {offset: new L.Point(0, -45)}));
           }
         }
         else {
