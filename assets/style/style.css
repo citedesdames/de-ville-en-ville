@@ -342,29 +342,36 @@ header .img-header {
 }
 
 .leaflet-popup-content-wrapper {
-    padding: 0;
+    padding: 0px;
 }
 
 .leaflet-popup-content {
-    margin: 0;
+    margin: 0px;
     width: 150px;
 }
 
 .card-minia {
-    width: 98%;
+    width: 100%;
     z-index: 0;
+    margin: 0px;
+    padding: 0px;
 }
+
 .card-header {
-    height: 440px;
     border-radius: 50px;
     border: solid #00537B 8px;
-    overflow: hidden;
+    background-color: #00537B;
+    overflow:hidden;
+    padding:0px;
+    position:relative;
 }
 
 .card-title {
-    position: relative;
-    top: -28vh;
-    margin: 0;
+    position: absolute;
+    text-align: center;
+    width: 100%;
+    top: 20px;
+    margin: 0px;
     text-align: center;
     z-index: 10;
     font-size: 2rem;
@@ -379,6 +386,12 @@ header .img-header {
 .card-content {
     padding: 0 4% 4% 4%;
 }
+
+.card-content span img {
+    width: 16px;
+    margin: 0 8px;
+}
+
 
 .title-about, .title-intro {
     text-align: center;
@@ -414,7 +427,7 @@ header .img-header {
 
 .subtitle-doc {
     color: gray;
-    font-size: .8rem;
+    font-size: 1rem;
     font-weight: normal;
 }
 
@@ -464,10 +477,6 @@ header .img-header {
 .rotate-span {
     display: inline-block;
     transform: rotate(90deg);
-}
-span img {
-    width: 16px;
-    margin: 0 8px;
 }
 
 .slideLeft {
@@ -583,4 +592,9 @@ span img {
 
 .text-click {
     text-align: center;
+    cursor: pointer;
+}
+
+strong .etape{
+    cursor: pointer;
 }
