@@ -139,7 +139,7 @@ function text_treatment(str, class_text) {
 	let doc = parser.parseFromString(str, 'text/html');
   let container = document.querySelector(".overflow-texte");
   container.appendChild(doc.querySelector(class_text));
-  console.log(doc.querySelector(class_text));
+  //console.log(doc.querySelector(class_text));
 }
 
 // Initialisation des marqueurs
@@ -345,34 +345,51 @@ function addDocument(doc){
         // Documents avec image
         if(doc.type == "image" || doc.type == "vidéo") {
           let codeHTML = "";
-          codeHTML = doc.auteur_nom;
+          let auteur = "";
+          codeHTML = nomAuteur(doc.auteur_prenom, doc.auteur_nom, doc.auteur_url, "", "", doc.auteur_autres);
           if(doc.auteur_url.length>0){
              codeHTML = '<a href="' + doc.auteur_url + '">' + codeHTML + '</a>';
           }
-          console.log(doc)
-          console.log(codeHTML)
+          //console.log(doc)
+          //console.log(codeHTML)
           if(codeHTML.length>0){
              codeHTML += ", ";
           }
+          auteur = codeHTML;
+
           if(doc.url_document.length>0){
              codeHTML += '<a href="' + doc.url_document + '">' + doc.titre_document + '</a>';
           }else{
              codeHTML += doc.titre_document;
           }
-          if(codeHTML.length>0){
-             codeHTML += ", ";
-          }
+          
           if(doc.legende.length>0){
              codeHTML += ', '+doc.legende;
           }
           
+          if(doc.copyright.length>0){
+             codeHTML += ', '+doc.copyright;
+          }
+
           let url_image = doc.url_document;
           if(doc.miniature.length > 0){
              url_image = doc.miniature;
           }
           
-          if(url_image.length>0){
-             codeHTML += '<img src="'+url_image+'" width="400px" margin="0 auto">';
+          // Document is a video
+          if(doc.type == "vidéo"){
+             if(url_image.replace("youtu.be/","").length < url_image.length || url_image.replace("youtube.com/","").length < url_image.length){
+                // Url de vidéo Youtube
+                url_image = '<iframe width="560" height="315" src="' + url_image + '" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
+             } else {
+                url_image = "";
+             }
+             codeHTML += '<br>'+url_image;
+          }
+          
+          // Document is an image
+          if(doc.type == "image" && url_image.length > 0){
+             codeHTML += '<br><a href="' + url_image + '"><img src="' + url_image + '" width="400px" margin="0 auto"></a>';
           }
           
           if(doc.texte_explicatif.length>0){
@@ -380,7 +397,9 @@ function addDocument(doc){
           }
           codeHTML = '<p class="subtitle-doc">' + codeHTML + '</p>';
           
-          carddoc.push('<div class="doc" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>&gt;</span><span><img src="assets/images/image.png" alt=""></span> '+doc.titre_document+'</h3><div class="hidden-doc">' + codeHTML + '</div></div>');
+          codeHTML = codeHTML.replace(/<a /gi, '<a target="_blank"');
+          auteur = auteur.replace(/<a /gi, '<a target="_blank"');
+          carddoc.push('<div class="doc" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>&gt;</span><span><img src="assets/images/image.png" alt=""></span> ' + auteur + doc.titre_document+'</h3><div class="hidden-doc">' + codeHTML + '</div></div>');
                     
           
         /*if(doc.titre_document.length>1) {
@@ -409,12 +428,15 @@ function addDocument(doc){
         // Documents avec texte 
         if(doc.type.toLowerCase() == "texte" || doc.type.toLowerCase() == "site web") {
           let codeHTML = "";
+          let auteur = "";
           codeHTML = nomAuteur(doc.auteur1_prenom, doc.auteur1_nom, doc.auteur1_url, doc.auteur2_prenom, doc.auteur2_nom, doc.auteur_autres);
           if(codeHTML.length>0){
              codeHTML += ", ";
           }
+          auteur = codeHTML;
+
           if(doc.url_document.length>0){
-             codeHTML += '<a href="' + doc.url_document + '">' + doc.titre_document + '</a>';
+             codeHTML += '<a href="' + doc.url_document + '>' + doc.titre_document + '</a>';
           }else{
              codeHTML += doc.titre_document;
           }
@@ -429,7 +451,9 @@ function addDocument(doc){
              codeHTML += '<p class="subtitle-doc">' + doc.texte + '</p>';
           }
           
-          carddoc.push('<div class="doc" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>&gt;</span><span><img src="assets/images/texte.png" alt=""></span> '+doc.titre_document+'</h3><div class="hidden-doc">' + codeHTML + '</div></div>');
+          codeHTML = codeHTML.replace(/<a /gi, '<a target="_blank"');
+          auteur = auteur.replace(/<a /gi, '<a target="_blank"');
+          carddoc.push('<div class="doc" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>&gt;</span><span><img src="assets/images/texte.png" alt=""></span> ' + auteur + doc.titre_document+'</h3><div class="hidden-doc">' + codeHTML + '</div></div>');
           
           /*
           let reg = /https:\/\/gallica\.bnf\.fr\/ark:\/12148\//;
@@ -539,11 +563,11 @@ function createMarkers(dataintro, dataetape, datatexts, datamedia) {
   for(i=0; i<dataetape.length;i++) {
     if(dataetape[i].latitude !== '' && dataetape[i].longitude !== '') {
     // Création du marqueur sur la carte
-    let mark = L.marker([dataetape[i].latitude, dataetape[i].longitude], {icon: blueMarkIcon, riseOnHover: true}).on("click", onMarkerMap);
+    let mark = L.marker([dataetape[i].latitude, dataetape[i].longitude], {icon: blueMarkIcon, riseOnHover: true, title: dataetape[i].lieu + ' - ' + dataetape[i].date}).on("click", onMarkerMap);
     mark.addTo(mymap);          
     // Création du marqueur sur la timeline
     e.insertAdjacentHTML("beforeend",
-    '<a id="mark'+dataetape[i].id_etape+'" class="marker" data-latlng="'+dataetape[i].latitude+', '+dataetape[i].longitude+'" onclick="onMarkerTimeline(this.id)"><img class="timeline-marker" src="https://zupimages.net/up/21/16/pcxc.png" alt=""></a>');
+    '<a id="mark'+dataetape[i].id_etape+'" class="marker" data-latlng="'+dataetape[i].latitude+', '+dataetape[i].longitude+'" onclick="onMarkerTimeline(this.id)"><img class="timeline-marker" src="https://zupimages.net/up/21/16/pcxc.png" alt="" title="'+dataetape[i].lieu+' - '+dataetape[i].date+'"></a>');
 
     // Création des tableaux qui vont stocker les contenus
     cardcontent = [];
@@ -572,9 +596,6 @@ function createMarkers(dataintro, dataetape, datatexts, datamedia) {
           test.push(mark.bindPopup('<div class="popup-wrapper"><div class="vignette" style="background-image: url(\''+vignette+'\');">'+dataetape[i].lieu+'</div><div class="popup-container"><p class="date">'+dataetape[i].date+'</p><p id="popup'+dataetape[i].id_etape+'" class="more" data-latlng="'+dataetape[i].latitude+', '+dataetape[i].longitude+'" onclick="onPopup(this)">En savoir plus</p></div></div>', {offset: new L.Point(0, -45)}));
         }
         addDocument(datamedia[n]);
-          if(i==15){
-             console.log("Adding media document "+n+" for "+dataetape[i].lieu);
-          }
       }
       else {
         // Push au début du tableau la ligne qu'il faudra mettre dans l'html
@@ -594,9 +615,6 @@ function createMarkers(dataintro, dataetape, datatexts, datamedia) {
           cardcontent.push('<div class="card-header"><img class="card-minia" src="'+vignette+'" alt""><div class="card-title"><h2>'+dataetape[i].lieu+'</h2></div></div><div class="description"><p class="description-content">'+dataetape[i].description+'</p></div>');
           test.push(mark.bindPopup('<div class="popup-wrapper"><div class="vignette" style="background-image: url(\''+vignette+'\');">'+dataetape[i].lieu+'</div><div class="popup-container"><p class="date">'+dataetape[i].date+'</p><p id="popup'+dataetape[i].id_etape+'" class="more" data-latlng="'+dataetape[i].latitude+', '+dataetape[i].longitude+'" onclick="onPopup(this)">En savoir plus</p></div></div>', {offset: new L.Point(0, -45)}));
           addDocument(datatexts[n]);
-          if(i==15){
-             console.log("Adding text document "+n+" for "+dataetape[i].lieu);
-          }
       }
       else {
         // Push au début du tableau la ligne qu'il faudra mettre dans l'html
@@ -620,8 +638,23 @@ function createMarkers(dataintro, dataetape, datatexts, datamedia) {
   };
 
   
-  e.insertAdjacentHTML("afterbegin", '<div class="slideLeft"><</div>')
-  e.insertAdjacentHTML("beforeend", '<div class="slideRight">></div>')
+  e.insertAdjacentHTML("afterbegin", '<div class="slideLeft">&lt;</div>')
+  e.insertAdjacentHTML("beforeend", '<div class="slideRight">&gt;</div>')
+  const buttonRight = document.querySelector('.slideRight');
+  const buttonLeft = document.querySelector('.slideLeft');
+
+  buttonRight.onclick = function () {
+    document.querySelector('.timeline').scrollBy({
+      left: 200,
+      behavior: 'smooth'
+    });     
+  };
+  buttonLeft.onclick = function () {
+    document.querySelector('.timeline').scrollBy({
+      left: -200,
+      behavior: 'smooth'
+    });     
+  };  
   // Insertion dans l'html le texte et titre d'introduction
   intro.insertAdjacentHTML("beforeend", '<div id="card" class="card-intro content"><h2 class="title-intro">'+dataintro[0].nom_itineraire+'</h2><p>'+dataintro[0].description_itineraire+'</p></div>')
   // Insertion dans l'html le bouton Commencer
@@ -1037,25 +1070,6 @@ function ChangeURL(i, e) {
     window.history.pushState({},'', url)
   }
 }
-
-// Fonction pour les boutons sur la timeline
-setTimeout(function() {
-  const buttonRight = document.querySelector('.slideRight');
-  const buttonLeft = document.querySelector('.slideLeft');
-
-  buttonRight.onclick = function () {
-    document.querySelector('.timeline').scrollBy({
-      left: 200,
-      behavior: 'smooth'
-    });     
-  };
-  buttonLeft.onclick = function () {
-    document.querySelector('.timeline').scrollBy({
-      left: -200,
-      behavior: 'smooth'
-    });     
-  };
-},2600);
 
 
 // Fonction pour retirer les couleurs de tous les marqueurs (timeline et carte)
