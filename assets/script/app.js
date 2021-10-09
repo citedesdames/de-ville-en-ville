@@ -436,7 +436,7 @@ function addDocument(doc){
           auteur = codeHTML;
 
           if(doc.url_document.length>0){
-             codeHTML += '<a href="' + doc.url_document + '>' + doc.titre_document + '</a>';
+             codeHTML += '<a href="' + doc.url_document + '">' + doc.titre_document + '</a>';
           }else{
              codeHTML += doc.titre_document;
           }
@@ -582,7 +582,7 @@ function createMarkers(dataintro, dataetape, datatexts, datamedia) {
         if(datamedia[n].vignette == "1") {
           // Push au début du tableau la ligne qu'il faudra mettre dans l'html
           vignette = datamedia[n].miniature;
-          cardcontent.unshift('<div class="card-header"><img class="card-minia" src="'+vignette+'" alt""><div class="card-title"><h2>'+dataetape[i].lieu+'</h2><p>'+dataetape[i].date+'</p></div></div><div class="description"><p class="description-content">'+dataetape[i].description+'</p></div><p class="text-click" onclick="onText('+dataetape[i].id_etape+')">Cette étape dans '+dataintro[0].titre_texte+'</p>');
+          cardcontent.unshift('<div class="card-header"><img class="card-minia" src="'+vignette+'" alt""><div class="card-title"><h2>'+dataetape[i].lieu+'</h2><p>'+dataetape[i].date+'</p></div></div><div class="description"><p class="description-content">'+dataetape[i].description+'</p></div><p class="text-click" onclick="onText('+dataetape[i].id_etape+')">Cette étape dans <u>'+dataintro[0].titre_texte+'</u></p>');
           // Création du pop up du marqueur sur la carte
           if(dataetape[i].date != "?") {
             test.unshift(mark.bindPopup('<div class="popup-wrapper"><div class="vignette" style="background-image: url(\''+vignette+'\');">'+dataetape[i].lieu+'</div><div class="popup-container"><p class="date">'+dataetape[i].date+'</p><p id="popup'+dataetape[i].id_etape+'" class="more" data-latlng="'+dataetape[i].latitude+', '+dataetape[i].longitude+'" onclick="onPopup(this)">En savoir plus</p></div></div>', {offset: new L.Point(0, -45)}));}

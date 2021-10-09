@@ -44,6 +44,12 @@ main {
     -moz-box-shadow: 8px 4px 10px 0px rgba(0,0,0,0.5);
 }
 
+.etape {
+    cursor: pointer;
+    text-decoration: underline; 
+    font-weight: bold;
+}
+
 .open {
     width: 50%;
 }
