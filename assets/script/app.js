@@ -120,10 +120,22 @@ function Start() {
   createMarkers(dataintro[0], dataetape[0], datatexts[0], datamedia[0]);
   let load = document.querySelector(".loader");
   load.classList.add("load-open");
-  if(typeof(etape) == 'number') {
+  if(typeof(etape) == "number") {
+    let autreEtape = etape-1;
+    if(etape==0){
+       autreEtape = etape+1
+    }
+    console.log(autreEtape)
+    document.querySelectorAll(".leaflet-marker-icon")[autreEtape].click();
+    document.getElementById("popup"+dataetape[0][autreEtape].id_etape).click();
+    setTimeout(function(){
     document.querySelectorAll(".leaflet-marker-icon")[etape].click();
     document.getElementById("popup"+dataetape[0][etape].id_etape).click();
+    },1000)
+    
   }
+
+
 }
 
 // Fonction qui effectue l'appel
@@ -400,30 +412,6 @@ function addDocument(doc){
           codeHTML = codeHTML.replace(/<a /gi, '<a target="_blank"');
           auteur = auteur.replace(/<a /gi, '<a target="_blank"');
           carddoc.push('<div class="doc" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>&gt;</span><span><img src="assets/images/image.png" alt=""></span> ' + auteur + doc.titre_document+'</h3><div class="hidden-doc">' + codeHTML + '</div></div>');
-                    
-          
-        /*if(doc.titre_document.length>1) {
-            if(doc.url_creation.search(/http/) !== 0 && doc.titre_document_original.search(/\<a href+/) !== 0) {
-              carddoc.push('<div class="doc" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>&gt;</span><span><img src="assets/images/image.png" alt=""></span> '+doc.titre_document+'</h3><h4 class="subtitle-doc">'+doc.titre_document_original.replace("<a href",'<a target="_blank" href')+'</h4><div class="hidden-doc"><img src="'+doc.url_document+'" width="400px" margin="0 auto"></div></div>');
-            }
-            else {
-              if(doc.creation.length>1) {
-                carddoc.push('<div class="doc" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>&gt;</span><span><img src="assets/images/image.png" alt=""></span> '+doc.titre_document+'</h3><h4 class="subtitle-doc"><a target="_blank" href="'+doc.url_creation+'">'+doc.creation+'</a> - '+doc.titre_document_original.replace("<a href",'<a target="_blank" href')+'</h4><div class="hidden-doc"><p class="subtitle-doc"></p><a class="img-doc" target="_blank" href="'+doc.url_creation+'" alt=""><img src="'+doc.url_document+'" width="400px"></a></div></div>');
-              }
-              else {
-                carddoc.push('<div class="doc" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>&gt;</span><span><img src="assets/images/image.png" alt=""></span> '+doc.titre_document+'</h3><h4 class="subtitle-doc">'+doc.titre_document_original.replace("<a href",'<a target="_blank" href')+'</h4><div class="hidden-doc"><p class="subtitle-doc"></p><a class="img-doc" target="_blank" href="'+doc.url_creation+'" alt=""><img src="'+doc.url_document+'" width="400px"></a></div></div>');}
-            }
-          }
-          else {
-            if(doc.url_creation.search(/http/) !== 0 && doc.titre_document_original.search(/\<a href+/) !== 0) {
-              carddoc.push('<div class="doc" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>&gt;</span><span><img src="assets/images/image.png" alt=""></span> '+doc.titre_document_original.replace("<a href",'<a target="_blank" href')+'</h3><div class="hidden-doc"><img src="'+doc.url_document+'" width="400px" margin="0 auto"></div></div>');
-            }
-            else {
-              carddoc.push('<div class="doc" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>&gt;</span><span><img src="assets/images/image.png" alt=""></span> '+doc.titre_document_original.replace("<a href",'<a target="_blank" href')+'</h3><h4 class="subtitle-doc"><a target="_blank" href="'+doc.url_creation+'">'+doc.creation+'</a></h4><div class="hidden-doc"><img src="'+doc.url_document+'" width="400px"></div></div>');
-            }
-
-          }
-        */
         }
         // Documents avec texte 
         if(doc.type.toLowerCase() == "texte" || doc.type.toLowerCase() == "site web") {
@@ -461,98 +449,8 @@ function addDocument(doc){
           auteur = auteur.replace(/<a /gi, '<a target="_blank"');
           carddoc.push('<div class="doc" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>&gt;</span><span><img src="assets/images/texte.png" alt=""></span> ' + auteur + doc.titre_document+'</h3><div class="hidden-doc">' + codeHTML + '</div></div>');
           
-          /*
-          let reg = /https:\/\/gallica\.bnf\.fr\/ark:\/12148\//;
-          if(reg.test(doc.url_document) === true) {
-            let text = doc.url_document.split(reg);
-            let textbis = text[1].split(/\.[a-z]+/);
-            if(doc.titre_document.length > 1) {
-                let codeHTML = "";
-                if(doc.titre_document_original.length > 1) {
-                  carddoc.push('<div class="doc" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>&gt;</span><span><img src="assets/images/texte.png" alt=""></span> '+doc.titre_document+'</h3><div class="hidden-doc"><p class="subtitle-doc">'+doc.titre_document_original.replace("<a href",'<a target="_blank" href')+'</p><p class="img-doc"><img src="https://gallica.bnf.fr/ark:/12148/'+textbis[0]+'.medres" alt=""</p></div></div>');
-                }
-                else {
-                  if(doc.url_document.length > 1) {
-                    carddoc.push('<div class="doc" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>&gt;</span><span><img src="assets/images/texte.png" alt=""></span> '+doc.titre_document+'</h3><div class="hidden-doc"><p class="subtitle-doc"><a href="'+doc.url_document+'">'+doc.url_document+'</a></p><p>'+doc.texte+'</p><p class="img-doc"><img src="https://gallica.bnf.fr/ark:/12148/'+textbis[0]+'.medres" alt=""</p></div></div>');
-                  }
-                  else {
-                    carddoc.push('<div class="doc" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>&gt;</span><span><img src="assets/images/texte.png" alt=""></span> '+doc.titre_document+'</h3><div class="hidden-doc"><p class="subtitle-doc">'+nomAuteur(doc.auteur1_prenom, doc.auteur1_nom, doc.auteur1_url, doc.auteur2_prenom, doc.auteur2_nom, doc.auteur_autres)+'</p><p>'+doc.texte+'</p><p class="img-doc"><img src="https://gallica.bnf.fr/ark:/12148/'+textbis[0]+'.medres" alt=""</p></div></div>');
-                  }
-                }
-            }
-            else {
-              carddoc.push('<div><p>'+doc.titre_document_original+'</p></div>');
-            }
-          }
-          else {
-            if(doc.titre_document.length > 1) {
-              if(doc.texte.length > 1) {
-                if(doc.titre_document_original.length > 1) {
-                  carddoc.push('<div class="doc" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>&gt;</span><span><img src="assets/images/texte.png" alt=""></span> '+doc.titre_document+'</h3><div class="hidden-doc"><p class="subtitle-doc">'+doc.titre_document_original.replace("<a href",'<a target="_blank" href')+'</p><p>'+doc.texte+'</p></div></div>');
-                }
-                else {
-                  if(doc.url_document.length > 1) {
-                    carddoc.push('<div class="doc" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>&gt;</span><span><img src="assets/images/texte.png" alt=""></span> '+doc.titre_document+'</h3><div class="hidden-doc"><p class="subtitle-doc"><a href="'+doc.url_document+'">'+doc.url_document+'</a></p><p>'+doc.texte+'</p></div></div>');
-                  }
-                  else {
-                    carddoc.push('<div class="doc" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>&gt;</span><span><img src="assets/images/texte.png" alt=""></span> '+doc.titre_document+'</h3><div class="hidden-doc"><p class="subtitle-doc"><a href="'+doc.url_creation+'">'+doc.url_creation+'</a></p><p>'+doc.texte+'</p></div></div>');
-                  }
-                }
-              }
-              else {
-                if(doc.titre_document_original.length > 1) {
-                  if(doc.titre_document_original.search(/http/) == -1) {
-                    if(doc.url_document.length > 1) {
-                      carddoc.push('<div class="doc" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>&gt;</span><span><img src="assets/images/texte.png" alt=""></span> '+doc.titre_document+'</h3><div class="hidden-doc"><p class="subtitle-doc"><a href="'+doc.url_document+'" target="_blank">'+doc.titre_document_original.replace("<a href",'<a target="_blank" href')+'</a></p></div></div>');
-                    }
-                  }
-                }
-                else {
-                  if(doc.url_document.length > 1) {
-                    carddoc.push('<div class="doc" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>&gt;</span><span><img src="assets/images/texte.png" alt=""></span> '+doc.titre_document+'</h3><div class="hidden-doc"><p class="subtitle-doc"><a href="'+doc.url_document+'">'+doc.url_document+'</a></p></div></div>');
-                  }
-                  else {
-                    carddoc.push('<div class="doc" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>&gt;</span><span><img src="assets/images/texte.png" alt=""></span> '+doc.titre_document+'</h3><div class="hidden-doc"><p class="subtitle-doc"><a href="'+doc.url_creation+'">'+doc.url_creation+'</a></p></div></div>');
-                  }
-                }
-              }
-            }
-            else {
-              carddoc.push('<div><p>'+doc.titre_document_original+'</p></div>');
-            }
-          }
-        */
         }
         
-        /*
-        // Documents avec site web
-        if(doc.type == "site web") { 
-          if(doc.titre_document !== '') {
-            carddoc.push('<div><p>'+doc.titre_document+'</p></div>');
-          }
-          else {
-            carddoc.push('<div><p>'+doc.titre_document_original+'</p></div>');
-          }
-        }
-        // Documents avec vidéo
-        if(doc.type == "vidéo") {
-          if(doc.titre_document !== '') {
-            carddoc.push('<div><p>'+doc.titre_document+'</p></div>');
-          }
-          else {
-            carddoc.push('<div><p>'+doc.titre_document_original+'</p></div>');
-          }
-        }
-        // Documents avec audio
-        if(doc.type == "audio") {
-          if(doc.titre_document !== '') {
-            carddoc.push('<div><p>'+doc.titre_document+'</p></div>');
-          }
-          else {
-            carddoc.push('<div><p>'+doc.titre_document_original+'</p></div>');
-          }
-        }
-        */
 
 }
 
@@ -569,7 +467,7 @@ function createMarkers(dataintro, dataetape, datatexts, datamedia) {
   for(i=0; i<dataetape.length;i++) {
     if(dataetape[i].latitude !== '' && dataetape[i].longitude !== '') {
     // Création du marqueur sur la carte
-    let mark = L.marker([dataetape[i].latitude, dataetape[i].longitude], {icon: blueMarkIcon, riseOnHover: true, title: dataetape[i].lieu + ' - ' + dataetape[i].date}).on("click", onMarkerMap);
+    let mark = L.marker([dataetape[i].latitude, dataetape[i].longitude], {icon: blueMarkIcon, riseOnHover: true, title: dataetape[i].lieu + ' - ' + dataetape[i].date, id:dataetape[i].id_etape}).on("click", onMarkerMap);
     mark.addTo(mymap);          
     // Création du marqueur sur la timeline
     e.insertAdjacentHTML("beforeend",
@@ -716,18 +614,16 @@ function onText(step) {
 function onMarkerTimeline(id) {
   // Sélection du marqueur cliqué dans la timeline
   let e = document.querySelector("#"+id);
-  //
   let timeline = document.querySelector('.timeline');
   // Ainsi que son image
   let child = document.querySelector("#"+id+" img");
   // Itération pour trouver quel marqueur de la carte est associé au marqueur de la timeline grâce aux coordonnées
   for(i=0; i<dataetape[0].length;i++) {
-    if(dataetape[0][i].latitude != "" && dataetape[0][i].longitude != "") {
     let mark = markers[i];
     let card = document.querySelector("#card"+dataetape[0][i].id_etape);
     mark.closePopup();
     // Si le marqueur de la carte est le même que le marqueur cliqué, alors on le passe en vert, s'il est vert, on le passe en bleu
-    if(mark.getLatLng().lat.toString()+", "+mark.getLatLng().lng.toString() == e.getAttribute("data-latlng")) {
+    if("mark" + mark.options.id.toString() == e.getAttribute("id")) {
       if(mark.getIcon() == blueMarkIcon) {
         ChangeURL(i);
         uncolorMarkers();
@@ -743,6 +639,7 @@ function onMarkerTimeline(id) {
           top: 0,
           behavior: 'smooth'
         });
+
         timeline.scrollTo({
           left:e.offsetLeft-75,
           behavior:'smooth'
@@ -763,7 +660,6 @@ function onMarkerTimeline(id) {
         document.querySelector(".etape-prev").textContent = "Étape précédente";
       }
     };  
-  };
   }
 };
 
@@ -797,8 +693,9 @@ function onPopup(e) {
   document.querySelector(".texte").classList.remove("text-open2");
   for(i=0;i<markers.length;i++){
     let marker = markers[i];
-    // Condition pour avoir le marqueur et la card correspondants au pop-up
-    if(marker.getLatLng().lat.toString()+", "+marker.getLatLng().lng.toString() == e.getAttribute("data-latlng")) {
+    // Condition pour avoir le marqueur et la card correspondant au pop-up
+    if("popup" + marker.options.id.toString() == e.getAttribute("id")) {
+      
       ChangeURL(i);
       document.querySelector(".introduction").classList.remove("-open");
       document.querySelector(".img-header").classList.remove("-open");
@@ -834,6 +731,7 @@ function onPopup(e) {
         left:document.querySelector("#mark"+dataetape[0][i].id_etape).offsetLeft-75,
         behavior:'smooth'
       });
+      
       // Conditions pour changer les boutons suivant et précédent si on est à la première ou la dernière étape
       if(i == markers.length - 1) {
         document.querySelector(".etape-suiv").classList.remove("-open");
