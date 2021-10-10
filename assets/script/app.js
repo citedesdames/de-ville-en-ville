@@ -335,7 +335,7 @@ function nomAuteur(auteur1_prenom, auteur1_nom, auteur1_url, auteur2_prenom, aut
   }
   chaineAuteur += auteur_autres;
   
-  return chaineAuteur;
+  return chaineAuteur.replace("' ","'").replace("’ ","'");
 }
 
 // Fonction pour ajouter un document
@@ -443,6 +443,12 @@ function addDocument(doc){
           if(doc.reference_bibliographique.length>0){
              codeHTML += ', '+doc.reference_bibliographique;
           }
+
+          let url_image = "";
+          if(doc.miniature.length > 0){
+             codeHTML += '<br><a href="' + doc.url_document + '"><img src="' + doc.miniature + '" width="400px" margin="0 auto"></a>';
+          }          
+
           if(doc.texte_explicatif.length>0){
              codeHTML += '<br><small>'+doc.texte_explicatif+'</small>';
           }
