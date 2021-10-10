@@ -478,7 +478,7 @@ function createMarkers(dataintro, dataetape, datatexts, datamedia) {
     carddoc = [];
     test = [];
     vignette = "assets/thumbnails/thumbnail-default.jpg";
-
+    
     // Ajout des documents multimédia liés à l'étape
     for(n=0; n<datamedia.length;n++) {
       if(datamedia[n].id_etape == dataetape[i].id_etape) {
@@ -486,7 +486,7 @@ function createMarkers(dataintro, dataetape, datatexts, datamedia) {
         if(datamedia[n].vignette == "1") {
           // Push au début du tableau la ligne qu'il faudra mettre dans l'html
           vignette = datamedia[n].miniature;
-          cardcontent.unshift('<div class="card-header"><img class="card-minia" src="'+vignette+'" alt""><div class="card-title"><h2>'+dataetape[i].lieu+'</h2><p>'+dataetape[i].date+'</p></div></div><div class="description"><p class="description-content">'+dataetape[i].description+'</p></div><p class="text-click" onclick="onText('+dataetape[i].id_etape+')">Cette étape dans <u>'+dataintro[0].titre_texte+'</u></p>');
+          cardcontent.unshift('<div class="card-header"><img class="card-minia" src="'+vignette+'" alt""><div class="card-title"><h2>'+dataetape[i].lieu+'</h2><p>'+dataetape[i].date+'</p></div></div><div class="description"><p class="description-content">'+dataetape[i].description+'</p></div>');
           // Création du pop up du marqueur sur la carte
           if(dataetape[i].date != "?") {
             test.unshift(mark.bindPopup('<div class="popup-wrapper"><div class="vignette" style="background-image: url(\''+vignette+'\');">'+dataetape[i].lieu+'</div><div class="popup-container"><p class="date">'+dataetape[i].date+'</p><p id="popup'+dataetape[i].id_etape+'" class="more" data-latlng="'+dataetape[i].latitude+', '+dataetape[i].longitude+'" onclick="onPopup(this)">En savoir plus</p></div></div>', {offset: new L.Point(0, -45)}));}
@@ -532,8 +532,8 @@ function createMarkers(dataintro, dataetape, datatexts, datamedia) {
     }
 
     carddoc = carddoc.toString().replace(/<\/p>\,/g,'</p>');
-    // Insertion dans l'html des lignes définies plus tôt
-    card.insertAdjacentHTML("beforeend", '<div id="card'+dataetape[i].id_etape+'"class="card">'+cardcontent[0]+'<div class="card-content">'+(carddoc.toString().replace(/<\/div>\,/g,'</div>'))+'</div></div>');
+    // Insertion dans l'html des lignes définies plus tôt et du lien vers l'ouvrage
+    card.insertAdjacentHTML("beforeend", '<div id="card'+dataetape[i].id_etape+'"class="card">'+cardcontent[0]+'<p class="text-click" onclick="onText(\''+dataetape[i].id_etape+'\')">Cette étape dans <u>'+dataintro[0].titre_texte+'</u></p><div class="card-content">'+(carddoc.toString().replace(/<\/div>\,/g,'</div>'))+'</div></div>');
     // Insertion du marqueur créé dans le tableau markers
     markers.push(mark);
     // Insertion de chaque coordonnées dans le tableau latlngs
@@ -612,6 +612,10 @@ function onText(step) {
 }
 // Fonction qui agit lors du clic sur un marqueur dans la timeline
 function onMarkerTimeline(id) {
+  document.querySelector(".texte").classList.remove("text-open1");
+  document.querySelector(".texte").classList.remove("text-open2");
+  document.querySelector(".overflow-tl").classList.add("-open");
+  document.querySelector(".overflow-cards").classList.add("-open");
   // Sélection du marqueur cliqué dans la timeline
   let e = document.querySelector("#"+id);
   let timeline = document.querySelector('.timeline');
