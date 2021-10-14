@@ -532,8 +532,14 @@ function createMarkers(dataintro, dataetape, datatexts, datamedia) {
     }
 
     carddoc = carddoc.toString().replace(/<\/p>\,/g,'</p>');
+    
+    let etapeLivre = ""
+    if(typeof(dataetape[i].page) == 'number'){
+       etapeLivre = '<p class="text-click" onclick="onText(\''+dataetape[i].id_etape+'\')">Cette étape dans <u>'+dataintro[0].titre_texte+'</u></p>';
+    }
+    
     // Insertion dans l'html des lignes définies plus tôt et du lien vers l'ouvrage
-    card.insertAdjacentHTML("beforeend", '<div id="card'+dataetape[i].id_etape+'"class="card">'+cardcontent[0]+'<p class="text-click" onclick="onText(\''+dataetape[i].id_etape+'\')">Cette étape dans <u>'+dataintro[0].titre_texte+'</u></p><div class="card-content">'+(carddoc.toString().replace(/<\/div>\,/g,'</div>'))+'</div></div>');
+    card.insertAdjacentHTML("beforeend", '<div id="card'+dataetape[i].id_etape+'"class="card">'+cardcontent[0]+etapeLivre+'<div class="card-content">'+(carddoc.toString().replace(/<\/div>\,/g,'</div>'))+'</div></div>');
     // Insertion du marqueur créé dans le tableau markers
     markers.push(mark);
     // Insertion de chaque coordonnées dans le tableau latlngs
