@@ -533,8 +533,8 @@ function createMarkers(dataintro, dataetape, datatexts, datamedia) {
 
     carddoc = carddoc.toString().replace(/<\/p>\,/g,'</p>');
     
-    let etapeLivre = ""
-    if(typeof(dataetape[i].page) == 'number'){
+    let etapeLivre = "";
+    if((dataetape[i].page).length > 0){
        etapeLivre = '<p class="text-click" onclick="onText(\''+dataetape[i].id_etape+'\')">Cette étape dans <u>'+dataintro[0].titre_texte+'</u></p>';
     }
     
