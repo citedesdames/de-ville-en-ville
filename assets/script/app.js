@@ -36,7 +36,7 @@ else {
   url = url[1].split("&");
   if(url.length>1) {
     etape = url[1].split("=")[1];
-    etape = etape - 1;
+    etape = parseInt(etape);
   }
   else {
     etape = undefined;
@@ -123,14 +123,22 @@ function Start() {
   if(typeof(etape) == "number") {
     let autreEtape = etape-1;
     if(etape==0){
-       autreEtape = etape+1
+       autreEtape = etape+1;
     }
-    console.log(autreEtape)
-    document.querySelectorAll(".leaflet-marker-icon")[autreEtape].click();
-    document.getElementById("popup"+dataetape[0][autreEtape].id_etape).click();
+    console.log("étape préc: "+autreEtape)
+    
+    document.querySelectorAll(".leaflet-marker-icon")[0].click();
+    document.getElementById("popup"+dataetape[0][0].id_etape).click();
     setTimeout(function(){
+    /*
     document.querySelectorAll(".leaflet-marker-icon")[etape].click();
+    console.log("étape voulue : " + etape)
+    console.log(dataetape[0][etape].id_etape)
     document.getElementById("popup"+dataetape[0][etape].id_etape).click();
+    */
+    
+    console.log("étape "+etape)
+    onMarkerTimeline("mark"+etape);
     },1000)
     
   }
@@ -158,19 +166,43 @@ function text_treatment(str, class_text) {
 // Tableau qui va contenir les marqueurs
 let markers = [];
 
+function blueMarkIcon(number){
 // Marqueur Bleu
-const blueMarkIcon = L.icon({
-  iconUrl: 'https://zupimages.net/up/21/16/bawa.png',
+/*
+return L.icon({
+  iconUrl: 'assets/images/blue-shadow.png',
   iconSize: [20.5, 40],
-  iconAnchor:   [10, 40]
-}); 
-
-// Marqueur Vert
-const greenMarkIcon = L.icon({
-  iconUrl: 'https://zupimages.net/up/21/16/f5xz.png',
-  iconSize: [30.6, 60],
-  iconAnchor:   [14, 55]
+  iconAnchor:   [10, 40],
+  number: number
 });
+*/
+return L.ExtraMarkers.icon({
+      icon: 'fa-number',
+      number: number,
+      markerColor: 'blue',
+      shape: 'square',
+      prefix: 'fa'
+      }); 
+}
+
+function greenMarkIcon(number){
+// Marqueur Vert
+/*
+return L.icon({
+  iconUrl: 'assets/images/green-shadow.png',
+  iconSize: [30.6, 60],
+  iconAnchor:   [14, 55],
+  number: number
+});
+*/
+return L.ExtraMarkers.icon({
+      icon: 'fa-number',
+      number: number,
+      markerColor: 'green',
+      shape: 'square',
+      prefix: 'fa'
+      }); 
+}
 
 /*--------------------- Fonctions ---------------------*/
 /*--------------------- Fonctions ---------------------*/
@@ -388,11 +420,14 @@ function addDocument(doc){
              url_image = doc.miniature;
           }
           
+          let icon = "image";
+          
           // Document is a video
           if(doc.type == "vidéo"){
+             icon = "video";
              if(url_image.replace("youtu.be/","").length < url_image.length || url_image.replace("youtube.com/","").length < url_image.length){
                 // Url de vidéo Youtube
-                url_image = '<iframe width="560" height="315" src="' + url_image + '" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
+                url_image = '<iframe width="500" height="315" src="' + url_image.replace("www.youtube.com/watch?v=","www.youtube.com/embed/").replace("youtu.be/","www.youtube.com/embed/") + '?rel=0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
              } else {
                 url_image = "";
              }
@@ -411,7 +446,7 @@ function addDocument(doc){
           
           codeHTML = codeHTML.replace(/<a /gi, '<a target="_blank"');
           auteur = auteur.replace(/<a /gi, '<a target="_blank"');
-          carddoc.push('<div class="doc" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>&gt;</span><span><img src="assets/images/image.png" alt=""></span> ' + auteur + doc.titre_document+'</h3><div class="hidden-doc">' + codeHTML + '</div></div>');
+          carddoc.push('<div class="doc" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>&gt;</span><span><img src="assets/images/' + icon + '.png" alt=""></span> ' + auteur + doc.titre_document+'</h3><div class="hidden-doc">' + codeHTML + '</div></div>');
         }
         // Documents avec texte 
         if(doc.type.toLowerCase() == "texte" || doc.type.toLowerCase() == "site web") {
@@ -462,16 +497,17 @@ function createMarkers(dataintro, dataetape, datatexts, datamedia) {
   let intro = document.querySelector(".introduction");
   DocumentsParEtape(datatexts, DocParEtape);
   DocumentsParEtape(datamedia, DocParEtape);
+  
   var latlngs = [];
   // Itération pour chacune des villes dans le tableau data
   for(i=0; i<dataetape.length;i++) {
     if(dataetape[i].latitude !== '' && dataetape[i].longitude !== '') {
     // Création du marqueur sur la carte
-    let mark = L.marker([dataetape[i].latitude, dataetape[i].longitude], {icon: blueMarkIcon, riseOnHover: true, title: dataetape[i].lieu + ' - ' + dataetape[i].date, id:dataetape[i].id_etape}).on("click", onMarkerMap);
-    mark.addTo(mymap);          
+    let mark = L.marker([dataetape[i].latitude, dataetape[i].longitude], {icon: blueMarkIcon(DocParEtape[dataetape[i].id_etape]), riseOnHover: true, title: dataetape[i].lieu + ' - ' + dataetape[i].date, id:dataetape[i].id_etape}).on("click", onMarkerMap);
+    mark.addTo(mymap);        
     // Création du marqueur sur la timeline
     e.insertAdjacentHTML("beforeend",
-    '<a id="mark'+dataetape[i].id_etape+'" class="marker" data-latlng="'+dataetape[i].latitude+', '+dataetape[i].longitude+'" onclick="onMarkerTimeline(this.id)"><img class="timeline-marker" src="https://zupimages.net/up/21/16/pcxc.png" alt="" title="'+dataetape[i].lieu+' - '+dataetape[i].date+'"></a>');
+    '<a id="mark'+dataetape[i].id_etape+'" class="marker" data-latlng="'+dataetape[i].latitude+', '+dataetape[i].longitude+'" onclick="onMarkerTimeline(this.id)"><img class="timeline-marker" src="assets/images/blue-noshadow.png" alt="" title="'+dataetape[i].lieu+' - '+dataetape[i].date+'"></a>');
 
     // Création des tableaux qui vont stocker les contenus
     cardcontent = [];
@@ -489,15 +525,15 @@ function createMarkers(dataintro, dataetape, datatexts, datamedia) {
           cardcontent.unshift('<div class="card-header"><img class="card-minia" src="'+vignette+'" alt""><div class="card-title"><h2>'+dataetape[i].lieu+'</h2><p>'+dataetape[i].date+'</p></div></div><div class="description"><p class="description-content">'+dataetape[i].description+'</p></div>');
           // Création du pop up du marqueur sur la carte
           if(dataetape[i].date != "?") {
-            test.unshift(mark.bindPopup('<div class="popup-wrapper"><div class="vignette" style="background-image: url(\''+vignette+'\');">'+dataetape[i].lieu+'</div><div class="popup-container"><p class="date">'+dataetape[i].date+'</p><p id="popup'+dataetape[i].id_etape+'" class="more" data-latlng="'+dataetape[i].latitude+', '+dataetape[i].longitude+'" onclick="onPopup(this)">En savoir plus</p></div></div>', {offset: new L.Point(0, -45)}));}
+            test.unshift(mark.bindPopup('<div class="popup-wrapper"><div class="vignette" style="background-image: url(\''+vignette+'\');">'+dataetape[i].lieu+'</div><div class="popup-container"><p class="date">'+dataetape[i].date+'</p><p id="popup'+dataetape[i].id_etape+'" class="more" data-latlng="'+dataetape[i].latitude+', '+dataetape[i].longitude+'" onclick="onPopup(this)">En savoir plus</p></div></div>', {offset: new L.Point(0, -3)}));}
           else {
-            test.unshift(mark.bindPopup('<div class="popup-wrapper"><div class="vignette" style="background-image: url(\''+vignette+'\');">'+dataetape[i].lieu+'</div><div class="popup-container"><p class="date"></p><p id="popup'+dataetape[i].id_etape+'" class="more" data-latlng="'+dataetape[i].latitude+', '+dataetape[i].longitude+'" onclick="onPopup(this)">En savoir plus</p></div></div>', {offset: new L.Point(0, -45)}));
+            test.unshift(mark.bindPopup('<div class="popup-wrapper"><div class="vignette" style="background-image: url(\''+vignette+'\');">'+dataetape[i].lieu+'</div><div class="popup-container"><p class="date"></p><p id="popup'+dataetape[i].id_etape+'" class="more" data-latlng="'+dataetape[i].latitude+', '+dataetape[i].longitude+'" onclick="onPopup(this)">En savoir plus</p></div></div>', {offset: new L.Point(0, -3)}));
           }
         }
         else {
           // Push dans le tableau une ligne par défaut
           cardcontent.push('<div class="card-header"><img class="card-minia" src="'+vignette+'" alt""><div class="card-title"><h2>'+dataetape[i].lieu+'</h2><p>'+dataetape[i].date+'</p></div></div><div class="description"><p class="description-content">'+dataetape[i].description+'</p></div>');
-          test.push(mark.bindPopup('<div class="popup-wrapper"><div class="vignette" style="background-image: url(\''+vignette+'\');">'+dataetape[i].lieu+'</div><div class="popup-container"><p class="date">'+dataetape[i].date+'</p><p id="popup'+dataetape[i].id_etape+'" class="more" data-latlng="'+dataetape[i].latitude+', '+dataetape[i].longitude+'" onclick="onPopup(this)">En savoir plus</p></div></div>', {offset: new L.Point(0, -45)}));
+          test.push(mark.bindPopup('<div class="popup-wrapper"><div class="vignette" style="background-image: url(\''+vignette+'\');">'+dataetape[i].lieu+'</div><div class="popup-container"><p class="date">'+dataetape[i].date+'</p><p id="popup'+dataetape[i].id_etape+'" class="more" data-latlng="'+dataetape[i].latitude+', '+dataetape[i].longitude+'" onclick="onPopup(this)">En savoir plus</p></div></div>', {offset: new L.Point(0, -3)}));
         }
         addDocument(datamedia[n]);
       }
@@ -505,9 +541,9 @@ function createMarkers(dataintro, dataetape, datatexts, datamedia) {
         // Push au début du tableau la ligne qu'il faudra mettre dans l'html
         cardcontent.push('<div class="card-header"><img class="card-minia" src="'+vignette+'" alt""><div class="card-title"><h2>'+dataetape[i].lieu+'</h2><p>'+dataetape[i].date+'</p></div></div><div class="description"><p class="description-content">'+dataetape[i].description+'</p></div>');
         if(dataetape[i].date != "?") {
-          test.push(mark.bindPopup('<div class="popup-wrapper"><div class="vignette" style="background-image: url(\''+vignette+'\');">'+dataetape[i].lieu+'</div><div class="popup-container"><p class="date">'+dataetape[i].date+'</p><p id="popup'+dataetape[i].id_etape+'" class="more" data-latlng="'+dataetape[i].latitude+', '+dataetape[i].longitude+'" onclick="onPopup(this)">En savoir plus</p></div></div>', {offset: new L.Point(0, -45)}));}
+          test.push(mark.bindPopup('<div class="popup-wrapper"><div class="vignette" style="background-image: url(\''+vignette+'\');">'+dataetape[i].lieu+'</div><div class="popup-container"><p class="date">'+dataetape[i].date+'</p><p id="popup'+dataetape[i].id_etape+'" class="more" data-latlng="'+dataetape[i].latitude+', '+dataetape[i].longitude+'" onclick="onPopup(this)">En savoir plus</p></div></div>', {offset: new L.Point(0, -3)}));}
         else {
-          test.push(mark.bindPopup('<div class="popup-wrapper"><div class="vignette" style="background-image: url(\''+vignette+'\');">'+dataetape[i].lieu+'</div><div class="popup-container"><p class="date"></p><p id="popup'+dataetape[i].id_etape+'" class="more" data-latlng="'+dataetape[i].latitude+', '+dataetape[i].longitude+'" onclick="onPopup(this)">En savoir plus</p></div></div>', {offset: new L.Point(0, -45)}));
+          test.push(mark.bindPopup('<div class="popup-wrapper"><div class="vignette" style="background-image: url(\''+vignette+'\');">'+dataetape[i].lieu+'</div><div class="popup-container"><p class="date"></p><p id="popup'+dataetape[i].id_etape+'" class="more" data-latlng="'+dataetape[i].latitude+', '+dataetape[i].longitude+'" onclick="onPopup(this)">En savoir plus</p></div></div>', {offset: new L.Point(0, -3)}));
         }
       }
     }
@@ -517,16 +553,16 @@ function createMarkers(dataintro, dataetape, datatexts, datamedia) {
       if(datatexts[n].id_etape == dataetape[i].id_etape) {
           // Push dans le tableau une ligne par défaut
           cardcontent.push('<div class="card-header"><img class="card-minia" src="'+vignette+'" alt""><div class="card-title"><h2>'+dataetape[i].lieu+'</h2><p>'+dataetape[i].date+'</p></div></div><div class="description"><p class="description-content">'+dataetape[i].description+'</p></div>');
-          test.push(mark.bindPopup('<div class="popup-wrapper"><div class="vignette" style="background-image: url(\''+vignette+'\');">'+dataetape[i].lieu+'</div><div class="popup-container"><p class="date">'+dataetape[i].date+'</p><p id="popup'+dataetape[i].id_etape+'" class="more" data-latlng="'+dataetape[i].latitude+', '+dataetape[i].longitude+'" onclick="onPopup(this)">En savoir plus</p></div></div>', {offset: new L.Point(0, -45)}));
+          test.push(mark.bindPopup('<div class="popup-wrapper"><div class="vignette" style="background-image: url(\''+vignette+'\');">'+dataetape[i].lieu+'</div><div class="popup-container"><p class="date">'+dataetape[i].date+'</p><p id="popup'+dataetape[i].id_etape+'" class="more" data-latlng="'+dataetape[i].latitude+', '+dataetape[i].longitude+'" onclick="onPopup(this)">En savoir plus</p></div></div>', {offset: new L.Point(0, -3)}));
           addDocument(datatexts[n]);
       }
       else {
         // Push au début du tableau la ligne qu'il faudra mettre dans l'html
         cardcontent.push('<div class="card-header"><img class="card-minia" src="'+vignette+'" alt""><div class="card-title"><h2>'+dataetape[i].lieu+'</h2><p>'+dataetape[i].date+'</p></div></div><div class="description"><p class="description-content">'+dataetape[i].description+'</p></div>');
         if(dataetape[i].date != "?") {
-          test.push(mark.bindPopup('<div class="popup-wrapper"><div class="vignette" style="background-image: url(\''+vignette+'\');">'+dataetape[i].lieu+'</div><div class="popup-container"><p class="date">'+dataetape[i].date+'</p><p id="popup'+dataetape[i].id_etape+'" class="more" data-latlng="'+dataetape[i].latitude+', '+dataetape[i].longitude+'" onclick="onPopup(this)">En savoir plus</p></div></div>', {offset: new L.Point(0, -45)}));}
+          test.push(mark.bindPopup('<div class="popup-wrapper"><div class="vignette" style="background-image: url(\''+vignette+'\');">'+dataetape[i].lieu+'</div><div class="popup-container"><p class="date">'+dataetape[i].date+'</p><p id="popup'+dataetape[i].id_etape+'" class="more" data-latlng="'+dataetape[i].latitude+', '+dataetape[i].longitude+'" onclick="onPopup(this)">En savoir plus</p></div></div>', {offset: new L.Point(0, -3)}));}
         else {
-          test.push(mark.bindPopup('<div class="popup-wrapper"><div class="vignette" style="background-image: url(\''+vignette+'\');">'+dataetape[i].lieu+'</div><div class="popup-container"><p class="date"></p><p id="popup'+dataetape[i].id_etape+'" class="more" data-latlng="'+dataetape[i].latitude+', '+dataetape[i].longitude+'" onclick="onPopup(this)">En savoir plus</p></div></div>', {offset: new L.Point(0, -45)}));
+          test.push(mark.bindPopup('<div class="popup-wrapper"><div class="vignette" style="background-image: url(\''+vignette+'\');">'+dataetape[i].lieu+'</div><div class="popup-container"><p class="date"></p><p id="popup'+dataetape[i].id_etape+'" class="more" data-latlng="'+dataetape[i].latitude+', '+dataetape[i].longitude+'" onclick="onPopup(this)">En savoir plus</p></div></div>', {offset: new L.Point(0, -3)}));
         }
       }
     }
@@ -587,10 +623,19 @@ function DocumentsParEtape(docs, obj) {
 //console.log(docs);
 
 for(i=0;i<docs.length;i++) {
+  if(docs[i]["id_etape"] != ""){
+     if(docs[i]["id_etape"] in obj){
+        obj[docs[i]["id_etape"]] += 1;
+     } else {
+        obj[docs[i]["id_etape"]] = 1;
+     }
+  }
+  /*
   if(docs[i].id_etape.length < 5) {
     //obj += docs[i].id_etape;
     //console.log(obj)
   }
+  */
 }
 // var obj = {key1: "value1", key2: "value2"};
 // Object.assign(obj, {key3: "value3"});
@@ -634,11 +679,11 @@ function onMarkerTimeline(id) {
     mark.closePopup();
     // Si le marqueur de la carte est le même que le marqueur cliqué, alors on le passe en vert, s'il est vert, on le passe en bleu
     if("mark" + mark.options.id.toString() == e.getAttribute("id")) {
-      if(mark.getIcon() == blueMarkIcon) {
+      if(mark.getIcon().options.markerColor == 'blue') {
         ChangeURL(i);
         uncolorMarkers();
-        mark.setIcon(greenMarkIcon);
-        child.setAttribute("src", "https://zupimages.net/up/21/16/wnre.png");      
+        mark.setIcon(greenMarkIcon(DocParEtape[dataetape[0][i].id_etape]));
+        child.setAttribute("src", "assets/images/green-noshadow.png");      
         mymap.flyTo([mark.getLatLng().lat, mark.getLatLng().lng+.5], 10, {
           "animate": true,
           "duration": 1
@@ -713,8 +758,8 @@ function onPopup(e) {
       let img = document.querySelector("#mark"+dataetape[0][i].id_etape+" img");
       let card = document.querySelector("#card"+dataetape[0][i].id_etape);
       let scrollitem = document.querySelector(".overflow-cards");
-      img.setAttribute("src", "https://zupimages.net/up/21/16/wnre.png");
-      marker.setIcon(greenMarkIcon);
+      img.setAttribute("src", "assets/images/green-noshadow.png");
+      marker.setIcon(greenMarkIcon(DocParEtape[dataetape[0][i].id_etape]))
       marker.closePopup();
       ChangeClassFromMark(tab);
       card.classList.add("-open");
@@ -776,8 +821,8 @@ function changeStep(e) {
           newcard.classList.add("-open");
           let child = document.querySelector("#mark"+Number(dataetape[0][i].id_etape)).nextSibling.firstChild;
           let mark = markers[i+1];
-          mark.setIcon(greenMarkIcon);
-          child.setAttribute("src", "https://zupimages.net/up/21/16/wnre.png");      
+          mark.setIcon(greenMarkIcon(DocParEtape[dataetape[0][i].id_etape]));
+          child.setAttribute("src", "assets/images/green-noshadow.png");      
           mymap.flyTo([mark.getLatLng().lat, mark.getLatLng().lng+.5], 10, {
             "animate": true,
             "duration": 1
@@ -815,8 +860,8 @@ function changeStep(e) {
           newcard.classList.add("-open");
           let child = document.querySelector("#mark"+Number(dataetape[0][i].id_etape)).previousSibling.firstChild;
           let mark = markers[i-1];
-          mark.setIcon(greenMarkIcon);
-          child.setAttribute("src", "https://zupimages.net/up/21/16/wnre.png");      
+          mark.setIcon(greenMarkIcon(DocParEtape[dataetape[0][i].id_etape]));
+          child.setAttribute("src", "assets/images/green-noshadow.png");      
           mymap.flyTo([mark.getLatLng().lat, mark.getLatLng().lng+.5], 10, {
             "animate": true,
             "duration": 1
@@ -881,8 +926,8 @@ function changeStep(e) {
       newcard.classList.add("-open");
       let child = document.querySelector("#mark1 img");
       let mark = markers[0];
-      mark.setIcon(greenMarkIcon);
-      child.setAttribute("src", "https://zupimages.net/up/21/16/wnre.png");      
+      mark.setIcon(greenMarkIcon(DocParEtape[dataetape[0][0].id_etape]))
+      child.setAttribute("src", "assets/images/green-noshadow.png");      
       mymap.flyTo([mark.getLatLng().lat, mark.getLatLng().lng+.5], 10, {
         "animate": true,
         "duration": 1
@@ -948,11 +993,15 @@ function ClicSurDoc(e) {
         doc[c].firstChild.firstChild.classList.remove('rotate-span');
       }
     }
+    
+    setTimeout(function(){
     let scrollitem = document.querySelector(".overflow-cards");
     scrollitem.scrollTo({
-      top: (e.offsetTop),
+      top: (e.offsetTop - scrollitem.offsetTop),
       behavior: 'smooth'
     });
+    },500)
+    
   }
   e.lastChild.classList.toggle("doc-open");
   e.firstChild.firstChild.classList.toggle("rotate-span");
@@ -993,10 +1042,10 @@ function uncolorMarkers() {
     let prevmark = markers[a];
     let prevcard = document.querySelectorAll(".card");
     let doc = document.querySelectorAll(".doc");
-    if(prevmark.getIcon().options.iconUrl == "https://zupimages.net/up/21/16/f5xz.png") {
+    if(prevmark.getIcon().options.markerColor == "green") {
       let img = document.querySelectorAll(".timeline-marker");
       for (b=0;b<markers.length;b++) {
-        img[b].setAttribute("src", "https://zupimages.net/up/21/16/pcxc.png");
+        img[b].setAttribute("src", "assets/images/blue-noshadow.png");
         prevcard[b].classList.remove("-open");
       };
       for (c=0;c<doc.length;c++) {
@@ -1006,7 +1055,8 @@ function uncolorMarkers() {
           doc[c].firstChild.firstChild.classList.remove('rotate-span');
         }
       }
-      prevmark.setIcon(blueMarkIcon);
+      console.log(prevmark.getIcon())
+      prevmark.setIcon(blueMarkIcon(prevmark.getIcon().options.number))
     }
     else {
       tab.push("1");
