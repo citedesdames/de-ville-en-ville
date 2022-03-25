@@ -36,7 +36,7 @@ else {
   url = url[1].split("&");
   if(url.length>1) {
     etape = url[1].split("=")[1];
-    etape = parseInt(etape);
+    etape = parseInt(etape) - 1;
   }
   else {
     etape = undefined;
@@ -125,7 +125,6 @@ function Start() {
     if(etape==0){
        autreEtape = etape+1;
     }
-    console.log("étape préc: "+autreEtape)
     
     document.querySelectorAll(".leaflet-marker-icon")[0].click();
     document.getElementById("popup"+dataetape[0][0].id_etape).click();
@@ -137,8 +136,7 @@ function Start() {
     document.getElementById("popup"+dataetape[0][etape].id_etape).click();
     */
     
-    console.log("étape "+etape)
-    onMarkerTimeline("mark"+etape);
+    onMarkerTimeline("mark"+dataetape[0][etape].id_etape);
     },1000)
     
   }
