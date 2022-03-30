@@ -444,7 +444,7 @@ function addDocument(doc){
           
           codeHTML = codeHTML.replace(/<a /gi, '<a target="_blank"');
           auteur = auteur.replace(/<a /gi, '<a target="_blank"');
-          carddoc.push('<div class="doc" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>&gt;</span><span><img src="assets/images/' + icon + '.png" alt=""></span> ' + auteur + doc.titre_document+'</h3><div class="hidden-doc">' + codeHTML + '</div></div>');
+          carddoc.push('<div class="doc" title="Document ajouté par ' + doc.contexte_ajout_ligne.replace("\"","") + '" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>&gt;</span><span><img src="assets/images/' + icon + '.png" alt=""></span> ' + auteur + doc.titre_document+'</h3><div class="hidden-doc">' + codeHTML + '</div></div>');
         }
         // Documents avec texte 
         if(doc.type.toLowerCase() == "texte" || doc.type.toLowerCase() == "site web") {
@@ -480,7 +480,7 @@ function addDocument(doc){
           
           codeHTML = codeHTML.replace(/<a /gi, '<a target="_blank"');
           auteur = auteur.replace(/<a /gi, '<a target="_blank"');
-          carddoc.push('<div class="doc" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>&gt;</span><span><img src="assets/images/texte.png" alt=""></span> ' + auteur + doc.titre_document+'</h3><div class="hidden-doc">' + codeHTML + '</div></div>');
+          carddoc.push('<div class="doc" title="Document ajouté par ' + doc.contexte_ajout_ligne.replace("\"","") + '" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>&gt;</span><span><img src="assets/images/texte.png" alt=""></span> ' + auteur + doc.titre_document+'</h3><div class="hidden-doc">' + codeHTML + '</div></div>');
           
         }
         
@@ -672,6 +672,7 @@ function onMarkerTimeline(id) {
   let child = document.querySelector("#"+id+" img");
   // Itération pour trouver quel marqueur de la carte est associé au marqueur de la timeline grâce aux coordonnées
   for(i=0; i<dataetape[0].length;i++) {
+    if(markers[i] != undefined){
     let mark = markers[i];
     let card = document.querySelector("#card"+dataetape[0][i].id_etape);
     mark.closePopup();
@@ -713,7 +714,8 @@ function onMarkerTimeline(id) {
         document.querySelector(".etape-prev").textContent = "Étape précédente";
       }
     };  
-  }
+  };
+  };
 };
 
 // Fonction qui agit lors du clic sur un marqueur dans la carte
