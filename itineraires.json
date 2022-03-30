@@ -14,5 +14,13 @@
         "documents":"https://docs.google.com/spreadsheets/d/e/2PACX-1vRaL8y5g2IR1wkiQiOch8rhGSxY-bxhve-9ZOWh4-nR_Ee-iwa6NTBgZ19cwHqnxWRLNenyUQb_XjZu/pub?gid=0&single=true&output=csv",
         "textes":"https://docs.google.com/spreadsheets/d/e/2PACX-1vRaL8y5g2IR1wkiQiOch8rhGSxY-bxhve-9ZOWh4-nR_Ee-iwa6NTBgZ19cwHqnxWRLNenyUQb_XjZu/pub?gid=1518459823&single=true&output=csv",
         "multimedia":"https://docs.google.com/spreadsheets/d/e/2PACX-1vRaL8y5g2IR1wkiQiOch8rhGSxY-bxhve-9ZOWh4-nR_Ee-iwa6NTBgZ19cwHqnxWRLNenyUQb_XjZu/pub?gid=753437719&single=true&output=csv"
+    },
+    {
+        "nom": "Tour de France",
+        "proprietes": "https://docs.google.com/spreadsheets/d/e/2PACX-1vQesd_UwvogCylVuGOJn5Fq0Pn2col2CHIOlHxCJ_gq9KGGUr8r58XimMPPeZlD-iNJTEVDLJcsQ6Lt/pub?gid=129227231&single=true&output=csv",
+        "etapes":"https://docs.google.com/spreadsheets/d/e/2PACX-1vQesd_UwvogCylVuGOJn5Fq0Pn2col2CHIOlHxCJ_gq9KGGUr8r58XimMPPeZlD-iNJTEVDLJcsQ6Lt/pub?gid=1773657079&single=true&output=csv",
+        "documents":"",
+        "textes":"https://docs.google.com/spreadsheets/d/e/2PACX-1vQesd_UwvogCylVuGOJn5Fq0Pn2col2CHIOlHxCJ_gq9KGGUr8r58XimMPPeZlD-iNJTEVDLJcsQ6Lt/pub?gid=339792079&single=true&output=csv",
+        "multimedia":"https://docs.google.com/spreadsheets/d/e/2PACX-1vQesd_UwvogCylVuGOJn5Fq0Pn2col2CHIOlHxCJ_gq9KGGUr8r58XimMPPeZlD-iNJTEVDLJcsQ6Lt/pub?gid=1931668045&single=true&output=csv"
     }
 ]
