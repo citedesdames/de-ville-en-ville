@@ -141,14 +141,17 @@ header h1 {
     text-align: center;
     transform: rotate(180deg);
     color: #fff;
-    font-size: 1.8rem;
+    font-size: 1.6rem;
     font-family: Montserrat SBold;
     cursor: pointer;
 }
 
 header .img-header {
-    display: none;
     cursor: pointer;
+}
+
+header .img-header-hidden {
+    display: none;
 }
 
 .header-open {
@@ -164,7 +167,7 @@ header .img-header {
 }
 
 .header-open h1 {
-    font-size: 2.2rem;
+    font-size: 1.8rem;
     color: #24395D;
     writing-mode: unset;
     transform: unset;
@@ -244,12 +247,28 @@ header .img-header {
     display: none;
 }
 
-.card, .card-intro, .card-about {
+.card {
     display: none;
     width: 80%;
     margin: 5% auto;
     margin-top: 0;
     border-radius: 50px;
+    min-height: 800px;
+    background-color: white;
+    box-shadow: 4px 4px 10px 0px rgba(0,0,0,0.5);
+    -webkit-box-shadow: 4px 4px 10px 0px rgba(0,0,0,0.5);
+    -moz-box-shadow: 4px 4px 10px 0px rgba(0,0,0,0.5);
+}
+
+.card-about, .card-intro {
+    display: none;
+    width: 80%;
+    margin: 5% auto;
+    margin-top: 0;
+    border-bottom-left-radius: 50px;
+    border-top-left-radius: 50px;
+    border-bottom-right-radius: 0px;
+    border-top-right-radius: 0px;
     min-height: 800px;
     background-color: white;
     box-shadow: 4px 4px 10px 0px rgba(0,0,0,0.5);
@@ -387,6 +406,8 @@ header .img-header {
 
 .content {
     padding: 4%;
+    height: 60vh;
+    overflow-y: scroll;
 }
 
 .card-content {
@@ -402,7 +423,7 @@ header .img-header {
 .title-about, .title-intro {
     text-align: center;
     color: #004262;
-    font-size: 2rem;
+    font-size: 1.6rem;
 }
 
 .leaflet-touch .leaflet-bar {

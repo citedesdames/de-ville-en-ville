@@ -37,6 +37,7 @@ else {
   if(url.length>1) {
     etape = url[1].split("=")[1];
     etape = parseInt(etape) - 1;
+    document.querySelector(".img-header").classList.remove("img-header-hidden");
   }
   else {
     etape = undefined;
@@ -98,13 +99,16 @@ fetch('./itineraires.json')
                       
                       // Initialisation de l'itinéraire
                       document.querySelector("title").textContent = dataintro[0][0].title;
-                      document.querySelector("h1").textContent = dataintro[0][0].titre_court;
+                      document.querySelector("h1").innerHTML += dataintro[0][0].titre_court;
                       document.querySelector("head").insertAdjacentHTML("beforeend",'<link rel="icon" type="image/png" href="'+dataintro[0][0].favicon+'" />');
 
                       // Création des marqueurs
                       Start();
                       // Appel des textes des itinéraires
                       file_get_contents(dataintro[0][0].url_texte_code, text_treatment, dataintro[0][0].class_texte);
+                      if(parametresUrl.etape==undefined){
+                         ChangeClass();
+                      }
                     }
                   })
                 }
@@ -234,7 +238,7 @@ function ChangeClass() {
       setTimeout(function() {
         intro1.classList.add("-open");
         intro2.classList.add("-open");
-        about.classList.add("-open");
+        about.classList.remove("img-header-hidden");
       },1000);
       document.querySelector(".texte").classList.remove("text-open1");
       document.querySelector(".texte").classList.remove("text-open2");
@@ -243,7 +247,7 @@ function ChangeClass() {
     else {
       intro1.classList.remove("-open");
       intro2.classList.remove("-open");
-      about.classList.remove("-open");
+      about.classList.add("img-header-hidden");
     }
     
     // Animation de la carte lors de l'ouverture et fermeture du volet pour éviter un décalage
@@ -744,6 +748,10 @@ function onMarkerMap(mark) {
 // Fonction qui agit lors du clic sur "En savoir plus" d'un pop up
 // À corriger pour ne pas sélectionner selon les coordonnées mais selon l'id
 function onPopup(e) {
+  console.log(document.querySelector(".about").classList);
+  if(document.querySelector(".about").classList.contains("-open")){
+     AboutPage();
+  }
   document.querySelector(".texte").classList.remove("text-open1");
   document.querySelector(".texte").classList.remove("text-open2");
   for(i=0;i<markers.length;i++){
@@ -941,6 +949,12 @@ function changeStep(e) {
   };
 };
 
+function closeCards(){
+  document.querySelector(".overflow-tl").classList.remove("-open");
+  document.querySelector(".overflow-cards").classList.remove("-open");
+  
+}
+
 function HeaderClick() {
   let i = Number(document.querySelector(".card.-open").getAttribute("id").split("card")[1]);
   ChangeURL(i, "header");
@@ -950,23 +964,23 @@ function HeaderClick() {
     behavior:'smooth'
   });
   uncolorMarkers(); 
-  document.querySelector(".introduction").classList.add("-open");
-  document.querySelector(".card-intro").classList.add("-open");
-  document.querySelector(".img-header").classList.add("-open");
-  document.querySelector(".overflow-tl").classList.remove("-open");
-  document.querySelector(".overflow-cards").classList.remove("-open");
-  
   for(i=0;i<markers.length;i++) {
     let marker = markers[i];
     marker.closePopup();
   };
+  closeCards();
+  document.querySelector(".introduction").classList.add("-open");
+  document.querySelector(".card-intro").classList.add("-open");
+  document.querySelector(".img-header").classList.add("-open");
   document.querySelector(".introduction").scrollTo({
     top: 0,
     behavior: 'smooth'
   });
 }
+
 // Clic sur le bouton informations
 function AboutPage() {
+  closeCards();
   let about = document.querySelector(".about");
   document.querySelector(".introduction").classList.remove("-open");
   if(about.classList.contains("-open")) {
