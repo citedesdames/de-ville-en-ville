@@ -352,7 +352,7 @@ function ChangeClassFromMark(e) {
 };
 
 // Création de la liste des auteurs
-function nomAuteur(auteur1_prenom, auteur1_nom, auteur1_url, auteur2_prenom, auteur2_nom, auteur_autres){
+function nomAuteur(insere_url, auteur1_prenom, auteur1_nom, auteur1_url, auteur2_prenom, auteur2_nom, auteur_autres){
   let chaineAuteur = "";
   
   // Ajout de l'auteur1
@@ -361,8 +361,8 @@ function nomAuteur(auteur1_prenom, auteur1_nom, auteur1_url, auteur2_prenom, aut
   }
   chaineAuteur += auteur1_nom;
   
-  // Ajout de l'URL pour auteur1 si elle existe
-  if(auteur1_url.length>0){
+  // Ajout de l'URL pour auteur1 si elle existe et qu'on veut l'insérer
+  if((auteur1_url.length>0) && (insere_url)){
      chaineAuteur = '<a href="'+auteur1_url+'">'+chaineAuteur+'</a>';
   }
   
@@ -392,13 +392,11 @@ function addDocument(doc){
         if(doc.type == "image" || doc.type == "vidéo") {
           let codeHTML = "";
           let auteur = "";
-          codeHTML = nomAuteur(doc.auteur_prenom, doc.auteur_nom, doc.auteur_url, "", "", doc.auteur_autres);
-          if(doc.auteur_url.length>0){
-             codeHTML = '<a href="' + doc.auteur_url + '">' + codeHTML + '</a>';
-          }
-          //console.log(doc)
-          //console.log(codeHTML)
+          let auteurSansLien = "";
+          codeHTML = nomAuteur(true, doc.auteur_prenom, doc.auteur_nom, doc.auteur_url, "", "", doc.auteur_autres);
+          auteurSansLien = nomAuteur(false, doc.auteur_prenom, doc.auteur_nom, doc.auteur_url, "", "", doc.auteur_autres);
           if(codeHTML.length>0){
+             auteurSansLien += ", ";
              codeHTML += ", ";
           }
           auteur = codeHTML;
@@ -448,14 +446,17 @@ function addDocument(doc){
           
           codeHTML = codeHTML.replace(/<a /gi, '<a target="_blank"');
           auteur = auteur.replace(/<a /gi, '<a target="_blank"');
-          carddoc.push('<div class="doc" title="Document ajouté par ' + doc.contexte_ajout_ligne.replace("\"","") + '" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>&gt;</span><span><img src="assets/images/' + icon + '.png" alt=""></span> ' + auteur + doc.titre_document+'</h3><div class="hidden-doc">' + codeHTML + '</div></div>');
+          carddoc.push('<div class="doc" title="Document ajouté par ' + doc.contexte_ajout_ligne.replace("\"","") + '" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>&gt;</span><span><img src="assets/images/' + icon + '.png" alt=""></span> ' + auteurSansLien + doc.titre_document+'</h3><div class="hidden-doc">' + codeHTML + '</div></div>');
         }
         // Documents avec texte 
         if(doc.type.toLowerCase() == "texte" || doc.type.toLowerCase() == "site web") {
           let codeHTML = "";
           let auteur = "";
-          codeHTML = nomAuteur(doc.auteur1_prenom, doc.auteur1_nom, doc.auteur1_url, doc.auteur2_prenom, doc.auteur2_nom, doc.auteur_autres);
+          let auteurSansLien = "";
+          codeHTML = nomAuteur(true, doc.auteur1_prenom, doc.auteur1_nom, doc.auteur1_url, doc.auteur2_prenom, doc.auteur2_nom, doc.auteur_autres);
+          auteurSansLien = nomAuteur(false, doc.auteur1_prenom, doc.auteur1_nom, doc.auteur1_url, doc.auteur2_prenom, doc.auteur2_nom, doc.auteur_autres);
           if(codeHTML.length>0){
+             auteurSansLien += ", ";
              codeHTML += ", ";
           }
           auteur = codeHTML;
@@ -484,7 +485,7 @@ function addDocument(doc){
           
           codeHTML = codeHTML.replace(/<a /gi, '<a target="_blank"');
           auteur = auteur.replace(/<a /gi, '<a target="_blank"');
-          carddoc.push('<div class="doc" title="Document ajouté par ' + doc.contexte_ajout_ligne.replace("\"","") + '" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>&gt;</span><span><img src="assets/images/texte.png" alt=""></span> ' + auteur + doc.titre_document+'</h3><div class="hidden-doc">' + codeHTML + '</div></div>');
+          carddoc.push('<div class="doc" title="Document ajouté par ' + doc.contexte_ajout_ligne.replace("\"","") + '" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>&gt;</span><span><img src="assets/images/texte.png" alt=""></span> ' + auteurSansLien + doc.titre_document+'</h3><div class="hidden-doc">' + codeHTML + '</div></div>');
           
         }
         
@@ -499,7 +500,7 @@ function createMarkers(dataintro, dataetape, datatexts, datamedia) {
   let intro = document.querySelector(".introduction");
   DocumentsParEtape(datatexts, DocParEtape);
   DocumentsParEtape(datamedia, DocParEtape);
-  
+  console.log("documents trouvés")
   var latlngs = [];
   // Itération pour chacune des villes dans le tableau data
   for(i=0; i<dataetape.length;i++) {
@@ -520,6 +521,7 @@ function createMarkers(dataintro, dataetape, datatexts, datamedia) {
     // Ajout des documents multimédia liés à l'étape
     for(n=0; n<datamedia.length;n++) {
       if(datamedia[n].id_etape == dataetape[i].id_etape) {
+        console.log("Document multimédia trouvé !")
         // Si un document est une vignette, alors
         if(datamedia[n].vignette == "1") {
           // Push au début du tableau la ligne qu'il faudra mettre dans l'html
@@ -540,6 +542,7 @@ function createMarkers(dataintro, dataetape, datatexts, datamedia) {
         addDocument(datamedia[n]);
       }
       else {
+        console.log("Document texte trouvé !")
         // Push au début du tableau la ligne qu'il faudra mettre dans l'html
         cardcontent.push('<div class="card-header"><img class="card-minia" src="'+vignette+'" alt""><div class="card-title"><h2>'+dataetape[i].lieu+'</h2><p>'+dataetape[i].date+'</p></div></div><div class="description"><p class="description-content">'+dataetape[i].description+'</p></div>');
         if(dataetape[i].date != "?") {
