@@ -642,3 +642,24 @@ header .img-header-hidden {
 strong .etape{
     cursor: pointer;
 }
+
+
+.persName{
+  background-color:#004262;
+  color:white;
+  padding:1px;
+}
+.nc{
+  background-color:#00537B !important;
+  color:white;
+  padding:1px;
+}
+.etape-texte{
+  background-color: orange;
+}
+.lieu{
+  background-color:#008d3b;
+  color:white;
+  padding:1px;
+  text-decoration:underline;
+}
