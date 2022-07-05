@@ -387,9 +387,9 @@ function nomAuteur(insere_url, auteur1_prenom, auteur1_nom, auteur1_url, auteur2
 // Fonction pour ajouter un document
 function addDocument(doc){
 // DOCUMENTS
-
+console.log(doc);
         // Documents avec image
-        if(doc.type == "image" || doc.type == "vidéo") {
+        if(doc.type == "image" || doc.type == "vidéo" || doc.type == "iframe") {
           let codeHTML = "";
           let auteur = "";
           let auteurSansLien = "";
@@ -434,6 +434,12 @@ function addDocument(doc){
              codeHTML += '<br>'+url_image;
           }
           
+          // Document is an iframe
+          if(doc.type == "iframe"){
+             icon = "video";
+             codeHTML += '<br>'+url_image;
+          }
+
           // Document is an image
           if(doc.type == "image" && url_image.length > 0){
              codeHTML += '<br><a href="' + url_image + '"><img src="' + url_image + '" width="400px" margin="0 auto"></a>';
@@ -462,12 +468,17 @@ function addDocument(doc){
           auteur = codeHTML;
 
           if(doc.url_document.length>0){
-             codeHTML += '<a href="' + doc.url_document + '">' + doc.titre_document + '</a>';
+             if(doc.reference_bibliographique.length>0){
+                codeHTML += '<a href="' + doc.url_document + '">' + doc.reference_bibliographique + '</a>';
+             } else {
+                codeHTML += '<a href="' + doc.url_document + '">' + doc.titre_document + '</a>';
+             }
           }else{
-             codeHTML += doc.titre_document;
-          }
-          if(doc.reference_bibliographique.length>0){
-             codeHTML += ', '+doc.reference_bibliographique;
+             if(doc.reference_bibliographique.length>0){
+                codeHTML += doc.reference_bibliographique;
+             } else {
+                codeHTML += doc.titre_document;
+             }
           }
 
           let url_image = "";
