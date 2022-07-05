@@ -442,8 +442,8 @@ console.log(doc);
 
           // Document is an image
           if(doc.type == "image" && url_image.length > 0){
-             if(url_document != undefined){
-                codeHTML += '<br><a href="' + url_document + '"><img src="' + url_image + '" width="400px" margin="0 auto"></a>';
+             if(doc.url_document != undefined){
+                codeHTML += '<br><a href="' + doc.url_document + '"><img src="' + url_image + '" width="400px" margin="0 auto"></a>';
              } else {
                 codeHTML += '<br><a href="' + url_image + '"><img src="' + url_image + '" width="400px" margin="0 auto"></a>';
              }
