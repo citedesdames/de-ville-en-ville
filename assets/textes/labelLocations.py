@@ -640,8 +640,64 @@ locations = [
 ]
 """
 
+
+
+locations = [
+['chez nous','1'],
+['envoya quérir','2'],
+['abbaye de Jarsy','3'],
+['petit Bourbon','4'],
+['logis de <abbr class="abbr" title="Monsieur">M.</abbr>&#160;Guiot','5'],
+['chez elles','6'],
+['à table','7'],
+['chez moi à la campagne','8'],
+['Gros-Bois','9'],
+['en nos maisons','10'],
+['Gros-Bois','11'],
+['Sussy','12'],
+['Gros-Bois','13'],
+['Sussy','14'],
+['à Paris','15'],
+['Val-de-Grâce','16'],
+['chez moi','17'],
+['Orléans','18'],
+['Poitiers','19'],
+['Angoulême','20'],
+['petite ville','21'],
+['la Tour Blanche','22'],
+['Bourdeille','23'],
+['Périgueux','24'],
+['Bergerac','25'],
+['Libourne','26'],
+['la Bastide','27'],
+['Garonne','28'],
+['porte du Chapeau-Rouge','29'],
+['à l’archevêché','30'],
+['Bacalan','31'],
+['la Bastide','32'],
+['Lamone','33'],
+['Libourne','34'],
+['Mucidan','35'],
+['Riberac','36'],
+['Angoulême','37'],
+['Paris','38'],
+['chez la reine','39'],
+['chez nous','40'],
+['chez <abbr class="abbr" title="Monsieur">M.</abbr>&#160;le Cardinal','41'],
+['Montereau-Faut-Yonne','42'],
+['du couvent','43'],
+['Montereau','44'],
+['au milieu de la rivière de Seine','45'],
+['Melun','46'],
+['Paris','47'],
+['chez moi','48'],
+]
+
 inputText = open("tourdefrance-old.html", "r", encoding="utf-8")
 outputText = open("tourdefrance.html", "w", encoding="utf-8")
+
+inputText = open("memoires-guette-old.html", "r", encoding="utf-8")
+outputText = open("memoires-guette.html", "w", encoding="utf-8")
 
 allText = ""
 for line in inputText:
