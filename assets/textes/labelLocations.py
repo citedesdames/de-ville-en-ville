@@ -338,10 +338,18 @@ locations = [
 ['Villeconte','603'],
 ['ſainct Saturnin','604'],
 ['Clermont en Auuergne','605'],
+['Mõtferrand','605b'],
+['Clermont','605c'],
+['Rion','605d'],
+['ſainct Bonnet','605e'],
 ['Aigueperſe','606'],
+['Ebruſle','606b'],
 ['Chantelle','607'],
+['la Coue','607b'],
 ['Montmarault','608'],
+['Brés','608b'],
 ['Coſne en Bourbonnois','609'],
+['Tenoille','609b'],
 ['Torſy','610'],
 ['Guyarche','611'],
 ['Aubigny','611a'],
@@ -365,6 +373,7 @@ locations = [
 ['Monceaux','621'],
 ['Sainct Mor des foſſez','622'],
 ['Paris','623'],
+
 ]
 
 
