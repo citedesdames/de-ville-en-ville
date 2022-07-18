@@ -351,6 +351,7 @@ locations = [
 ['Coſne en Bourbonnois','609'],
 ['Tenoille','609b'],
 ['Torſy','610'],
+['Grouſobre','610b'],
 ['Guyarche','611'],
 ['Aubigny','611a'],
 ['la Charité','612'],
