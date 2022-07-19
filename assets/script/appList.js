@@ -362,8 +362,9 @@ function createMarkers(dataintro, dataetape, datatexts, datamedia) {
   let about = document.querySelector(".about");
   about.insertAdjacentHTML("beforeend","<div class='card-about'><div class='content'><h2 class='title-about'>À propos</h2>"+dataintro[0].a_propos+"</div></div>");
   
-  document.querySelector(".main-container").style.width="800px";
-  document.querySelector(".main-container").style.backgroundColor="white";
+  console.log("Change visibility 1");
+  document.querySelector(".main_container").style.width="800px";
+  document.querySelector(".main_container").style.backgroundColor="white";
   document.querySelector(".introduction").style.display="block";
   document.querySelector(".introduction .content").style.height="auto";
   document.querySelector(".about").style.display="block";
@@ -373,7 +374,7 @@ function createMarkers(dataintro, dataetape, datatexts, datamedia) {
   document.querySelector(".overflow-cards").style.display="block";
   document.querySelectorAll(".card").forEach(function(e){e.style.display = "block";});
   document.querySelectorAll(".hidden-doc").forEach(function(e){e.classList.add("doc-open");});
-  
+  console.log("Change visibility 2");
 };
 
 
