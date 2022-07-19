@@ -88,7 +88,6 @@ fetch('./itineraires.json')
                       
                       // Initialisation de l'itinéraire
                       document.querySelector("title").textContent = dataintro[0][0].title;
-                      document.querySelector("h1").innerHTML += dataintro[0][0].titre_court;
                       document.querySelector("head").insertAdjacentHTML("beforeend",'<link rel="icon" type="image/png" href="'+dataintro[0][0].favicon+'" />');
 
                       // Création des marqueurs
@@ -234,7 +233,7 @@ console.log(doc);
           
           codeHTML = codeHTML.replace(/<a /gi, '<a target="_blank"');
           auteur = auteur.replace(/<a /gi, '<a target="_blank"');
-          carddoc.push('<div class="doc" title="Document ajouté par ' + doc.contexte_ajout_ligne.replace("\"","") + '" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>&gt;</span><span><img src="assets/images/' + icon + '.png" alt=""></span> ' + auteurSansLien + doc.titre_document+'</h3><div class="hidden-doc">' + codeHTML + '</div></div>');
+          carddoc.push('<div class="doc" title="Document ajouté par ' + doc.contexte_ajout_ligne.replace("\"","") + '" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>&gt;</span><span><img src="assets/images/' + icon + '-small.png" alt=""></span> ' + auteurSansLien + doc.titre_document+'</h3><div class="hidden-doc">' + codeHTML + '</div></div>');
         }
         // Documents avec texte 
         if(doc.type.toLowerCase() == "texte" || doc.type.toLowerCase() == "site web") {
@@ -278,7 +277,7 @@ console.log(doc);
           
           codeHTML = codeHTML.replace(/<a /gi, '<a target="_blank"');
           auteur = auteur.replace(/<a /gi, '<a target="_blank"');
-          carddoc.push('<div class="doc" title="Document ajouté par ' + doc.contexte_ajout_ligne.replace("\"","") + '" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>&gt;</span><span><img src="assets/images/texte.png" alt=""></span> ' + auteurSansLien + doc.titre_document+'</h3><div class="hidden-doc">' + codeHTML + '</div></div>');
+          carddoc.push('<div class="doc" title="Document ajouté par ' + doc.contexte_ajout_ligne.replace("\"","") + '" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>&gt;</span><span><img src="assets/images/texte-small.png" alt=""></span> ' + auteurSansLien + doc.titre_document+'</h3><div class="hidden-doc">' + codeHTML + '</div></div>');
           
         }
         
@@ -363,10 +362,13 @@ function createMarkers(dataintro, dataetape, datatexts, datamedia) {
   let about = document.querySelector(".about");
   about.insertAdjacentHTML("beforeend","<div class='card-about'><div class='content'><h2 class='title-about'>À propos</h2>"+dataintro[0].a_propos+"</div></div>");
   
+  document.querySelector(".main-container").style.width="800px";
+  document.querySelector(".main-container").style.backgroundColor="white";
+  document.querySelector(".introduction").style.display="block";
+  document.querySelector(".introduction .content").style.height="auto";
   document.querySelector(".about").style.display="block";
   document.querySelector(".card-about").style.display="block";
   document.querySelector(".card-about .content").style.height="auto";
-  document.querySelector(".introduction").style.display="block";
   document.querySelector(".card-intro").style.display="block";
   document.querySelector(".overflow-cards").style.display="block";
   document.querySelectorAll(".card").forEach(function(e){e.style.display = "block";});
