@@ -1,0 +1,36 @@
+2	13563
+13	198
+14	351
+16	3252
+18	2225
+21	10398
+22	6011
+23	2170
+21	5254
+23	645
+24	9829
+25	928
+26	7774
+29	2547
+30	797
+31	141
+40	3282
+41	428
+Saint-Denis	Paris
+Le Catelet	Saint-Denis
+Cambrai	Le Catelet
+Valenciennes	Cambrai
+Mons	Valenciennes
+Namur	Mons
+Huy	Namur
+Liège	Huy
+Namur	Liège
+Liège	Namur
+Huy	Liège
+Dinant	Huy
+Florennes	Dinant
+Le Cateau-Cambrésis	Florennes
+Le Catelet	Le Cateau-Cambrésis
+La Fère	Le Catelet
+Saint-Denis	La Fère
+Paris	Saint-Denis
