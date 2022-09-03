@@ -290,54 +290,64 @@ function createMarkers(dataintro, dataetape, datatexts, datamedia) {
   let e = document.querySelector('.timeline');
   let card = document.querySelector(".overflow-cards");
   let intro = document.querySelector(".introduction");
-  DocumentsParEtape(datatexts, DocParEtape);
-  DocumentsParEtape(datamedia, DocParEtape);
+  let mediasParEtape = {};
+  let textesParEtape = {};
+  let vignettes = {}
+  
+  // Création de l'objet associant à chaque étape la liste des documents multimédia liés
+  for(n=0; n < datamedia.length;n++) {
+    if(DocParEtape[datamedia[n].id_etape] in DocParEtape){
+      DocParEtape[datamedia[n].id_etape] += 1;
+    } else {
+      DocParEtape[datamedia[n].id_etape] = 1;
+    }
+    if(datamedia[n].id_etape in mediasParEtape){
+      mediasParEtape[datamedia[n].id_etape].push(datamedia[n]);
+    } else {
+      mediasParEtape[datamedia[n].id_etape] = [datamedia[n]];
+    }
+    if(datamedia[n].vignette=="1"){
+      vignettes[datamedia[n].id_etape] = datamedia[n].miniature;
+    }
+  }
+  
+  // Création de l'objet associant à chaque étape la liste des textes liés
+  for(n=0; n < datatexts.length;n++) {
+    if (DocParEtape[datatexts[n].id_etape] in DocParEtape){
+      DocParEtape[datatexts[n].id_etape] += 1;
+    } else {
+      DocParEtape[datatexts[n].id_etape] = 1;
+    }
+    if (datatexts[n].id_etape in textesParEtape){
+      textesParEtape[datatexts[n].id_etape].push(datatexts[n]);
+    } else {
+      textesParEtape[datatexts[n].id_etape] = [datatexts[n]];
+    }
+  }
+  
+  //DocumentsParEtape(datatexts, DocParEtape);
+  //DocumentsParEtape(datamedia, DocParEtape);
   console.log("documents trouvés")
   var latlngs = [];
   // Itération pour chacune des villes dans le tableau data
   for(i=0; i<dataetape.length;i++) {
     if(dataetape[i].latitude !== '' && dataetape[i].longitude !== '') {
-
     // Création des tableaux qui vont stocker les contenus
     cardcontent = [];
     carddoc = [];
     test = [];
-    vignette = "assets/thumbnails/thumbnail-default.jpg";
     
     // Ajout des documents multimédia liés à l'étape
-    for(n=0; n<datamedia.length;n++) {
-      if(datamedia[n].id_etape == dataetape[i].id_etape) {
-        console.log("Document multimédia trouvé !")
-        // Si un document est une vignette, alors
-        if(datamedia[n].vignette == "1") {
-          // Push au début du tableau la ligne qu'il faudra mettre dans l'html
-          vignette = datamedia[n].miniature;
-          cardcontent.unshift('<div class="card-header"><img class="card-minia" src="'+vignette+'" alt""><div class="card-title"><h2>'+dataetape[i].lieu+'</h2><p>'+dataetape[i].date+'</p></div></div><div class="description"><p class="description-content">'+dataetape[i].description+'</p></div>');
-          // Création du pop up du marqueur sur la carte
-        }
-        else {
-          // Push dans le tableau une ligne par défaut
-          cardcontent.push('<div class="card-header"><img class="card-minia" src="'+vignette+'" alt""><div class="card-title"><h2>'+dataetape[i].lieu+'</h2><p>'+dataetape[i].date+'</p></div></div><div class="description"><p class="description-content">'+dataetape[i].description+'</p></div>');
-        }
-        addDocument(datamedia[n]);
-      }
-      else {
-        console.log("Document texte trouvé !")
-        // Push au début du tableau la ligne qu'il faudra mettre dans l'html
-        cardcontent.push('<div class="card-header"><img class="card-minia" src="'+vignette+'" alt""><div class="card-title"><h2>'+dataetape[i].lieu+'</h2><p>'+dataetape[i].date+'</p></div></div><div class="description"><p class="description-content">'+dataetape[i].description+'</p></div>');
+    if(dataetape[i].id_etape in mediasParEtape){
+      for(n = 0; n < mediasParEtape[dataetape[i].id_etape].length; n++) {
+        addDocument(mediasParEtape[dataetape[i].id_etape][n]);
       }
     }
 
     // Ajout des documents texte liés à l'étape
-    for(n=0; n<datatexts.length;n++) {
-      if(datatexts[n].id_etape == dataetape[i].id_etape) {
-          // Push dans le tableau une ligne par défaut
-          cardcontent.push('<div class="card-header"><img class="card-minia" src="'+vignette+'" alt""><div class="card-title"><h2>'+dataetape[i].lieu+'</h2><p>'+dataetape[i].date+'</p></div></div><div class="description"><p class="description-content">'+dataetape[i].description+'</p></div>');
-          addDocument(datatexts[n]);
-      }
-      else {
-        // Push au début du tableau la ligne qu'il faudra mettre dans l'html
-        cardcontent.push('<div class="card-header"><img class="card-minia" src="'+vignette+'" alt""><div class="card-title"><h2>'+dataetape[i].lieu+'</h2><p>'+dataetape[i].date+'</p></div></div><div class="description"><p class="description-content">'+dataetape[i].description+'</p></div>');
+    if(dataetape[i].id_etape in textesParEtape){
+      for(n = 0; n < textesParEtape[dataetape[i].id_etape].length; n++) {
+        addDocument(textesParEtape[dataetape[i].id_etape][n]);
       }
     }
 
@@ -349,7 +359,20 @@ function createMarkers(dataintro, dataetape, datatexts, datamedia) {
     }
     
     // Insertion dans l'html des lignes définies plus tôt et du lien vers l'ouvrage
-    card.insertAdjacentHTML("beforeend", '<div id="card'+dataetape[i].id_etape+'"class="card">'+cardcontent[0]+etapeLivre+'<div class="card-content">'+(carddoc.toString().replace(/<\/div>\,/g,'</div>'))+'</div></div>');
+    if((cardcontent.length) == 0){
+      cardcontent.push();
+    }
+    
+    let vignette = "assets/thumbnails/thumbnail-default.jpg";
+    if(dataetape[i].id_etape in vignettes){
+       vignette = vignettes[dataetape[i].id_etape];
+    }
+    card.insertAdjacentHTML("beforeend", '<div id="card' + dataetape[i].id_etape + '"class="card">'
+      + '<div class="card-header"><img class="card-minia" src="' + vignette + '" alt""><div class="card-title"><h2>'+dataetape[i].lieu+'</h2><p>'+dataetape[i].date+'</p></div></div>'
+      + '<div class="description"><p class="description-content">'+dataetape[i].description+'</p></div>'
+      + etapeLivre
+      +'<div class="card-content">'+(carddoc.toString().replace(/<\/div>\,/g,'</div>'))+'</div>'
+      +'</div>');
     // Insertion de chaque coordonnées dans le tableau latlngs
     latlngs.push([dataetape[i].latitude, dataetape[i].longitude]);
     }
@@ -362,7 +385,6 @@ function createMarkers(dataintro, dataetape, datatexts, datamedia) {
   let about = document.querySelector(".about");
   about.insertAdjacentHTML("beforeend","<div class='card-about'><div class='content'><h2 class='title-about'>À propos</h2>"+dataintro[0].a_propos+"</div></div>");
   
-  console.log("Change visibility 1");
   document.querySelector(".main_container").style.width="800px";
   document.querySelector(".main_container").style.backgroundColor="white";
   document.querySelector(".introduction").style.display="block";
@@ -374,32 +396,8 @@ function createMarkers(dataintro, dataetape, datatexts, datamedia) {
   document.querySelector(".overflow-cards").style.display="block";
   document.querySelectorAll(".card").forEach(function(e){e.style.display = "block";});
   document.querySelectorAll(".hidden-doc").forEach(function(e){e.classList.add("doc-open");});
-  console.log("Change visibility 2");
 };
 
-
-function DocumentsParEtape(docs, obj) {
-//console.log(docs);
-
-for(i=0;i<docs.length;i++) {
-  if(docs[i]["id_etape"] != ""){
-     if(docs[i]["id_etape"] in obj){
-        obj[docs[i]["id_etape"]] += 1;
-     } else {
-        obj[docs[i]["id_etape"]] = 1;
-     }
-  }
-  /*
-  if(docs[i].id_etape.length < 5) {
-    //obj += docs[i].id_etape;
-    //console.log(obj)
-  }
-  */
-}
-// var obj = {key1: "value1", key2: "value2"};
-// Object.assign(obj, {key3: "value3"});
-//console.log(obj)
-}
 
 // Clic pour voir le texte
 function onText(step) {
