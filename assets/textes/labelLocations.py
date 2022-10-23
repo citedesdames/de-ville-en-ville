@@ -5,6 +5,8 @@ import csv, glob, os, re, sys
 
 folder = os.path.abspath(os.path.dirname(sys.argv[0]))
 
+"""
+# Locations for Grand tour de France
 locations = [
 ['ville capitale de Paris','1'],
 ['Sainct Mor des foſſez','2'],
@@ -387,10 +389,11 @@ locations = [
 
 
 ]
-
+"""
 
 
 """
+# Locations for Mémoires de catherine de La Guette
 locations = [
 ['chez nous','1'],
 ['envoya quérir','2'],
@@ -443,13 +446,84 @@ locations = [
 ]
 """
 
+# Locations for Voyage de Gascogne
+locations = [
+['Paris','1'],
+['Ollainville','2'],
+['Estampes','3'],
+['Angerville','4'],
+['Artenay','5'],
+['faulxbourgs d’Orléans','6'],
+['Cléry','7'],
+['S. Dye','8'],
+['Blois','9'],
+['Chenonceaux','10'],
+['Tours','11'],
+['Azé-le-Rideau','12'],
+['Chinon','13'],
+['Fontevrault','14'],
+['Chinon','15'],
+['Champigny','16'],
+['Mont-sur-Guêne','17'],
+['Mirebeau','18'],
+['Pont-d’Oranse','19'],
+['Poictiers','20'],
+['Vyvonne','21'],
+['Couay','22'],
+['Civray','23'],
+['Ruffec','24'],
+['Verteuil','25'],
+['Renay','26'],
+['Nègre','27'],
+['Anville','28'],
+['Neufvy','29'],
+['Cognac','30'],
+['Pons','31'],
+['Plassac','32'],
+['Mirambeau','33'],
+['Tollyer','34'],
+['Blaye','35'],
+['Bourg','36'],
+['Lybourne','37'],
+['Créon','38'],
+['Bordeaux','39'],
+['Cadillac','40'],
+['Sainct-Macaire','41'],
+['la Réole','42'],
+['Saincte-Bazeille','43'],
+['Marmande','49'],
+['Tonneins','50'],
+['Esguillon','51'],
+['Port-Saincte-Marie','52'],
+['Agen','53'],
+['Lafox','54'],
+['Valence d’Agen','55'],
+['Mouassac','57'],
+['Chasteau-Sarrazin','58'],
+['Montèche','59'],
+['Sainct-Jorry','60'],
+['Tholouze','61'],
+['Pibrac','62'],
+['L’Isle en Jourdain','63'],
+['Agimont','64'],
+['Aubiet','65'],
+['Auch','66'],
+['Condom','67'],
+['Nérac','68']
+]
+
+"""
 inputText = open("tourdefrance-old.html", "r", encoding="utf-8")
 outputText = open("tourdefrance.html", "w", encoding="utf-8")
+"""
 
 """
 inputText = open("memoires-guette-old.html", "r", encoding="utf-8")
 outputText = open("memoires-guette.html", "w", encoding="utf-8")
 """
+
+inputText = open("voyagedegascogne-old.html", "r", encoding="utf-8")
+outputText = open("voyagedegascogne.html", "w", encoding="utf-8")
 
 allText = ""
 for line in inputText:

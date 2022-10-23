@@ -26,7 +26,7 @@ else {
   if(url.length>1) {
     etape = url[1].split("=")[1];
     etape = parseInt(etape) - 1;
-    document.querySelector(".img-header").classList.remove("img-header-hidden");
+    //document.querySelector(".img-header").classList.remove("img-header-hidden");
   }
   else {
     etape = undefined;
