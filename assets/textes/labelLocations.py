@@ -461,7 +461,7 @@ locations = [
 ['Tours','11'],
 ['Azé-le-Rideau','12'],
 ['Chinon','13'],
-['Fontevrault','14'],
+['abbaye de Fontevrault','14'],
 ['Chinon','15'],
 ['Champigny','16'],
 ['Mont-sur-Guêne','17'],
@@ -489,27 +489,28 @@ locations = [
 ['Bordeaux','39'],
 ['Cadillac','40'],
 ['Sainct-Macaire','41'],
-['la Réole','42'],
-['Saincte-Bazeille','43'],
+['Casteras','42'],
+['la Réole','43'],
+['Saincte-Bazeille','44'],
 ['Marmande','49'],
-['Tonneins','50'],
+['Thonnynx','50'],
 ['Esguillon','51'],
 ['Port-Saincte-Marie','52'],
 ['Agen','53'],
-['Lafox','54'],
-['Valence d’Agen','55'],
+['La Fox','54'],
+['Vallance','55'],
 ['Mouassac','57'],
 ['Chasteau-Sarrazin','58'],
 ['Montèche','59'],
 ['Sainct-Jorry','60'],
 ['Tholouze','61'],
 ['Pibrac','62'],
-['L’Isle en Jourdain','63'],
-['Agimont','64'],
-['Aubiet','65'],
-['Auch','66'],
-['Condom','67'],
-['Nérac','68']
+['l’Isle en Jourdain','63'],
+['Gimont','64'],
+['Aubyet','65'],
+['Aulch','66'],
+['à Condom','67'],
+['arrivée à Nérac','68'],
 ]
 
 """
@@ -544,5 +545,5 @@ while l < len(locations):
       l = len(locations)
    l = l+1
 inputText.close()
-outputText.writelines(treatedText)
+outputText.writelines(treatedText + remainingText)
 outputText.close()
