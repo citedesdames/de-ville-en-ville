@@ -121,6 +121,7 @@ fetch('./itineraires.json')
 
 // Fonction avec les données en entrées
 function Start() {
+  //console.log(dataetape);
   createMarkers(dataintro[0], dataetape[0], datatexts[0], datamedia[0]);
   let load = document.querySelector(".loader");
   load.classList.add("load-open");
@@ -387,7 +388,7 @@ function nomAuteur(insere_url, auteur1_prenom, auteur1_nom, auteur1_url, auteur2
 // Fonction pour ajouter un document
 function addDocument(doc){
 // DOCUMENTS
-console.log(doc);
+//console.log(doc);
         // Documents avec image
         if(doc.type == "image" || doc.type == "vidéo" || doc.type == "iframe") {
           let codeHTML = "";
@@ -456,7 +457,8 @@ console.log(doc);
           
           codeHTML = codeHTML.replace(/<a /gi, '<a target="_blank"');
           auteur = auteur.replace(/<a /gi, '<a target="_blank"');
-          carddoc.push('<div class="doc" title="Document ajouté par ' + doc.contexte_ajout_ligne.replace("\"","") + '" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>&gt;</span><span><img src="assets/images/' + icon + '.png" alt=""></span> ' + auteurSansLien + doc.titre_document+'</h3><div class="hidden-doc">' + codeHTML + '</div></div>');
+          carddoc.push('<div class="doc" title="Document ajouté par ' + doc.contexte_ajout_ligne.replace("\"","") + '" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>&gt;</span><span><img src="assets/images/' + icon + '.png" alt=""></span> ' //+ auteurSansLien 
+          + doc.titre_document+'</h3><div class="hidden-doc">' + codeHTML + '</div></div>');
         }
         // Documents avec texte 
         if(doc.type.toLowerCase() == "texte" || doc.type.toLowerCase() == "site web") {
@@ -755,7 +757,7 @@ function onMarkerMap(mark) {
 // Fonction qui agit lors du clic sur "En savoir plus" d'un pop up
 // À corriger pour ne pas sélectionner selon les coordonnées mais selon l'id
 function onPopup(e) {
-  console.log(document.querySelector(".about").classList);
+  //console.log(document.querySelector(".about").classList);
   if(document.querySelector(".about").classList.contains("-open")){
      AboutPage();
   }
@@ -1076,7 +1078,7 @@ function uncolorMarkers() {
           doc[c].firstChild.firstChild.classList.remove('rotate-span');
         }
       }
-      console.log(prevmark.getIcon())
+      //console.log(prevmark.getIcon())
       prevmark.setIcon(blueMarkIcon(prevmark.getIcon().options.number))
     }
     else {
