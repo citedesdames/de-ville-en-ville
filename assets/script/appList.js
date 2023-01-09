@@ -9,6 +9,10 @@ let url2;
 let etape;
 let parametresUrl;
 
+
+let idTextes = ""
+let idMedias = ""
+
 // Ajout de paramètres dans l'URL s'il n'y en a pas
 if(typeof url[1] == "undefined") {
   window.history.pushState({site: 0}, '', "?site=0");
@@ -109,6 +113,19 @@ fetch('./itineraires.json')
 
 // Fonction avec les données en entrées
 function Start() {
+  
+  for(key in Object.keys(datatexts[0][0])){
+     if(Object.keys(datatexts[0][0])[key].substring(0,3) == "id "){
+       idTextes = Object.keys(datatexts[0][0])[key]
+     }
+  }
+  console.log(idTextes);
+  for(key in Object.keys(datamedia[0][0])){
+     if(Object.keys(datamedia[0][0])[key].substring(0,3) == "id "){
+       idMedias = Object.keys(datamedia[0][0])[key]
+     }
+  }
+  console.log(idMedias);
   createMarkers(dataintro[0], dataetape[0], datatexts[0], datamedia[0]);
 }
 
@@ -164,7 +181,7 @@ function nomAuteur(insere_url, auteur1_prenom, auteur1_nom, auteur1_url, auteur2
 // Fonction pour ajouter un document
 function addDocument(doc){
 // DOCUMENTS
-console.log(doc);
+//console.log(doc);
         // Documents avec image
         if(doc.type == "image" || doc.type == "vidéo" || doc.type == "iframe") {
           let codeHTML = "";
@@ -233,7 +250,8 @@ console.log(doc);
           
           codeHTML = codeHTML.replace(/<a /gi, '<a target="_blank"');
           auteur = auteur.replace(/<a /gi, '<a target="_blank"');
-          carddoc.push('<div class="doc" title="Document ajouté par ' + doc.contexte_ajout_ligne.replace("\"","") + '" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>&gt;</span><span><img src="assets/images/' + icon + '-small.png" alt=""></span> ' + auteurSansLien + doc.titre_document+'</h3><div class="hidden-doc">' + codeHTML + '</div></div>');
+          carddoc.push('<div class="doc" title="Document ajouté par ' + doc.contexte_ajout_ligne.replace("\"","") + '" onclick="ClicSurDoc(this)"><h3 class="title-doc"><b>Média ' + doc[idMedias] + '</b><span>&gt;</span><span><img src="assets/images/' + icon + '-small.png" alt=""></span> ' // + auteurSansLien 
+            + doc.titre_document+'</h3><div class="hidden-doc">' + codeHTML + '</div></div>');
         }
         // Documents avec texte 
         if(doc.type.toLowerCase() == "texte" || doc.type.toLowerCase() == "site web") {
@@ -277,7 +295,7 @@ console.log(doc);
           
           codeHTML = codeHTML.replace(/<a /gi, '<a target="_blank"');
           auteur = auteur.replace(/<a /gi, '<a target="_blank"');
-          carddoc.push('<div class="doc" title="Document ajouté par ' + doc.contexte_ajout_ligne.replace("\"","") + '" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>&gt;</span><span><img src="assets/images/texte-small.png" alt=""></span> ' + auteurSansLien + doc.titre_document+'</h3><div class="hidden-doc">' + codeHTML + '</div></div>');
+          carddoc.push('<div class="doc" title="Document ajouté par ' + doc.contexte_ajout_ligne.replace("\"","") + '" onclick="ClicSurDoc(this)"><h3 class="title-doc"><b>Texte ' + doc[idTextes] + '</b><span>&gt;</span><span><img src="assets/images/texte-small.png" alt=""></span> ' + auteurSansLien + doc.titre_document+'</h3><div class="hidden-doc">' + codeHTML + '</div></div>');
           
         }
         
@@ -368,7 +386,7 @@ function createMarkers(dataintro, dataetape, datatexts, datamedia) {
        vignette = vignettes[dataetape[i].id_etape];
     }
     card.insertAdjacentHTML("beforeend", '<div id="card' + dataetape[i].id_etape + '"class="card">'
-      + '<div class="card-header"><img class="card-minia" src="' + vignette + '" alt""><div class="card-title"><h2>'+dataetape[i].lieu+'</h2><p>'+dataetape[i].date+'</p></div></div>'
+      + '<div class="card-header"><img class="card-minia" src="' + vignette + '" alt""><div class="card-title">Étape '+dataetape[i].id_etape+'<h2>'+dataetape[i].lieu+'</h2><p>'+dataetape[i].date+'</p></div></div>'
       + '<div class="description"><p class="description-content">'+dataetape[i].description+'</p></div>'
       + etapeLivre
       +'<div class="card-content">'+(carddoc.toString().replace(/<\/div>\,/g,'</div>'))+'</div>'
