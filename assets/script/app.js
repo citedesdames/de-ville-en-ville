@@ -535,10 +535,10 @@ function createMarkers(dataintro, dataetape, datatexts, datamedia) {
       vignettes[datamedia[n].id_etape] = datamedia[n].miniature;
     }
   }
-  
+
   // Création de l'objet associant à chaque étape la liste des textes liés
   for(n=0; n < datatexts.length;n++) {
-    if (DocParEtape[datatexts[n].id_etape] in DocParEtape){
+    if ([datatexts[n].id_etape] in DocParEtape){
       DocParEtape[datatexts[n].id_etape] += 1;
     } else {
       DocParEtape[datatexts[n].id_etape] = 1;
