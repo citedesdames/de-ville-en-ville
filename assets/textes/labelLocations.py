@@ -63,6 +63,8 @@ locations = [
 ['pont de Velle','53'],
 ['Maſcon','54'],
 ['Iſle','55'],
+['Lyon','55b'],
+['Iſle','55c'],
 ['Lyon','56'],
 ['Beauregart','57'],
 ['Lyon','58'],
@@ -185,6 +187,8 @@ locations = [
 ['Quadillac','175'],
 ['Bordeaux','176'],
 ['Toars','177'],
+['Frands','177b'],
+['Chaſteau Trompette','177c'],
 ['à l’Eueſché','178'],
 ['Caſtres','179'],
 ['Lengon','180'],
@@ -386,6 +390,7 @@ locations = [
 ['Buſſy ſainct George','376'],
 ['Sainct Mor des foſſez','377'],
 ['Paris','378'],
+
 
 ]
 #"""
