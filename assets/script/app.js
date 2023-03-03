@@ -402,10 +402,18 @@ function addDocument(doc){
           }
           auteur = codeHTML;
 
+          let icon = "image";
+          if((doc.type == "vidéo")||(doc.type == "iframe")){
+             icon = "video";
+          }
+          
           if(doc.url_document.length>0){
-             codeHTML += '<a href="' + doc.url_document + '">' + doc.titre_document + '</a>';
+             //codeHTML += '<a href="' + doc.url_document + '">' + doc.titre_document + '</a>';
+             codeHTML += '<a href="' + doc.url_document + '"><span><img src="assets/images/' + icon + '.png" alt=""></span></a>';
+             
           }else{
-             codeHTML += doc.titre_document;
+             //codeHTML += doc.titre_document;
+             codeHTML += '<span><img src="assets/images/' + icon + '.png" alt=""></span>';
           }
           
           if(doc.legende.length>0){
@@ -421,11 +429,9 @@ function addDocument(doc){
              url_image = doc.miniature;
           }
           
-          let icon = "image";
           
           // Document is a video
           if(doc.type == "vidéo"){
-             icon = "video";
              if(url_image.replace("youtu.be/","").length < url_image.length || url_image.replace("youtube.com/","").length < url_image.length){
                 // Url de vidéo Youtube
                 url_image = '<iframe width="500" height="315" src="' + url_image.replace("www.youtube.com/watch?v=","www.youtube.com/embed/").replace("youtu.be/","www.youtube.com/embed/") + '?rel=0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
@@ -437,7 +443,6 @@ function addDocument(doc){
           
           // Document is an iframe
           if(doc.type == "iframe"){
-             icon = "video";
              codeHTML += '<br>'+url_image;
           }
 
