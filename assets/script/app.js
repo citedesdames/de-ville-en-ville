@@ -9,7 +9,7 @@ mymap.setView([47, 3], 6);
 mymap.zoomControl.setPosition('topright');
 // Ajout du fond de carte https://c.tile.stamen.com/watercolor/{z}/{x}/{y}.jpg http://tile.stamen.com/terrain/{z}/{x}/{y}.png
 L.tileLayer('https://stamen-tiles.a.ssl.fastly.net/terrain/{z}/{x}/{y}.png', {
-    attribution: '',
+    attribution: '© <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a>, © <a href="https://stamen.com/" target="_blank">Stamen Design</a>, © <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a>, © <a href="https://www.openstreetmap.org/about/" target="_blank">OpenStreetMap contributors</a>',
     maxZoom: 14,
     minZoom: 3
 }).addTo(mymap);
