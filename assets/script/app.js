@@ -401,6 +401,8 @@ function addDocument(doc){
              codeHTML += ", ";
           }
           auteur = codeHTML;
+          
+          let needComma = false;
 
           let icon = "image";
           if((doc.type == "vidéo")||(doc.type == "iframe")){
@@ -409,19 +411,27 @@ function addDocument(doc){
           
           if(doc.url_document.length>0){
              //codeHTML += '<a href="' + doc.url_document + '">' + doc.titre_document + '</a>';
-             codeHTML += '<a href="' + doc.url_document + '"><span><img src="assets/images/' + icon + '.png" alt=""></span></a>';
-             
+             //codeHTML += '<a href="' + doc.url_document + '"><span><img src="assets/images/' + icon + '.png" alt=""></span></a>';
+             codeHTML += '<a href="' + doc.url_document + '">&#128462;</a> ';
           }else{
              //codeHTML += doc.titre_document;
-             codeHTML += '<span><img src="assets/images/' + icon + '.png" alt=""></span>';
+             //codeHTML += '<span><img src="assets/images/' + icon + '.png" alt=""></span>';
           }
           
           if(doc.legende.length>0){
-             codeHTML += ', '+doc.legende;
+             codeHTML += doc.legende;
+             needComma = true;
           }
-          
+
+          if(("annee" in doc) && (doc.annee.length>0)){
+             if(needComma){codeHTML += ', ';}
+             codeHTML += doc.annee;
+             needComma = true;
+          }
+                    
           if(doc.copyright.length>0){
-             codeHTML += ', '+doc.copyright;
+             if(needComma){codeHTML += ', ';}
+             codeHTML += doc.copyright;
           }
 
           let url_image = doc.url_document;
