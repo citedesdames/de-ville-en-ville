@@ -472,8 +472,14 @@ function addDocument(doc){
           
           codeHTML = codeHTML.replace(/<a /gi, '<a target="_blank"');
           auteur = auteur.replace(/<a /gi, '<a target="_blank"');
+          
+          let annee = "";
+          if(("annee" in doc) && (doc.annee.length>0)){
+             annee = ", " + doc.annee;
+          }
+          
           carddoc.push('<div class="doc" title="Document ajouté par ' + doc.contexte_ajout_ligne.replace("\"","") + '" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>&gt;</span><span><img src="assets/images/' + icon + '.png" alt=""></span> ' //+ auteurSansLien 
-          + doc.titre_document+'</h3><div class="hidden-doc">' + codeHTML + '</div></div>');
+          + doc.titre_document + annee +'</h3><div class="hidden-doc">' + codeHTML + '</div></div>');
         }
         // Documents avec texte 
         if(doc.type.toLowerCase() == "texte" || doc.type.toLowerCase() == "site web") {
