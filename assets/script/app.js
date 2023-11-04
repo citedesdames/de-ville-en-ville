@@ -19,6 +19,7 @@ let url = window.location.href.split('?');
 let url2;
 let etape;
 let parametresUrl;
+let siteId = 1;
 
 // Ajout de paramètres dans l'URL s'il n'y en a pas
 if(typeof url[1] == "undefined") {
@@ -47,6 +48,8 @@ else {
     "etape": etape
   }
 }
+
+siteId = parametresUrl.site;
 
 // Tableaux qui vont contenir les données des .csv
 
@@ -669,8 +672,20 @@ function createMarkers(dataintro, dataetape, datatexts, datamedia) {
   about.insertAdjacentHTML("beforeend","<div class='card-about'><div class='content'><h2 class='title-about'>À propos</h2>"+dataintro[0].a_propos+"</div></div>");
   about.insertAdjacentHTML("beforeend", '<div class="button-start"><a class="etape-start -open" onclick="AboutPage()">Retour</a></div>');
   // Création des lignes qui relient les marqueurs
-  let polyline = L.polyline(latlngs, {color: '#004262'});
-  polyline.addTo(mymap);
+  
+  if(siteId > 0){
+     let step = 0;
+     latlngs.forEach(x => {
+        if(step > 0){
+            let polyline = L.polyline([latlngs[step-1],latlngs[step]], {color: `rgb(${255-255*(step/latlngs.length)},0,${255*(step/latlngs.length)})`});
+            polyline.addTo(mymap);
+        }
+        step++;
+     })
+  } else {
+     L.polyline(latlngs, {color: '#004262'}).addTo(mymap);
+  }
+  
   document.querySelector(".overflow-tl").insertAdjacentHTML("beforeend",'<div class="blue-line"></div>');
 };
 
