@@ -53,6 +53,86 @@ L.tileLayer('https://tiles.stadiamaps.com/tiles/stamen_terrain/{z}/{x}/{y}{r}.pn
     minZoom: 3
 }).addTo(mymap);
 } else {
+if(siteId == 4){
+
+// Test of the code from https://geohistoricaldata.org/assets/js/geohistoricaldata.js
+
+function layerWMS(service_url, _layers, _opts){
+	opts = Object.assign(_opts,{layers:_layers});
+	return new L.TileLayer.WMS(service_url,opts);
+}
+var ghd={
+	wms:{
+		url:'http://geohistoricaldata.org/geoserver/wms',
+		opts_default:{
+			style:'raster',
+			attribution: "Map data &copy; <a href='http://geohistoricaldata.org/'>http://geohistoricaldata.org/</a>'",
+			transparent:true,
+			format:'image/png',
+			maxZoom:14,
+			minZoom: 3,
+			tileSize:512
+		}
+	}
+};
+
+var level_france={
+	//RASTERS 
+	
+        //from GHD
+        cassini_52bnf:layerWMS(ghd.wms.url,'cassini-rasters:cassini_bnf_52 ',ghd.wms.opts_default),
+        ghd_cassini:layerWMS(ghd.wms.url,'cassini-ehess:CASSINI',ghd.wms.opts_default),
+
+	//VECTORS
+	//from GeoHistoricalData
+	cassini_assemblage:layerWMS(ghd.wms.url,'cassini-vectors:france_cassini_table_assemblage',ghd.wms.opts_default),
+	cassini_routes:layerWMS(ghd.wms.url,'cassini-vectors:france_cassini',ghd.wms.opts_default),
+	cassini_surfaces:layerWMS(ghd.wms.url,'cassini-vectors:france_cassini_taches_urbaines',ghd.wms.opts_default),
+	cassini_hydro_lines:layerWMS(ghd.wms.url,'cassini-vectors:france_cassini_hydro',ghd.wms.opts_default),
+	cassini_hydro_surfaces:layerWMS(ghd.wms.url,'cassini-vectors:france_cassini_surfaces_hydro',ghd.wms.opts_default),
+	cassini_toponyms:layerWMS(ghd.wms.url,'cassini-vectors:france_cassini_toponyms',ghd.wms.opts_default),
+	cassini_chefslieux:layerWMS(ghd.wms.url,'cassini-vectors:france_cassini_chefs_lieux_valides',ghd.wms.opts_default),
+	cassini_forets:layerWMS(ghd.wms.url,'cassini-vectors:france_cassini_forets',ghd.wms.opts_default)
+};
+
+var level_paris={
+	//RASTERS 
+	//from GeoHistoricalData
+	delagrive_1728: layerWMS(ghd.wms.url,'paris-rasters:delagrive_1728',ghd.wms.opts_default),
+	delagrive_1740:layerWMS(ghd.wms.url,'paris-rasters:delagrive_1740',ghd.wms.opts_default),
+	lattre_1785:layerWMS(ghd.wms.url,'paris-rasters:lattre_1785',ghd.wms.opts_default),
+	verniquet_1789:layerWMS(ghd.wms.url,'paris-rasters:verniquet_1789',ghd.wms.opts_default),
+	picquet_1809:layerWMS(ghd.wms.url,'paris-rasters:picquet_1809',ghd.wms.opts_default),
+	jacoubet_1836:layerWMS(ghd.wms.url,'paris-rasters:jacoubet_1836',ghd.wms.opts_default),
+	andriveau_1849:layerWMS(ghd.wms.url,'paris-rasters:andriveau_1849',ghd.wms.opts_default),
+	municipal_1888:layerWMS(ghd.wms.url,'paris-rasters:poubelle_1888',ghd.wms.opts_default),
+
+	//VECTORS
+	//from GeoHistoricalData
+	rues_verniquet:layerWMS(ghd.wms.url,'paris-vectors:1790_verniquet',ghd.wms.opts_default),
+	rues_vasserot:layerWMS(ghd.wms.url,'paris-vectors:1836_jacoubet_vasserot',ghd.wms.opts_default),
+	rues_jacoubet:layerWMS(ghd.wms.url,'paris-vectors:1836_jacoubet',ghd.wms.opts_default),
+	rues_poubelle:layerWMS(ghd.wms.url,'paris-vectors:1888_poubelle',ghd.wms.opts_default)
+};
+
+/*
+var mymap = L.map('mapid', {
+    //center: [48.858,2.34],
+    center: [45.7624,3.3058],
+    zoom: 12,
+    layers: [level_france.ghd_cassini],
+    fullscreenControl: true,
+    fullscreenControlOptions: { // optional
+        title:"Show me the fullscreen !"
+    },
+    attributionControl: false
+});
+*/
+
+layerWMS(ghd.wms.url,'cassini-ehess:CASSINI',ghd.wms.opts_default).addTo(mymap);
+
+} else{
+
 L.tileLayer.wms('https://ws.sogefi-web.com/wms?', {
     layers: 'Carte_Cassini',
     attribution : 'Univ. Eiffel, EHESS/IGN ; données distribuées par SOGEFI',
@@ -60,6 +140,7 @@ L.tileLayer.wms('https://ws.sogefi-web.com/wms?', {
     minZoom: 3
 }).addTo(mymap);
 
+}
 }
 
 // Tableaux qui vont contenir les données des .csv
