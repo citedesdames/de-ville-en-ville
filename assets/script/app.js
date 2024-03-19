@@ -696,7 +696,6 @@ function createMarkers(dataintro, dataetape, datatexts, datamedia) {
     markers.push(mark);
     // Insertion de chaque coordonnées dans le tableau latlngs
     latlngs.push([dataetape[i].latitude, dataetape[i].longitude]);
-    console.log(dataetape[i]["itinéraire"])
     // Stocker les coordonnées de l'itinéraire vers cette étape si disponibles
     if(dataetape[i]["itinéraire"] != undefined){
        paths.push(dataetape[i]["itinéraire"]);
@@ -749,8 +748,6 @@ function createMarkers(dataintro, dataetape, datatexts, datamedia) {
                let thePath = JSON.parse(paths[step]);
                let firstCoord = latlngs[step];
                let lastCoord = latlngs[step-1];
-               console.log(latlngs[step-1],thePath.coordinates[0])
-               console.log(latlngs[step-1][1],thePath.coordinates[0][0])
                if((latlngs[step-1][0]-thePath.coordinates[0][1])*(latlngs[step-1][0]-thePath.coordinates[0][1])+(latlngs[step-1][1]-thePath.coordinates[0][0])*(latlngs[step-1][1]-thePath.coordinates[0][0]) < (latlngs[step][0]-thePath.coordinates[0][1])*(latlngs[step][0]-thePath.coordinates[0][1])+(latlngs[step][1]-thePath.coordinates[0][0])*(latlngs[step][1]-thePath.coordinates[0][0])){
                   firstCoord = latlngs[step-1];
                   lastCoord = latlngs[step];               
@@ -762,7 +759,6 @@ function createMarkers(dataintro, dataetape, datatexts, datamedia) {
                theLine.push(lastCoord);
                if(thePath.weight != undefined){weight = thePath.weight;}
                if(thePath.opacity != undefined){opacity = thePath.opacity;}
-               console.log("opacity", opacity)
             }
             let polyline = L.polyline(theLine, {weight: weight, opacity: opacity, color: `rgb(${255-255*(step/latlngs.length)},0,${255*(step/latlngs.length)})`});
             polyline.addTo(mymap);
