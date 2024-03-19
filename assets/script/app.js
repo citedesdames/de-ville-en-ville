@@ -56,17 +56,17 @@ L.tileLayer('https://tiles.stadiamaps.com/tiles/stamen_terrain/{z}/{x}/{y}{r}.pn
 if(siteId == 4){
 
 // Test of the code from https://geohistoricaldata.org/assets/js/geohistoricaldata.js
-
 function layerWMS(service_url, _layers, _opts){
 	opts = Object.assign(_opts,{layers:_layers});
 	return new L.TileLayer.WMS(service_url,opts);
 }
+
 var ghd={
 	wms:{
 		url:'http://geohistoricaldata.org/geoserver/wms',
 		opts_default:{
 			style:'raster',
-			attribution: "Map data &copy; <a href='http://geohistoricaldata.org/'>http://geohistoricaldata.org/</a>'",
+			attribution: "Map data &copy; <a href='http://geohistoricaldata.org/'>http://geohistoricaldata.org/</a> &amp; <a href='http://ladehis.ehess.fr/index.php?355'>LDH-EHESS</a>",
 			transparent:true,
 			format:'image/png',
 			maxZoom:14,
@@ -78,10 +78,8 @@ var ghd={
 
 var level_france={
 	//RASTERS 
-	
-        //from GHD
-        cassini_52bnf:layerWMS(ghd.wms.url,'cassini-rasters:cassini_bnf_52 ',ghd.wms.opts_default),
-        ghd_cassini:layerWMS(ghd.wms.url,'cassini-ehess:CASSINI',ghd.wms.opts_default),
+	//from GHD
+  ghd_cassini:layerWMS(ghd.wms.url,'cassini-ehess:CASSINI',ghd.wms.opts_default),
 
 	//VECTORS
 	//from GeoHistoricalData
@@ -94,40 +92,6 @@ var level_france={
 	cassini_chefslieux:layerWMS(ghd.wms.url,'cassini-vectors:france_cassini_chefs_lieux_valides',ghd.wms.opts_default),
 	cassini_forets:layerWMS(ghd.wms.url,'cassini-vectors:france_cassini_forets',ghd.wms.opts_default)
 };
-
-var level_paris={
-	//RASTERS 
-	//from GeoHistoricalData
-	delagrive_1728: layerWMS(ghd.wms.url,'paris-rasters:delagrive_1728',ghd.wms.opts_default),
-	delagrive_1740:layerWMS(ghd.wms.url,'paris-rasters:delagrive_1740',ghd.wms.opts_default),
-	lattre_1785:layerWMS(ghd.wms.url,'paris-rasters:lattre_1785',ghd.wms.opts_default),
-	verniquet_1789:layerWMS(ghd.wms.url,'paris-rasters:verniquet_1789',ghd.wms.opts_default),
-	picquet_1809:layerWMS(ghd.wms.url,'paris-rasters:picquet_1809',ghd.wms.opts_default),
-	jacoubet_1836:layerWMS(ghd.wms.url,'paris-rasters:jacoubet_1836',ghd.wms.opts_default),
-	andriveau_1849:layerWMS(ghd.wms.url,'paris-rasters:andriveau_1849',ghd.wms.opts_default),
-	municipal_1888:layerWMS(ghd.wms.url,'paris-rasters:poubelle_1888',ghd.wms.opts_default),
-
-	//VECTORS
-	//from GeoHistoricalData
-	rues_verniquet:layerWMS(ghd.wms.url,'paris-vectors:1790_verniquet',ghd.wms.opts_default),
-	rues_vasserot:layerWMS(ghd.wms.url,'paris-vectors:1836_jacoubet_vasserot',ghd.wms.opts_default),
-	rues_jacoubet:layerWMS(ghd.wms.url,'paris-vectors:1836_jacoubet',ghd.wms.opts_default),
-	rues_poubelle:layerWMS(ghd.wms.url,'paris-vectors:1888_poubelle',ghd.wms.opts_default)
-};
-
-/*
-var mymap = L.map('mapid', {
-    //center: [48.858,2.34],
-    center: [45.7624,3.3058],
-    zoom: 12,
-    layers: [level_france.ghd_cassini],
-    fullscreenControl: true,
-    fullscreenControlOptions: { // optional
-        title:"Show me the fullscreen !"
-    },
-    attributionControl: false
-});
-*/
 
 layerWMS(ghd.wms.url,'cassini-ehess:CASSINI',ghd.wms.opts_default).addTo(mymap);
 
@@ -670,6 +634,7 @@ function createMarkers(dataintro, dataetape, datatexts, datamedia) {
   //DocumentsParEtape(datamedia, DocParEtape);
   console.log("documents trouvés")
   var latlngs = [];
+  var paths = [];
   // Itération pour chacune des villes dans le tableau data
   for(i=0; i<dataetape.length;i++) {
     if(dataetape[i].latitude !== '' && dataetape[i].longitude !== '') {
@@ -731,6 +696,13 @@ function createMarkers(dataintro, dataetape, datatexts, datamedia) {
     markers.push(mark);
     // Insertion de chaque coordonnées dans le tableau latlngs
     latlngs.push([dataetape[i].latitude, dataetape[i].longitude]);
+    console.log(dataetape[i]["itinéraire"])
+    // Stocker les coordonnées de l'itinéraire vers cette étape si disponibles
+    if(dataetape[i]["itinéraire"] != undefined){
+       paths.push(dataetape[i]["itinéraire"]);
+    } else {
+       paths.push("");
+    }
     }
   };
 
@@ -764,12 +736,35 @@ function createMarkers(dataintro, dataetape, datatexts, datamedia) {
   about.insertAdjacentHTML("beforeend","<div class='card-about'><div class='content'><h2 class='title-about'>À propos</h2>"+dataintro[0].a_propos+"</div></div>");
   about.insertAdjacentHTML("beforeend", '<div class="button-start"><a class="etape-start -open" onclick="AboutPage()">Retour</a></div>');
   // Création des lignes qui relient les marqueurs
-  
   if(siteId > 0){
      let step = 0;
      latlngs.forEach(x => {
+        let weight = 3;
+        let opacity = 1;
         if(step > 0){
-            let polyline = L.polyline([latlngs[step-1],latlngs[step]], {color: `rgb(${255-255*(step/latlngs.length)},0,${255*(step/latlngs.length)})`});
+            // Création d'une ligne droite de la précédente étape vers l'étape actuelle
+            let theLine = [latlngs[step-1],latlngs[step]];
+            if(paths[step] != ""){
+               // Chargement d'un itinéraire aux coordonnées personnalisées au lieu d'une ligne droite
+               let thePath = JSON.parse(paths[step]);
+               let firstCoord = latlngs[step];
+               let lastCoord = latlngs[step-1];
+               console.log(latlngs[step-1],thePath.coordinates[0])
+               console.log(latlngs[step-1][1],thePath.coordinates[0][0])
+               if((latlngs[step-1][0]-thePath.coordinates[0][1])*(latlngs[step-1][0]-thePath.coordinates[0][1])+(latlngs[step-1][1]-thePath.coordinates[0][0])*(latlngs[step-1][1]-thePath.coordinates[0][0]) < (latlngs[step][0]-thePath.coordinates[0][1])*(latlngs[step][0]-thePath.coordinates[0][1])+(latlngs[step][1]-thePath.coordinates[0][0])*(latlngs[step][1]-thePath.coordinates[0][0])){
+                  firstCoord = latlngs[step-1];
+                  lastCoord = latlngs[step];               
+               }
+               theLine = [firstCoord];
+               thePath.coordinates.forEach(coord => {
+                  theLine.push([coord[1], coord[0]])
+               })  
+               theLine.push(lastCoord);
+               if(thePath.weight != undefined){weight = thePath.weight;}
+               if(thePath.opacity != undefined){opacity = thePath.opacity;}
+               console.log("opacity", opacity)
+            }
+            let polyline = L.polyline(theLine, {weight: weight, opacity: opacity, color: `rgb(${255-255*(step/latlngs.length)},0,${255*(step/latlngs.length)})`});
             polyline.addTo(mymap);
         }
         step++;
