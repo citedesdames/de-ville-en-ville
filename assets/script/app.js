@@ -635,6 +635,7 @@ function createMarkers(dataintro, dataetape, datatexts, datamedia) {
   console.log("documents trouvés")
   var latlngs = [];
   var paths = [];
+  var dates = [];
   // Itération pour chacune des villes dans le tableau data
   for(i=0; i<dataetape.length;i++) {
     if(dataetape[i].latitude !== '' && dataetape[i].longitude !== '') {
@@ -702,6 +703,12 @@ function createMarkers(dataintro, dataetape, datatexts, datamedia) {
     } else {
        paths.push("");
     }
+    // Stocker la date de cette étape si disponible
+    if(dataetape[i]["date"] != undefined){
+       dates.push(dataetape[i]["date"]);
+    } else {
+       dates.push("");
+    }
     }
   };
 
@@ -760,7 +767,39 @@ function createMarkers(dataintro, dataetape, datatexts, datamedia) {
                if(thePath.weight != undefined){weight = thePath.weight;}
                if(thePath.opacity != undefined){opacity = thePath.opacity;}
             }
-            let polyline = L.polyline(theLine, {weight: weight, opacity: opacity, color: `rgb(${255-255*(step/latlngs.length)},0,${255*(step/latlngs.length)})`});
+            let color = `rgb(${255-255*(step/latlngs.length)},0,${255*(step/latlngs.length)})`;
+            console.log()
+            if(siteId == 4){
+               let year = parseInt(dates[step].substring(dates[step].length-5, dates[step].length));
+               if(year==1578){
+                   color = "#e3342f";
+                }
+               if(year==1579){
+                   color = "#f6993f";
+                }
+               if(year==1580){
+                   color = "#ffed4a";
+                }
+               if(year==1581){
+                   color = "#38c172";
+                }
+               if(year==1582){
+                   color = "#4dc0b5";
+                }
+               if(year==1583){
+                   color = "#3490dc";
+                }
+               if(year==1584){
+                   color = "#6574cd";
+                }
+               if(year==1585){
+                   color = "#9561e2";
+                }
+               if(year==1586){
+                   color = "#f66d9b";
+                }
+            }
+            let polyline = L.polyline(theLine, {weight: weight, opacity: opacity, color: color});
             polyline.addTo(mymap);
         }
         step++;
