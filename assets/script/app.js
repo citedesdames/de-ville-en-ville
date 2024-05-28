@@ -582,7 +582,13 @@ function addDocument(doc){
           
           codeHTML = codeHTML.replace(/<a /gi, '<a target="_blank"');
           auteur = auteur.replace(/<a /gi, '<a target="_blank"');
-          carddoc.push('<div class="doc" title="Document ajouté par ' + doc.contexte_ajout_ligne.replace("\"","") + '" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>&gt;</span><span><img src="assets/images/texte.png" alt=""></span> ' + auteurSansLien + doc.titre_document+'</h3><div class="hidden-doc">' + codeHTML + '</div></div>');
+          
+          // Suppression de l'auteur dans le titre
+          if(siteId == 1){
+             carddoc.push('<div class="doc" title="Document ajouté par ' + doc.contexte_ajout_ligne.replace("\"","") + '" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>&gt;</span><span><img src="assets/images/texte.png" alt=""></span> ' + doc.titre_document+'</h3><div class="hidden-doc">' + codeHTML + '</div></div>');
+          }else{
+             carddoc.push('<div class="doc" title="Document ajouté par ' + doc.contexte_ajout_ligne.replace("\"","") + '" onclick="ClicSurDoc(this)"><h3 class="title-doc"><span>&gt;</span><span><img src="assets/images/texte.png" alt=""></span> ' + auteurSansLien + doc.titre_document+'</h3><div class="hidden-doc">' + codeHTML + '</div></div>');
+          }
           
         }
         
