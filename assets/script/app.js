@@ -45,11 +45,11 @@ let mymap = L.map('mapid');
 
 mymap.setView([47, 3], 6);
 mymap.zoomControl.setPosition('topright');
-if((siteId == 0)||(siteId == 1)){
+if((siteId == 0)||(siteId == 1)||(siteId == 5)){
 // Ajout du fond de carte https://c.tile.stamen.com/watercolor/{z}/{x}/{y}.jpg http://tile.stamen.com/terrain/{z}/{x}/{y}.png
 L.tileLayer('https://tiles.stadiamaps.com/tiles/stamen_terrain/{z}/{x}/{y}{r}.png', {
     attribution: '© <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a>, © <a href="https://stamen.com/" target="_blank">Stamen Design</a>, © <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a>, © <a href="https://www.openstreetmap.org/about/" target="_blank">OpenStreetMap contributors</a>',
-    maxZoom: 14,
+    maxZoom: 15,
     minZoom: 3
 }).addTo(mymap);
 } else {
@@ -63,7 +63,7 @@ function layerWMS(service_url, _layers, _opts){
 
 var ghd={
 	wms:{
-		url:'http://geohistoricaldata.org/geoserver/wms',
+		url:'https://geohistoricaldata.org/geoserver/wms',
 		opts_default:{
 			style:'raster',
 			attribution: "Map data &copy; <a href='http://geohistoricaldata.org/'>http://geohistoricaldata.org/</a> &amp; <a href='http://ladehis.ehess.fr/index.php?355'>LDH-EHESS</a>",
