@@ -53,7 +53,7 @@ L.tileLayer('https://tiles.stadiamaps.com/tiles/stamen_terrain/{z}/{x}/{y}{r}.pn
     minZoom: 3
 }).addTo(mymap);
 } else {
-if(siteId == 4||siteId == 3){
+if((siteId == 4)||(siteId == 3)||(siteId == 2)){
 
 // Test of the code from https://geohistoricaldata.org/assets/js/geohistoricaldata.js
 function layerWMS(service_url, _layers, _opts){
